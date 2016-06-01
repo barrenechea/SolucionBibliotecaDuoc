@@ -1,0 +1,16 @@
+﻿<Controls:MetroWindow x:Class="Biblioteca.GUI.Inicio"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
+        Title="Sistema Biblioteca" Height="284" Width="400" IsMaxRestoreButtonEnabled="False"
+        ShowIconOnTitleBar="False" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
+        Loaded="Inicio_OnLoaded">
+    <Grid>
+        <Controls:Tile Name="btnCatalogo" Title="Ver catálogo" TiltFactor="10" Width="250" Height="140" Click="btnCatalogo_Click" Margin="71,40,71,0" Cursor="Hand" IsEnabled="False" VerticalAlignment="Top">
+            <Controls:PackIconModern Kind="BookOpenText" Width="90" Height="80" />
+        </Controls:Tile>
+        <Button Name="btnLogin" Style="{DynamicResource SquareButtonStyle}" Content="Acceso Administrativo" Margin="0,0,10,10" HorizontalAlignment="Right" Width="151" Click="btnLogin_Click" Controls:ControlsHelper.ContentCharacterCasing="Normal" Controls:ButtonHelper.PreserveTextCase="True" IsEnabled="False" Height="28" VerticalAlignment="Bottom"/>
+        <Controls:TransitioningContentControl Content="Estado: Conectando al servidor" Foreground="Orange" x:Name="lblStatus" Margin="10,10,10,0" HorizontalContentAlignment="Center" Transition="Right" VerticalAlignment="Top" />
+    </Grid>
+</Controls:MetroWindow>

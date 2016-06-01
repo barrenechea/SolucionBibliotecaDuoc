@@ -1,0 +1,20 @@
+﻿<Controls:MetroWindow x:Class="Biblioteca.GUI.Catalogo"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      Title="Sistema Biblioteca" Height="500" Width="900"
+                      IsMaxRestoreButtonEnabled="False" ShowIconOnTitleBar="False"
+                      BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
+                      ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded">
+
+    <Grid>
+        <Button Style="{DynamicResource MetroCircleButtonStyle}" ToolTip="Volver" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="50" Height="50" Click="BtnVolver_Click">
+            <Controls:PackIconModern Kind="ArrowLeft" Width="25" Height="25" />
+        </Button>
+        <Label Content="Catálogo de libros" HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush}" FontSize="{DynamicResource TabItemFontSize}"/>
+
+        <DataGrid Name="lstLibros" Margin="10,65,10,43" IsReadOnly="True" SelectionChanged="lstLibros_SelectionChanged"/>
+
+        <Button Name="BtnVerDetalle" Content="Ver Detalle de Libro" IsEnabled="False" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" VerticalAlignment="Bottom" Click="BtnVerDetalle_Click"/>
+    </Grid>
+</Controls:MetroWindow>
