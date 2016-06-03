@@ -45,7 +45,7 @@ namespace Biblioteca.Controlador
         {
             if(LibroPersistence == null) return new Message(false, "Debe precargar los datos de un libro");
 
-            const string sqlSentence = "INSERT INTO libro(cod_libro, titulo, autor, categoria, argumento, ubicacion, editorial, cod_tipo, nro_paginas, nro_copias) " +
+            const string sqlSentence = "INSERT INTO Libro(cod_libro, titulo, autor, categoria, argumento, ubicacion, editorial, cod_tipo, nro_paginas, nro_copias) " +
                                        "VALUES (@CodLibro, @Titulo, @Autor, @Categoria, @Argumento, @Ubicacion, @Editorial, @CodTipo, @NroPaginas, @NroCopias);";
             
             var arrayParameters = new[]
@@ -75,7 +75,7 @@ namespace Biblioteca.Controlador
         {
             if (LibroPersistence == null) return new Message(false, "Debe precargar los datos de un libro");
 
-            const string sqlSentence = "UPDATE libro SET titulo=@Titulo, autor=@Autor, categoria=@Categoria, " +
+            const string sqlSentence = "UPDATE Libro SET titulo=@Titulo, autor=@Autor, categoria=@Categoria, " +
                                        "argumento=@Argumento, ubicacion=@Ubicacion, editorial=@Editorial, " +
                                        "cod_tipo=@CodTipo, nro_paginas=@NroPaginas, nro_copias=@NroCopias " +
                                        "WHERE cod_libro = @CodLibro;";
@@ -134,8 +134,8 @@ namespace Biblioteca.Controlador
         public Message FetchLibro(string codLibro)
         {
             var libroSelected = Select(
-                    "SELECT cod_libro, titulo, autor, categoria, argumento, ubicacion, editorial, cod_tipo, nro_paginas, nro_copias FROM libro WHERE cod_libro = @CodLibro;",
-                    new[] {"@CodLibro"}, new object[] {codLibro});
+                    "SELECT cod_libro, titulo, autor, categoria, argumento, ubicacion, editorial, cod_tipo, nro_paginas, nro_copias FROM Libro WHERE cod_libro = @CodLibro;",
+                    new[] {"@CodLibro"}, new object[] {codLibro.ToUpper()});
 
             if (libroSelected == null || libroSelected.Rows.Count == 0)
                 return new Message(false, "Libro no encontrado");

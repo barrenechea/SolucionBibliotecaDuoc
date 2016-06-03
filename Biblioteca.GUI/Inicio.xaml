@@ -12,5 +12,6 @@
         </Controls:Tile>
         <Button Name="btnLogin" Style="{DynamicResource SquareButtonStyle}" Content="Acceso Administrativo" Margin="0,0,10,10" HorizontalAlignment="Right" Width="151" Click="btnLogin_Click" Controls:ControlsHelper.ContentCharacterCasing="Normal" Controls:ButtonHelper.PreserveTextCase="True" IsEnabled="False" Height="28" VerticalAlignment="Bottom"/>
         <Controls:TransitioningContentControl Content="Estado: Conectando al servidor" Foreground="Orange" x:Name="lblStatus" Margin="10,10,10,0" HorizontalContentAlignment="Center" Transition="Right" VerticalAlignment="Top" />
+        <Button x:Name="btnBenchmark" Style="{DynamicResource SquareButtonStyle}" Content="Benchmark" Margin="10,0,0,10" Click="BtnBenchmark_OnClicknchmark_Click" Controls:ControlsHelper.ContentCharacterCasing="Normal" Controls:ButtonHelper.PreserveTextCase="True" IsEnabled="False" Height="28" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="93"/>
     </Grid>
 </Controls:MetroWindow>

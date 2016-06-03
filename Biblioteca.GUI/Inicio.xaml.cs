@@ -67,7 +67,7 @@ namespace Biblioteca.GUI
             lblStatus.Content = "Estado: Conectado al servidor";
             lblStatus.Foreground = _connectionMessage.Status ? Brushes.Green : Brushes.Red;
             if (_connectionMessage.Status)
-                btnCatalogo.IsEnabled = btnLogin.IsEnabled = true;
+                btnCatalogo.IsEnabled = btnLogin.IsEnabled = btnBenchmark.IsEnabled = true;
         }
         private async void ShowNormalDialog(string title, string message)
         {
@@ -91,5 +91,10 @@ namespace Biblioteca.GUI
             Close();
         }
         #endregion
+
+        private void BtnBenchmark_OnClicknchmark_Click(object sender, RoutedEventArgs e)
+        {
+            new Test().Show();
+        }
     }
 }

@@ -190,7 +190,7 @@ namespace Biblioteca.Controlador
             {
                 sqlSentence =
                     "SELECT Persona.rut, Persona.nombre, Persona.apellido, Persona.direccion, Persona.cod_comuna, " +
-                    "Usuario.nro_ficha, Usuario.estado, Usuario.fec_nac, Estudiante.curso FROM persona " +
+                    "Usuario.nro_ficha, Usuario.estado, Usuario.fec_nac, Estudiante.curso FROM Persona " +
                     "JOIN Usuario ON Usuario.rut=Persona.rut " +
                     "JOIN Estudiante ON Estudiante.nro_ficha=Usuario.nro_ficha " +
                     "WHERE Estudiante.nro_ficha=@NroFicha;";
@@ -217,7 +217,7 @@ namespace Biblioteca.Controlador
             {
                 sqlSentence =
                     "SELECT Persona.rut, Persona.nombre, Persona.apellido, Persona.direccion, Persona.cod_comuna, " +
-                    "Usuario.nro_ficha, Usuario.estado, Usuario.fec_nac, Funcionario.cargo FROM persona " +
+                    "Usuario.nro_ficha, Usuario.estado, Usuario.fec_nac, Funcionario.cargo FROM Persona " +
                     "JOIN Usuario ON Usuario.rut=Persona.rut " +
                     "JOIN Funcionario ON Funcionario.nro_ficha=Usuario.nro_ficha " +
                     "WHERE Funcionario.nro_ficha=@NroFicha;";

@@ -1,0 +1,14 @@
+﻿<Controls:MetroWindow x:Class="Biblioteca.GUI.Test"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
+        Title="Sistema Biblioteca" Height="174" Width="400" IsMaxRestoreButtonEnabled="False"
+        ShowIconOnTitleBar="False" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Closing="MetroWindow_Closing">
+    <Grid>
+        <Label Name="lblStatus" Content="Stress Test" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush}" FontSize="{DynamicResource TabItemFontSize}" Width="372"></Label>
+        <Label Name="lblSpeed" Content="Query's Milisec." HorizontalContentAlignment="Right" Margin="211,0,10,10" VerticalAlignment="Bottom"/>
+        <Label Name="lblTiempoTranscurrido" Content="Segundos transcurridos" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="196"/>
+        <Label Name="lblPromedio" Content="Promedio" HorizontalContentAlignment="Center" Margin="10,76,10,0" VerticalAlignment="Top"/>
+    </Grid>
+</Controls:MetroWindow>
