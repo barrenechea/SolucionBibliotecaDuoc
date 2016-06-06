@@ -114,12 +114,7 @@ namespace Biblioteca.Entidad
         public int NroCopias
         {
             get { return _nroCopias; }
-            set
-            {
-                if (value == 0)
-                    throw new ArgumentException("Debe ingresar la cantidad de copias");
-                _nroCopias = value;
-            }
+            set { _nroCopias = value; }
         }
         #endregion
         #region Constructor
