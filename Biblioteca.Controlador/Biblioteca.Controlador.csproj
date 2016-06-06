@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ControllerDatabase.cs" />
     <Compile Include="ControllerLibro.cs" />
+    <Compile Include="ControllerPrestamo.cs" />
     <Compile Include="ControllerUsers.cs" />
     <Compile Include="Utils\ControllerIniParser.cs" />
     <Compile Include="ControllerLogin.cs" />

@@ -1,0 +1,27 @@
+﻿<controls:MetroWindow x:Class="Biblioteca.GUI.Prestamo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="Prestamo" Height="476" Width="322">
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button x:Name="BtnLogout" ToolTip="Cerrar sesión" Click="BtnLogout_OnClick">
+                <controls:PackIconModern Kind="DoorLeave" Width="18" Height="18" />
+            </Button>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Grid>
+            <Button Style="{DynamicResource MetroCircleButtonStyle}" ToolTip="Volver" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="50" Height="50" Click="BtnBack_Click">
+                <controls:PackIconModern Kind="ArrowLeft" Width="25" Height="25" />
+            </Button>
+
+            <Label Name="lblTitulo" Content="Préstamo de libros" HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush}" FontSize="{DynamicResource TabItemFontSize}"/>
+            <TextBox Name="txtNroFicha" MaxLength="10" Height="23" Margin="10,78,10,0" TextWrapping="Wrap" VerticalAlignment="Top" controls:TextBoxHelper.ClearTextButton="True" controls:TextBoxHelper.Watermark="Número de ficha"/>
+            <TextBox Name="txtLibro" MaxLength="50" Height="23" Margin="10,109,10,0" TextWrapping="Wrap" VerticalAlignment="Top" controls:TextBoxHelper.ClearTextButton="True" controls:TextBoxHelper.Watermark="Código del libro"/>
+
+            <Button Name="BtnExecute" Content="ButtonContent" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" controls:ControlsHelper.ContentCharacterCasing="Normal" Height="28" VerticalAlignment="Bottom" Click="BtnExecute_Click"/>
+            <controls:TransitioningContentControl Name="lblStatus" Content="" HorizontalContentAlignment="Center" Foreground="Red" Margin="11,0,9,43" Transition="Right" Height="26" VerticalAlignment="Bottom"/>
+        </Grid>
+    </Grid>
+    </controls:MetroWindow>
