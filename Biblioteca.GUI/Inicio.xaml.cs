@@ -92,6 +92,7 @@ namespace Biblioteca.GUI
         }
         #endregion
 
+
         private void BtnBenchmark_OnClicknchmark_Click(object sender, RoutedEventArgs e)
         {
             new Test().Show();
