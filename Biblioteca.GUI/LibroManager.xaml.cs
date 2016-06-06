@@ -147,7 +147,7 @@ namespace Biblioteca.GUI
             }
             if (int.TryParse(txtNroCopias.Text, out i))
             {
-                if (i <= 0)
+                if (_isAdd && i <= 0)
                 {
                     lblStatus.Content = "El número de copias debe ser mayor a 0";
                     txtNroCopias.Focus();
