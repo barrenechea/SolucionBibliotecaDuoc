@@ -48,7 +48,7 @@ namespace Biblioteca.GUI
             lblSpeed.Content = string.Format("Delay: {0} milisec.", _cantidad);
             var tiempoInicial = (int)(_tiempoInicial.ElapsedMilliseconds / 1000);
             if (tiempoInicial > 0)
-                lblPromedio.Content = string.Format("Promedio: {0} querys/seg", (e.ProgressPercentage / _tiempoInicial.Elapsed.Seconds));
+                lblPromedio.Content = string.Format("Promedio: {0} querys/seg", (e.ProgressPercentage / (_tiempoInicial.ElapsedMilliseconds / 1000)));
             lblTiempoTranscurrido.Content = string.Format("Transcurridos {0} segs.", tiempoInicial);
         }
         private void Conn_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
