@@ -14,7 +14,7 @@ namespace Biblioteca.Controlador
         public Message UsuarioActivado(string nroFicha)
         {
             var estado = Select("SELECT estado from Usuario WHERE nro_ficha = @Nro_ficha;", new[] { "@Nro_ficha" }, new object[] { nroFicha });
-            return estado.Rows[0].Field<int>(0) == 1 ? new Message(true) : new Message(false, "El usuario está desactivado, revise hoja de morosidad.");
+            return new Message(estado.Rows[0].Field<bool>(0), estado.Rows[0].Field<bool>(0) ? null : "El usuario está desactivado, revise hoja de morosidad.");
         }
 
         
