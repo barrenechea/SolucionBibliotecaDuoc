@@ -166,6 +166,7 @@ namespace Biblioteca.GUI
             if (result == MessageDialogResult.Affirmative)
             {
                 new Prestamo().Show();
+                Close();
                 //ToDo Nuevo préstamo
             }
             else if (result == MessageDialogResult.Negative)

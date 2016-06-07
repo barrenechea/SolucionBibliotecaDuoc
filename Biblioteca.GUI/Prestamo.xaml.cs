@@ -48,6 +48,12 @@ namespace Biblioteca.GUI
 
         private bool Validation()
         {
+            if (string.IsNullOrWhiteSpace(txtNroFicha.Text))
+            {
+                lblStatus.Content = "Debe llenar todos los campos";
+                txtNroFicha.Focus();
+                return false;
+            }
             int i;
             if (!int.TryParse(txtNroFicha.Text, out i))
             {
@@ -55,13 +61,7 @@ namespace Biblioteca.GUI
                 txtNroFicha.Focus();
                 return false;
             }
-            if (txtNroFicha.Text == string.Empty)
-            {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtCodLibro.Focus();
-                return false;
-            }
-            if (txtCodLibro.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtCodLibro.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtCodLibro.Focus();
@@ -85,6 +85,7 @@ namespace Biblioteca.GUI
                     return false;
                 }
             }
+            //toDo quitar espacios en blanco a los codigos de libro.
             lblStatus.Content = string.Empty;
             return true;
         }

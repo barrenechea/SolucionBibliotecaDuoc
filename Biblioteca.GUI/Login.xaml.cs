@@ -47,7 +47,7 @@ namespace Biblioteca.GUI
         #region Other methods
         private bool Validate()
         {
-            if (txtUsuario.Text != string.Empty && txtPassword.Password != string.Empty) return true;
+            if (!string.IsNullOrWhiteSpace(txtUsuario.Text) && !string.IsNullOrWhiteSpace(txtPassword.Password)) return true;
             ShowNormalDialog("Error", "Debe llenar todos los campos");
             return false;
         }

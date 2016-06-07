@@ -23,19 +23,19 @@ namespace Biblioteca.GUI
         #region Custom Methods
         private bool Validation()
         {
-            if (txtNombre.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtNombre.Focus();
                 return false;
             }
-            if (txtApellido.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtApellido.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtApellido.Focus();
                 return false;
             }
-            if (txtDireccion.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtDireccion.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtDireccion.Focus();
@@ -47,7 +47,7 @@ namespace Biblioteca.GUI
                 cmbComuna.Focus();
                 return false;
             }
-            if (txtFonoFijo.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtFonoFijo.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtFonoFijo.Focus();
@@ -60,7 +60,7 @@ namespace Biblioteca.GUI
                 txtFonoFijo.Focus();
                 return false;
             }
-            if (txtFonoCel.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtFonoCel.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtFonoCel.Focus();

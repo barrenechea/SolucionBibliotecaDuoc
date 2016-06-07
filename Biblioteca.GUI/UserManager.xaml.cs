@@ -110,19 +110,19 @@ namespace Biblioteca.GUI
         }
         private bool Validation()
         {
-            if (txtNombre.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtNombre.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtNombre.Focus();
                 return false;
             }
-            if (txtApellido.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtApellido.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtApellido.Focus();
                 return false;
             }
-            if (txtRun.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtRun.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtRun.Focus();
@@ -158,7 +158,7 @@ namespace Biblioteca.GUI
                 dateFechaNac.Focus();
                 return false;
             }
-            if (txtDireccion.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtDireccion.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtDireccion.Focus();
@@ -170,7 +170,7 @@ namespace Biblioteca.GUI
                 cmbComuna.Focus();
                 return false;
             }
-            if (txtFonoFijo.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtFonoFijo.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtFonoFijo.Focus();
@@ -183,7 +183,7 @@ namespace Biblioteca.GUI
                 txtFonoFijo.Focus();
                 return false;
             }
-            if (txtFonoCel.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtFonoCel.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtFonoCel.Focus();
@@ -197,7 +197,7 @@ namespace Biblioteca.GUI
             }
             if (_isEstudiante)
             {
-                if (txtRunApoderado.Text == string.Empty)
+                if (string.IsNullOrWhiteSpace(txtRunApoderado.Text))
                 {
                     lblStatus.Content = "Debe llenar todos los campos";
                     txtRunApoderado.Focus();
@@ -221,23 +221,22 @@ namespace Biblioteca.GUI
                     txtRunApoderado.Focus();
                     return false;
                 }
-                if (txtParentesco.Text == string.Empty)
+                if (string.IsNullOrWhiteSpace(txtParentesco.Text))
                 {
                     lblStatus.Content = "Debe llenar todos los campos";
                     txtParentesco.Focus();
                     return false;
                 }
-                if (txtCurso.Text == string.Empty)
+                if (string.IsNullOrWhiteSpace(txtCurso.Text))
                 {
                     lblStatus.Content = "Debe llenar todos los campos";
                     txtCurso.Focus();
                     return false;
                 }
-
             }
             else
             {
-                if (txtCargo.Text == string.Empty)
+                if (string.IsNullOrWhiteSpace(txtCargo.Text))
                 {
                     lblStatus.Content = "Debe llenar todos los campos";
                     txtCargo.Focus();

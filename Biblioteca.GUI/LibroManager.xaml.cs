@@ -69,43 +69,43 @@ namespace Biblioteca.GUI
         }
         private bool Validation()
         {
-            if (txtCodLibro.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtCodLibro.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtCodLibro.Focus();
                 return false;
             }
-            if (txtTitulo.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtTitulo.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtTitulo.Focus();
                 return false;
             }
-            if (txtAutor.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtAutor.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtAutor.Focus();
                 return false;
             }
-            if (txtCategoria.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtCategoria.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtCategoria.Focus();
                 return false;
             }
-            if (txtArgumento.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtArgumento.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtArgumento.Focus();
                 return false;
             }
-            if (txtUbicacion.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtUbicacion.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtUbicacion.Focus();
                 return false;
             }
-            if (txtEditorial.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtEditorial.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtEditorial.Focus();
@@ -117,7 +117,7 @@ namespace Biblioteca.GUI
                 cmbTipo.Focus();
                 return false;
             }
-            if (txtNroPag.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtNroPag.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtNroPag.Focus();
@@ -139,7 +139,7 @@ namespace Biblioteca.GUI
                 txtNroPag.Focus();
                 return false;
             }
-            if (txtNroCopias.Text == string.Empty)
+            if (string.IsNullOrWhiteSpace(txtNroCopias.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtNroCopias.Focus();
