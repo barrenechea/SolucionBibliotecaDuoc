@@ -48,6 +48,13 @@ namespace Biblioteca.GUI
 
         private bool Validation()
         {
+            int i;
+            if (!int.TryParse(txtNroFicha.Text, out i))
+            {
+                lblStatus.Content = "El número de ficha es de solo números";
+                txtNroFicha.Focus();
+                return false;
+            }
             if (txtNroFicha.Text == string.Empty)
             {
                 lblStatus.Content = "Debe llenar todos los campos";
@@ -59,6 +66,24 @@ namespace Biblioteca.GUI
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtCodLibro.Focus();
                 return false;
+            }
+            if (App.Users.IsStudent(txtNroFicha.Text))
+            {
+                if (txtCodLibro.Text.Split(',').Length > 1)
+                {
+                    lblStatus.Content = "Los estudiantes no pueden solicitar más de un libro";
+                    txtCodLibro.Focus();
+                    return false;
+                }
+            }
+            else
+            {
+                if (txtCodLibro.Text.Split(',').Length > 5)
+                {
+                    lblStatus.Content = "Los funcionarios no pueden solicitar más de cinco libros";
+                    txtCodLibro.Focus();
+                    return false;
+                }
             }
             lblStatus.Content = string.Empty;
             return true;
