@@ -10,6 +10,6 @@ namespace Biblioteca.GUI
         public static readonly ControllerLogin Login = new ControllerLogin();
         public static readonly ControllerUsers Users = new ControllerUsers();
         public static readonly ControllerLibro Libros = new ControllerLibro();
-        
+        public static readonly ControllerPrestamo Prestamo = new ControllerPrestamo();
     }
 }
