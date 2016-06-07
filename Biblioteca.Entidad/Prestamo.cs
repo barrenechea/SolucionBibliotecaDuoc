@@ -31,12 +31,6 @@ namespace Biblioteca.Entidad
         }
 
 
-        //private DateTime FechaPrestamo;
-        //private int CodPrestamo;
-        //private int NroFicha;
-
-
-
 
         public Prestamo(int codPrestamo, DateTime fechaPrestamo, int nroFicha)
         {
