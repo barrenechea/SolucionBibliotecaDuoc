@@ -19,21 +19,13 @@ namespace Biblioteca.Controlador
         /// This method is to preload a Prestamo into the controller before requesting an Insert or Update query.
         /// </summary>
         /// <param name="nroFicha">Número de ficha del solicitante</param>
-        /// <param name="codLibros">Codigos de libros que se solicitan</param>
-        /// <param name="devolucion">Días en los que se debe devolver el libro</param>
         /// <returns>Message, indicates status of the preload, and a message in case of failure</returns>
-        public Message PreloadPrestamo(int nroFicha, string[] codLibros)
+        public Message PreloadPrestamo(int nroFicha)
         {
             Message msg;
             try
             {
                 PrestamoPersistence = new Prestamo(DateTime.Now, nroFicha);
-                var codPrestamo = CodigoLibro(nroFicha);
-                var devolucion = 0;
-                foreach (var codLibro  in codLibros)
-                {
-                    DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, devolucion), false, 0, codPrestamo, codLibro.Trim()));
-                }
                 msg = new Message(true);
             }
             catch
@@ -42,39 +34,60 @@ namespace Biblioteca.Controlador
             }
             return msg;
         }
+
+        /// <summary>
+        /// This method is to preload a Detalle prestamo into the controller before requesting an Insert or Update query.
+        /// </summary>
+        /// <param name="nroFicha">Número de ficha del solicitante</param>
+        /// <param name="codLibros">Códigos de los libros que solicita</param>
+        /// <returns></returns>
+        public Message PreloadDetallePrestamo(int nroFicha, string[] codLibros)
+        {
+            Message msg;
+            try
+            {
+                var codPrestamo = CodigoPrestamo(nroFicha);
+                foreach (var codLibro in codLibros)
+                {
+                    if (TipoLibro(codLibro) == 4)
+                        DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, 5), false, 0, codPrestamo, codLibro.Trim()));
+                    else
+                        DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, 5), false, 0, codPrestamo, codLibro.Trim()));
+                }
+                msg = new Message(true);
+            }
+            catch
+            {
+                msg = new Message(false, "Verifique los parámetros");
+            }
+            return msg;
+
+        }
         #endregion
 
         #region Querys
-        public Message Insert()
+        public Message InsertPrestamo()
         {
-            if (PrestamoPersistence == null || DetPrestamoPersistence == null) return new Message(false, "Debe precargar los datos del préstamo");
+            if (PrestamoPersistence == null) return new Message(false, "Debe precargar los datos del préstamo");
 
-            string sqlSentence;
-            string[] arrayParameters;
-            object[] arrayObjects;
+            var sqlSentence = "INSERT INTO Prestamo (fec_prestamo, nro_ficha) " +
+                                 "VALUES (@FecPrestamo, @NroFicha);";
+            var arrayParameters = new[] { "@FecPrestamo", "@NroFicha" };
+            var arrayObjects = new object[] { DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"), PrestamoPersistence.NroFicha };
+            
+            return Execute(sqlSentence, arrayParameters, arrayObjects);
+        }
 
-            sqlSentence = "INSERT INTO Prestamo (fec_prestamo, nro_ficha) " +
-                          "VALUES (@FecPrestamo, @NroFicha);";
-            arrayParameters = new[] { "@FecPrestamo", "@NroFicha" };
-            arrayObjects = new object[] { DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"), PrestamoPersistence.NroFicha };
-
-            var executePre = Execute(sqlSentence, arrayParameters, arrayObjects);
-
-
-            #region Insert into Detalle prestamo
-
+        public Message InsertDetallePrestamo()
+        {
+            var sqlSentence = "INSERT INTO Detalle_prestamo(fec_devolucion, libro_devuelto, renovacion, cod_prestamo, cod_libro) " +
+                          "VALUES (@FecDevolucion, @LibroDevuelto, @Renovacion, @CodPrestamo, @CodLibro);";
+            var arrayParameters = new[] { "@FecDevolucion", "@LibroDevuelto", "@Renovacion", "@CodPrestamo", "@CodLibro" };
             foreach (var dp in DetPrestamoPersistence)
             {
-                sqlSentence = "INSERT INTO Detalle_prestamo(fec_devolucion, libro_devuelto, renovacion, cod_prestamo, cod_libro) " +
-                          "VALUES (@FecDevolucion, @LibroDevuelto, @Renovacion, @CodPrestamo, @CodLibro);";
-
-                arrayParameters = new[] { "@FecDevolucion", "@LibroDevuelto", "@Renovacion", "@CodPrestamo", "@CodLibro" };
-                arrayObjects = new object[] { dp.FecDevolucion, dp.LibroDevuelto, dp.Renovacion, dp.CodPrestamo, dp.CodLibro.Trim() };
-                Execute(sqlSentence, arrayParameters, arrayObjects);
+                var arrayObjects = new object[] { dp.FecDevolucion, dp.LibroDevuelto, dp.Renovacion, dp.CodPrestamo, dp.CodLibro.Trim() };
+                return Execute(sqlSentence, arrayParameters, arrayObjects);
             }
-
-            #endregion
-            return executePre;
         }
         #endregion
 
@@ -116,7 +129,7 @@ namespace Biblioteca.Controlador
             return (int)exists.Rows[0].Field<long>(0);
         }
 
-        private int CodigoLibro(int numFicha)
+        private int CodigoPrestamo(int numFicha)
         {
             var codigo = Select("SELECT MAX(cod_prestamo) FROM prestamo WHERE nro_ficha = @NroFicha;", new [] { "@NroFicha" }, new object[] {numFicha});
             return codigo.Rows[0].Field<int>(0);
@@ -138,6 +151,12 @@ namespace Biblioteca.Controlador
             return Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = '@CodLibro';", new []{ "CodLibro" }, new object[] { codLibro });
         }
 
+        public int TipoLibro(string codLibro)
+        {
+            var query = Select("SELECT cod_tipo FROM Libro WHERE cod_libro = @CodLibro", new[] {"@CodLibro"},
+                new object[] {codLibro});
+            return query.Rows[0].Field<int>(0);
+        }
         #endregion
     }
 }

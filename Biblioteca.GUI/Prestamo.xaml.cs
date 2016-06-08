@@ -20,7 +20,6 @@ namespace Biblioteca.GUI
     /// </summary>
     public partial class Prestamo
     {
-        private readonly bool _isAdd;
         public Prestamo()
         {
             InitializeComponent();
@@ -41,13 +40,13 @@ namespace Biblioteca.GUI
 
         private void BtnExecute_Click(object sender, RoutedEventArgs e)
         {
-            if (Validation())
+            if (!Validation()) return;
+            ExecutePrestamo();
+            ExecuteDetallePrestamo();
+            foreach (var libro in txtCodLibro.Text.Split(','))
             {
-                
+                App.Prestamo.DescuentaLibro(libro.ToUpper().Trim());
             }
-            
-            //Execute();
-
         }
 
         private bool Validation()
@@ -132,15 +131,40 @@ namespace Biblioteca.GUI
             return true;
         }
 
-        private void Execute()
+        private void ExecutePrestamo()
         {
-            if (App.Libros.TestConnection().Status)
+            if (App.Prestamo.TestConnection().Status)
             {
-                var preload = App.Prestamo.PreloadPrestamo(int.Parse(txtNroFicha.Text), txtCodLibro.Text.Split(','));
-
+                var preload = App.Prestamo.PreloadPrestamo(int.Parse(txtNroFicha.Text));
                 if (preload.Status)
                 {
-                    var result = _isAdd ? App.Prestamo.Insert() : App.Libros.Update();
+                    var result = App.Prestamo.InsertPrestamo();
+                    
+                    if (result.Status)
+                    {
+                        new PanelAdmin(result).Show();
+                        Close();
+                    }
+                    else
+                        lblStatus.Content = result.Mensaje;
+                }
+                else
+                    lblStatus.Content = preload.Mensaje;
+            }
+            else
+            {
+                lblStatus.Content = "Se ha perdido la conexión con el servidor";
+            }
+        }
+
+        private void ExecuteDetallePrestamo()
+        {
+            if (App.Prestamo.TestConnection().Status)
+            {
+                var preload = App.Prestamo.PreloadDetallePrestamo(int.Parse(txtNroFicha.Text), txtCodLibro.Text.Split(','));
+                if (preload.Status)
+                {
+                    var result = App.Prestamo.InsertDetallePrestamo();
 
                     if (result.Status)
                     {
@@ -155,13 +179,8 @@ namespace Biblioteca.GUI
             }
             else
             {
-                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
+                lblStatus.Content = "Se ha perdido la conexión con el servidor";
             }
-        }
-
-        private async void ShowNormalDialog(string title, string message)
-        {
-            await this.ShowMessageAsync(title, message);
         }
     }
 }
