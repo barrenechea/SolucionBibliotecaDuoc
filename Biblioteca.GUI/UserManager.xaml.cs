@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Biblioteca.Entidad;
+using Biblioteca.Entidad.Enum;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
@@ -23,7 +24,7 @@ namespace Biblioteca.GUI
             _isAdd = isAdd;
 
             lblTitulo.Content = BtnExecute.Content = _isAdd ? "Agregar Usuario" : "Modificar Usuario";
-
+            cmbParentesco.ItemsSource = new [] { "Padre", "Madre", "Otro" };
             if (_isAdd && App.Users.PersonaPersistence != null) LoadData();
         }
         #endregion
@@ -87,10 +88,11 @@ namespace Biblioteca.GUI
             txtFonoFijo.Text = App.Users.PersonaPersistence.FonoFijo;
             txtFonoCel.Text = App.Users.PersonaPersistence.FonoCel;
             dateFechaNac.SelectedDate = DateTime.Parse(((Usuario)App.Users.PersonaPersistence).FecNacimiento);
+
             if (_isEstudiante)
             {
                 txtRunApoderado.Text = App.Users.RunApoderado;
-                txtParentesco.Text = App.Users.Parentesco;
+                cmbParentesco.SelectedValue = App.Users.Parentesco;
                 txtCurso.Text = ((Estudiante)App.Users.PersonaPersistence).Curso;
             }
             else
@@ -223,10 +225,10 @@ namespace Biblioteca.GUI
                     txtRunApoderado.Focus();
                     return false;
                 }
-                if (string.IsNullOrWhiteSpace(txtParentesco.Text))
+                if (cmbParentesco.SelectedIndex == -1)
                 {
-                    lblStatus.Content = "Debe llenar todos los campos";
-                    txtParentesco.Focus();
+                    lblStatus.Content = "Debe seleccionar un parentesco";
+                    cmbParentesco.Focus();
                     return false;
                 }
                 if (string.IsNullOrWhiteSpace(txtCurso.Text))
@@ -278,7 +280,7 @@ namespace Biblioteca.GUI
         {
             if (_isEstudiante)
             {
-                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, true, txtCurso.Text, txtRunApoderado.Text, txtParentesco.Text);
+                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, true, txtCurso.Text, txtRunApoderado.Text, cmbParentesco.SelectedValue.ToString());
                 if (!App.Users.ExistsRun(txtRunApoderado.Text).Status)
                 {
                     GoCreateApoderado();
@@ -293,7 +295,7 @@ namespace Biblioteca.GUI
             {
                 if (_isEstudiante)
                 {
-                    var insertApoderado = App.Users.InsertApoderadoOnly(txtRunApoderado.Text, App.Users.FetchNroFicha(txtRun.Text), txtParentesco.Text);
+                    var insertApoderado = App.Users.InsertApoderadoOnly(txtRunApoderado.Text, App.Users.FetchNroFicha(txtRun.Text), cmbParentesco.SelectedValue.ToString());
                     if (!insertApoderado.Status)
                     {
                         lblStatus.Content = insertApoderado.Mensaje + " (Apoderado)";
@@ -310,7 +312,7 @@ namespace Biblioteca.GUI
         private void ExecuteUpdate()
         {
             if (_isEstudiante)
-                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, switchEnabledAccount.IsChecked.Value, txtCurso.Text, txtRunApoderado.Text, txtParentesco.Text, int.Parse(_nroFicha));
+                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, switchEnabledAccount.IsChecked.Value, txtCurso.Text, txtRunApoderado.Text, cmbParentesco.SelectedValue.ToString(), int.Parse(_nroFicha));
             else
                 App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, switchEnabledAccount.IsChecked.Value, txtCargo.Text, int.Parse(_nroFicha));
 

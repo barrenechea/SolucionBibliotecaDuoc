@@ -30,7 +30,7 @@
 
         <Grid Name="GridEstudiante" Visibility="Hidden" Margin="0,321,0,0" Height="93" VerticalAlignment="Top">
             <TextBox Name="txtRunApoderado" MaxLength="10" Height="23" Margin="10,5,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Ingrese RUN Apoderado" TextChanged="txtRun_TextChanged"/>
-            <TextBox x:Name="txtParentesco" MaxLength="10" Height="23" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Ingrese Parentesco"/>
+            <ComboBox Name="cmbParentesco"  Margin="10,36,10,0" VerticalAlignment="Top" Controls:TextBoxHelper.Watermark="Seleccione Parentesco"/>
             <TextBox Name="txtCurso" MaxLength="5" Height="23" Margin="10,67,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Ingrese Curso del Estudiante"/>
 
         </Grid>
