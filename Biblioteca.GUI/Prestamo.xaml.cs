@@ -44,7 +44,7 @@ namespace Biblioteca.GUI
         {
             if (!Validation()) return;
             //lblStatus.Content = App.Prestamo.SumarDias(DateTime.Now, 5);
-            Execute();
+            //Execute();
 
         }
 
@@ -92,32 +92,32 @@ namespace Biblioteca.GUI
             return true;
         }
 
-        private void Execute()
-        {
-            if (App.Libros.TestConnection().Status)
-            {
-                var preload = App.Prestamo.PreloadPrestamo(DateTime.Now, int.Parse(txtNroFicha.Text.ToUpper()));
+        //private void Execute()
+        //{
+        //    if (App.Libros.TestConnection().Status)
+        //    {
+        //        var preload = App.Prestamo.PreloadPrestamo(DateTime.Now, int.Parse(txtNroFicha.Text.ToUpper()));
 
-                if (preload.Status)
-                {
-                    var result = _isAdd ? App.Prestamo.Insert() : App.Libros.Update();
+        //        if (preload.Status)
+        //        {
+        //            var result = _isAdd ? App.Prestamo.Insert() : App.Libros.Update();
 
-                    if (result.Status)
-                    {
-                        new PanelAdmin(result).Show();
-                        Close();
-                    }
-                    else
-                        lblStatus.Content = result.Mensaje;
-                }
-                else
-                    lblStatus.Content = preload.Mensaje;
-            }
-            else
-            {
-                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
-            }
-        }
+        //            if (result.Status)
+        //            {
+        //                new PanelAdmin(result).Show();
+        //                Close();
+        //            }
+        //            else
+        //                lblStatus.Content = result.Mensaje;
+        //        }
+        //        else
+        //            lblStatus.Content = preload.Mensaje;
+        //    }
+        //    else
+        //    {
+        //        ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
+        //    }
+        //}
 
         private async void ShowNormalDialog(string title, string message)
         {
