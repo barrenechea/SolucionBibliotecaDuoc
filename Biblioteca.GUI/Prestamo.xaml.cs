@@ -69,30 +69,56 @@ namespace Biblioteca.GUI
                 txtCodLibro.Focus();
                 return false;
             }
-            if (App.Users.IsStudent(txtNroFicha.Text))
+            var codigos = txtCodLibro.Text.ToUpper().Split(',');
+            var resultado = App.Prestamo.ExistsNroFicha(txtNroFicha.Text);
+            if (resultado.Status)
             {
-                if (txtCodLibro.Text.Split(',').Length > 1)
+                if (App.Users.IsStudent(8)
                 {
-                    lblStatus.Content = "Los estudiantes no pueden solicitar más de un libro";
-                    txtCodLibro.Focus();
-                    return false;
+                    if (codigos.Length > 1)
+                    {
+                        lblStatus.Content = "Los estudiantes no pueden solicitar más de un libro";
+                        txtCodLibro.Focus();
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (codigos.Length > 5)
+                    {
+                        lblStatus.Content = "Los funcionarios no pueden solicitar más de cinco libros";
+                        txtCodLibro.Focus();
+                        return false;
+                    }
                 }
             }
             else
             {
-                if (txtCodLibro.Text.Split(',').Length > 5)
-                {
-                    lblStatus.Content = "Los funcionarios no pueden solicitar más de cinco libros";
-                    txtCodLibro.Focus();
-                    return false;
-                }
+                lblStatus.Content = resultado.Mensaje;
+                txtNroFicha.Focus();
+                return false;
             }
 
-            var codigos = txtCodLibro.Text.Split(',');
-            var msg = App.Prestamo.UsuarioActivado(txtNroFicha.Text);
-            if (!msg.Status)
+            resultado = App.Prestamo.UsuarioActivado(txtNroFicha.Text);
+            if (!resultado.Status)
             {
-                lblStatus.Content = msg.Mensaje;
+                lblStatus.Content = resultado.Mensaje;
+                return false;
+            }
+            foreach (var cod in codigos)
+            {
+                resultado = App.Prestamo.ExistsLibro(cod.Trim());
+                if (!resultado.Status)
+                {
+                    lblStatus.Content = resultado.Mensaje;
+                    return false;
+                }
+                resultado = App.Prestamo.LibroDisponible(cod.Trim());
+                if (!resultado.Status)
+                {
+                    lblStatus.Content = resultado.Mensaje;
+                    return false;
+                }
             }
             lblStatus.Content = string.Empty;
             return true;

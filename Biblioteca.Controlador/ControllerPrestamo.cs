@@ -31,7 +31,7 @@ namespace Biblioteca.Controlador
                 var codPrestamo = CodigoLibro(nroFicha);
                 foreach (var codLibro  in codLibros)
                 {
-                    DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, devolucion), false, 0, codPrestamo, codLibro));
+                    DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, devolucion), false, 0, codPrestamo, codLibro.Trim()));
                 }
                 msg = new Message(true);
             }
@@ -94,13 +94,13 @@ namespace Biblioteca.Controlador
         public Message ExistsLibro(string codLibro)
         {
             var exists = Select("SELECT * from Libro WHERE cod_libro = @CodLibro;", new[] { "@CodLibro" }, new object[] { codLibro }).Rows.Count != 0;
-            return new Message(exists, exists ? null : "No se ha encontrado el libro");
+            return new Message(exists, exists ? null : "El libro " + codLibro + " no existe");
         }
 
         public Message LibroDisponible(string codLibro)
         {
             var exists = Select("SELECT * from Libro WHERE cod_libro = @CodLibro and nro_copias > 0;", new[] { "@CodLibro" }, new object[] { codLibro }).Rows.Count != 0;
-            return new Message(exists, exists ? null : "No quedan libros disponibles");
+            return new Message(exists, exists ? null : "El libro "+codLibro+" no se encuentra disponible");
         }
 
         public int CodigoLibro(int numFicha)

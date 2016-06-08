@@ -331,7 +331,7 @@ namespace Biblioteca.Controlador
 
             return studentTable.Rows.Count != 0;
         }
-        private bool IsStudent(int nroFicha)
+        public bool IsStudent(int nroFicha)
         {
             var studentTable = Select("SELECT curso FROM Estudiante WHERE nro_ficha=@NroFicha;", new[] { "@NroFicha" }, new object[] { nroFicha });
             return studentTable.Rows.Count != 0;
