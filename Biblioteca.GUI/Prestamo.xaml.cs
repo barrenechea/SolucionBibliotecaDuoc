@@ -73,7 +73,7 @@ namespace Biblioteca.GUI
             var resultado = App.Prestamo.ExistsNroFicha(txtNroFicha.Text);
             if (resultado.Status)
             {
-                if (App.Users.IsStudent(8)
+                if (App.Users.IsStudent(int.Parse(txtNroFicha.Text)))
                 {
                     if (codigos.Length > 1)
                     {
