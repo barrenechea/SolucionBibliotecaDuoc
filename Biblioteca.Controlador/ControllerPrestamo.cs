@@ -46,13 +46,14 @@ namespace Biblioteca.Controlador
             Message msg;
             try
             {
+                DetPrestamoPersistence = new List<DetallePrestamo>();
                 var codPrestamo = CodigoPrestamo(nroFicha);
                 foreach (var codLibro in codLibros)
                 {
-                    if (TipoLibro(codLibro) == 4)
+                    if (TipoLibro(codLibro.Trim()) == 4)
                         DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, 5), false, 0, codPrestamo, codLibro.Trim()));
                     else
-                        DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, 5), false, 0, codPrestamo, codLibro.Trim()));
+                        DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, 3), false, 0, codPrestamo, codLibro.Trim()));
                 }
                 msg = new Message(true);
             }
@@ -150,7 +151,7 @@ namespace Biblioteca.Controlador
 
         public Message DescuentaLibro(string codLibro)
         {
-            return Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = '@CodLibro';", new []{ "CodLibro" }, new object[] { codLibro });
+            return Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new []{ "CodLibro" }, new object[] { codLibro });
         }
 
         public int TipoLibro(string codLibro)
