@@ -40,8 +40,16 @@ namespace Biblioteca.GUI
 
         private void BtnExecute_Click(object sender, RoutedEventArgs e)
         {
-            if (!Validation()) return;
-            ExecutePrestamo();
+
+            if (App.Prestamo.TestConnection().Status)
+            {
+                if (!Validation()) return;
+                ExecutePrestamo();
+            }
+            else
+            {
+                lblStatus.Content = "Se ha perdido la conexión con el servidor";
+            }
         }
 
         private bool Validation()
@@ -80,7 +88,7 @@ namespace Biblioteca.GUI
                     }
                     if (prestados > 1)
                     {
-                        lblStatus.Content =  "El estudiante tiene un prestamo pendiente";
+                        lblStatus.Content = "El estudiante tiene un prestamo pendiente";
                         return false;
                     }
                 }
@@ -128,57 +136,43 @@ namespace Biblioteca.GUI
 
         private void ExecutePrestamo()
         {
-            if (App.Prestamo.TestConnection().Status)
+            var preload = App.Prestamo.PreloadPrestamo(int.Parse(txtNroFicha.Text));
+            if (preload.Status)
             {
-                var preload = App.Prestamo.PreloadPrestamo(int.Parse(txtNroFicha.Text));
-                if (preload.Status)
+                var result = App.Prestamo.InsertPrestamo();
+
+                if (result.Status)
                 {
-                    var result = App.Prestamo.InsertPrestamo();
-                    
-                    if (result.Status)
-                    {
-                        ExecuteDetallePrestamo();
-                    }
-                    else
-                        lblStatus.Content = result.Mensaje;
+                    ExecuteDetallePrestamo();
                 }
                 else
-                    lblStatus.Content = preload.Mensaje;
+                    lblStatus.Content = result.Mensaje;
             }
             else
-            {
-                lblStatus.Content = "Se ha perdido la conexión con el servidor";
-            }
+                lblStatus.Content = preload.Mensaje;
         }
 
         private void ExecuteDetallePrestamo()
         {
-            if (App.Prestamo.TestConnection().Status)
+            var preload = App.Prestamo.PreloadDetallePrestamo(int.Parse(txtNroFicha.Text), txtCodLibro.Text.Split(','));
+            if (preload.Status)
             {
-                var preload = App.Prestamo.PreloadDetallePrestamo(int.Parse(txtNroFicha.Text), txtCodLibro.Text.Split(','));
-                if (preload.Status)
-                {
-                    var result = App.Prestamo.InsertDetallePrestamo();
+                var result = App.Prestamo.InsertDetallePrestamo();
 
-                    if (result.Status)
+                if (result.Status)
+                {
+                    foreach (var libro in txtCodLibro.Text.Split(','))
                     {
-                        foreach (var libro in txtCodLibro.Text.Split(','))
-                        {
-                            App.Prestamo.DescuentaLibro(libro.ToUpper().Trim());
-                        }
-                        new PanelAdmin(result).Show();
-                        Close();
+                        App.Prestamo.DescuentaLibro(libro.ToUpper().Trim());
                     }
-                    else
-                        lblStatus.Content = result.Mensaje;
+                    new PanelAdmin(result).Show();
+                    Close();
                 }
                 else
-                    lblStatus.Content = preload.Mensaje;
+                    lblStatus.Content = result.Mensaje;
             }
             else
-            {
-                lblStatus.Content = "Se ha perdido la conexión con el servidor";
-            }
+                lblStatus.Content = preload.Mensaje;
         }
     }
 }
