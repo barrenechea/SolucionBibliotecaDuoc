@@ -87,7 +87,13 @@ namespace Biblioteca.GUI
                     return false;
                 }
             }
-            //toDo quitar espacios en blanco a los codigos de libro.
+
+            var codigos = txtCodLibro.Text.Split(',');
+            var msg = App.Prestamo.UsuarioActivado(txtNroFicha.Text);
+            if (!msg.Status)
+            {
+                lblStatus.Content = msg.Mensaje;
+            }
             lblStatus.Content = string.Empty;
             return true;
         }

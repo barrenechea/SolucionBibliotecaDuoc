@@ -27,9 +27,8 @@ namespace Biblioteca.Controlador
             Message msg;
             try
             {
-                //toDo Problema: si más de una bibliotecaria agrega un prestamo al mismo tiempo 
                 PrestamoPersistence = new Prestamo(DateTime.Now, nroFicha);
-                var codPrestamo = CodigoLibro();
+                var codPrestamo = CodigoLibro(nroFicha);
                 foreach (var codLibro  in codLibros)
                 {
                     DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, devolucion), false, 0, codPrestamo, codLibro));
@@ -69,7 +68,7 @@ namespace Biblioteca.Controlador
                           "VALUES (@FecDevolucion, @LibroDevuelto, @Renovacion, @CodPrestamo, @CodLibro);";
 
                 arrayParameters = new[] { "@FecDevolucion", "@LibroDevuelto", "@Renovacion", "@CodPrestamo", "@CodLibro" };
-                arrayObjects = new object[] { dp.FecDevolucion, dp.LibroDevuelto, dp.Renovacion, dp.CodPrestamo, dp.CodLibro };
+                arrayObjects = new object[] { dp.FecDevolucion, dp.LibroDevuelto, dp.Renovacion, dp.CodPrestamo, dp.CodLibro.Trim() };
                 Execute(sqlSentence, arrayParameters, arrayObjects);
             }
 
@@ -83,7 +82,7 @@ namespace Biblioteca.Controlador
         public Message UsuarioActivado(string nroFicha)
         {
             var estado = Select("SELECT estado from Usuario WHERE nro_ficha = @Nro_ficha;", new[] { "@Nro_ficha" }, new object[] { nroFicha });
-            return new Message(estado.Rows[0].Field<bool>(0), estado.Rows[0].Field<bool>(0) ? null : "El usuario está desactivado, revise hoja de morosidad.");
+            return new Message(estado.Rows[0].Field<bool>(0), estado.Rows[0].Field<bool>(0) ? null : "El usuario tiene préstamos pendientes.");
         }
 
         public Message ExistsNroFicha(string nroFicha)
@@ -104,9 +103,9 @@ namespace Biblioteca.Controlador
             return new Message(exists, exists ? null : "No quedan libros disponibles");
         }
 
-        public int CodigoLibro()
+        public int CodigoLibro(int numFicha)
         {
-            var codigo = Select("SELECT MAX(cod_prestamo) FROM prestamo;");
+            var codigo = Select("SELECT MAX(cod_prestamo) FROM prestamo WHERE nro_ficha = @NroFicha;", new [] { "@NroFicha" }, new object[] {numFicha});
             return codigo.Rows[0].Field<int>(0);
         }
 
