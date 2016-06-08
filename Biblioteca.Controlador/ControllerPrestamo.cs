@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,7 +66,6 @@ namespace Biblioteca.Controlador
 
         }
         #endregion
-
         #region Querys
         public Message InsertPrestamo()
         {
@@ -95,42 +95,54 @@ namespace Biblioteca.Controlador
         #endregion
 
         #region Utils
+        #region Usuario
 
+        /// <summary>
+        /// Revisa si un usuario puede pedir libros de a cuerdo a su estado en la base de datos
+        /// </summary>
+        /// <param name="nroFicha">Numero de ficha del usuario a consultar</param>
+        /// <returns>Message con el estado (True o False). En caso de ser false, se retorna mensaje correspondiente</returns>
         public Message UsuarioActivado(string nroFicha)
         {
             var estado = Select("SELECT estado from Usuario WHERE nro_ficha = @Nro_ficha;", new[] { "@Nro_ficha" }, new object[] { nroFicha });
             return new Message(estado.Rows[0].Field<bool>(0), estado.Rows[0].Field<bool>(0) ? null : "Usuario tiene sanción activa.");
         }
 
+        /// <summary>
+        /// Revisa si el número de ficha existe en la base de datos
+        /// </summary>
+        /// <param name="nroFicha"></param>
+        /// <returns>Message con el resultado (True o False). En caso de ser false, se retorna mensaje correspondiente</returns>
         public Message ExistsNroFicha(string nroFicha)
         {
             var exists = Select("SELECT * from Usuario WHERE nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { nroFicha }).Rows.Count != 0;
             return new Message(exists, exists ? null : "No se ha encontrado el número de ficha");
         }
+        #endregion
+        #region Libro
 
+
+        /// <summary>
+        /// Revisa si el libro que se está solicitando existe en la base de datos
+        /// </summary>
+        /// <param name="codLibro">Codigo del libro a revisar</param>
+        /// <returns>Message con el estado de existencia del libro (True o False). En caso de ser false, se retorna mensaje correspondiente</returns>
         public Message ExistsLibro(string codLibro)
         {
             var exists = Select("SELECT * from Libro WHERE cod_libro = @CodLibro;", new[] { "@CodLibro" }, new object[] { codLibro }).Rows.Count != 0;
-            return new Message(exists, exists ? null : "El libro " + codLibro + " no existe");
+            return new Message(exists, exists ? null : "El libro " + codLibro.Trim() + " no existe");
         }
 
+        /// <summary>
+        /// Indica la cantidad de libros que hay en el sistema
+        /// </summary>
+        /// <param name="codLibro">Libro a revisar</param>
+        /// <returns>int con la cantidad de libros</returns>
         public int LibroDisponible(string codLibro)
         {
             var exists = Select("SELECT count(*) from Libro WHERE cod_libro = @CodLibro and nro_copias > 0;", new[] { "@CodLibro" }, new object[] { codLibro });
             return (int)exists.Rows[0].Field<long>(0);
         }
-
-        public int StockLibros(string[] codigos, string codLibro)
-        {
-            var cantidad = 0;
-            for (int i = 0; i < codigos.Length; i++)
-            {
-                if (codigos[i].Trim().Equals(codLibro))
-                    cantidad++;
-            }
-            return cantidad;
-        }
-
 
         public int LibrosPrestados(string nroFicha)
         {
@@ -140,13 +152,26 @@ namespace Biblioteca.Controlador
                                "ON dp.cod_prestamo = p.cod_prestamo " +
                                "JOIN usuario u ON p.nro_ficha = u.nro_ficha " +
                                "WHERE u.nro_ficha = @NroFicha AND libro_devuelto=0;"
-                               , new [] { "@NroFicha" } , new object[] { nroFicha });
+                               , new[] { "@NroFicha" }, new object[] { nroFicha });
             return (int)exists.Rows[0].Field<long>(0);
         }
 
+        public void DescuentaLibro(string codLibro)
+        {
+            Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new[] { "CodLibro" }, new object[] { codLibro });
+        }
+
+        private int TipoLibro(string codLibro)
+        {
+            var query = Select("SELECT cod_tipo FROM Libro WHERE cod_libro = @CodLibro", new[] { "@CodLibro" },
+                new object[] { codLibro });
+            return query.Rows[0].Field<int>(0);
+        }
+        #endregion
+        #region Prestamo
         private int CodigoPrestamo(int numFicha)
         {
-            var codigo = Select("SELECT MAX(cod_prestamo) FROM prestamo WHERE nro_ficha = @NroFicha;", new [] { "@NroFicha" }, new object[] {numFicha});
+            var codigo = Select("SELECT MAX(cod_prestamo) FROM prestamo WHERE nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { numFicha });
             return codigo.Rows[0].Field<int>(0);
         }
 
@@ -160,18 +185,7 @@ namespace Biblioteca.Controlador
             }
             return fecha;
         }
-
-        public void DescuentaLibro(string codLibro)
-        {
-            Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new []{ "CodLibro" }, new object[] { codLibro });
-        }
-
-        private int TipoLibro(string codLibro)
-        {
-            var query = Select("SELECT cod_tipo FROM Libro WHERE cod_libro = @CodLibro", new[] {"@CodLibro"},
-                new object[] {codLibro});
-            return query.Rows[0].Field<int>(0);
-        }
+        #endregion
         #endregion
     }
 }

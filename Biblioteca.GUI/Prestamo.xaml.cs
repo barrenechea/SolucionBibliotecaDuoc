@@ -74,6 +74,12 @@ namespace Biblioteca.GUI
                 return false;
             }
             var codigos = txtCodLibro.Text.ToUpper().Split(',');
+            if (codigos.Any(string.IsNullOrWhiteSpace))
+            {
+                lblStatus.Content = "No debe ingresar espacios en blanco entre las comas";
+                txtCodLibro.Focus();
+                return false;
+            }
             var resultado = App.Prestamo.ExistsNroFicha(txtNroFicha.Text);
             if (resultado.Status)
             {
@@ -113,6 +119,7 @@ namespace Biblioteca.GUI
             if (!resultado.Status)
             {
                 lblStatus.Content = resultado.Mensaje;
+                txtNroFicha.Focus();
                 return false;
             }
             foreach (var cod in codigos)
@@ -121,13 +128,14 @@ namespace Biblioteca.GUI
                 if (!resultado.Status)
                 {
                     lblStatus.Content = resultado.Mensaje;
+                    txtCodLibro.Focus();
                     return false;
                 }
                 var librosDisponibles = App.Prestamo.LibroDisponible(cod.Trim());
-                var librosIguales = App.Prestamo.StockLibros(codigos, cod.Trim());
-                if (librosDisponibles < 1 || librosIguales > librosDisponibles)
+                if (librosDisponibles < 1 || codigos.Count(t => t.Trim().Equals(cod.Trim())) > librosDisponibles)
                 {
                     lblStatus.Content = "No hay suficientes libros";
+                    txtCodLibro.Focus();
                     return false;
                 }
             }
