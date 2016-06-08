@@ -47,7 +47,7 @@
     <Compile Include="ControllerPrestamo.cs" />
     <Compile Include="ControllerUsers.cs" />
     <Compile Include="Utils\ControllerIniParser.cs" />
-    <Compile Include="ControllerLogin.cs" />
+    <Compile Include="ControllerAdmins.cs" />
     <Compile Include="Utils\ControllerHash.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

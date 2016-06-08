@@ -53,7 +53,7 @@ namespace Biblioteca.GUI
         #region Event Handlers
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var test = App.Login.TestConnection();
+            var test = App.Admins.TestConnection();
             if (test.Status)
             {
                 _libros = App.Libros.FetchAllAvailable();

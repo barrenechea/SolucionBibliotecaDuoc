@@ -105,7 +105,7 @@ namespace Biblioteca.GUI
         #region Event Handlers
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
-            App.Login.Logout();
+            App.Admins.Logout();
             new Inicio().Show();
             Close();
         }

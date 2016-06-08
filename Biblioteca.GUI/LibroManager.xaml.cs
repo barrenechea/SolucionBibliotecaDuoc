@@ -214,7 +214,7 @@ namespace Biblioteca.GUI
         }
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
-            App.Login.Logout();
+            App.Admins.Logout();
             new Inicio().Show();
             Close();
         }

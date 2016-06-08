@@ -68,6 +68,23 @@ namespace Biblioteca.Entidad
             get { return _tipoDeUsuario; }
             set { _tipoDeUsuario = value; }
         }
+        public char TipoDeUsuarioChar
+        {
+            get
+            {
+                switch (TipoDeUsuario)
+                {
+                    case TipoUsuario.Director:
+                        return 'D';
+                    case TipoUsuario.Jefebiblioteca:
+                        return 'J';
+                    case TipoUsuario.Bibliotecario:
+                        return 'B';
+                    default:
+                        return ' ';
+                }
+            }
+        }
         #endregion
         #region Constructor
         public Administrador(string nombre, string apellido, string idUsuario, string contrasena, bool estado,

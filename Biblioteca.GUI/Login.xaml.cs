@@ -30,7 +30,7 @@ namespace Biblioteca.GUI
         #region BackgroundWorker methods
         private void Login_DoWork(object sender, DoWorkEventArgs e)
         {
-            _mensaje = App.Login.Login(_user, _pass);
+            _mensaje = App.Admins.Login(_user, _pass);
         }
         private async void Login_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -73,7 +73,7 @@ namespace Biblioteca.GUI
         {
             if (!Validate()) return;
 
-            var test = App.Login.TestConnection();
+            var test = App.Admins.TestConnection();
             if (test.Status)
             {
                 _user = txtUsuario.Text;

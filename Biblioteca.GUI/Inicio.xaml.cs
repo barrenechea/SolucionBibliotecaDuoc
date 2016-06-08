@@ -50,7 +50,7 @@ namespace Biblioteca.GUI
                     if (_connectionMessage.Status) break;
                     Thread.Sleep(5000);
                 }
-                _connectionMessage = App.Login.TestConnection();
+                _connectionMessage = App.Admins.TestConnection();
                 count++;
                 if (_connectionMessage.Status) break;
 

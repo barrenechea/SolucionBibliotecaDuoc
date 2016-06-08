@@ -46,10 +46,10 @@ namespace Biblioteca.GUI
         {
             // Hide unused tabs based on admin privileges
             TabBibliotecario.Visibility = TabJefe.Visibility = TabDirector.Visibility = Visibility.Hidden;
-            lblNombre.Content = App.Login.AdminActive.Nombre;
-            lblApellido.Content = App.Login.AdminActive.Apellido;
+            lblNombre.Content = App.Admins.AdminActive.Nombre;
+            lblApellido.Content = App.Admins.AdminActive.Apellido;
 
-            switch (App.Login.AdminActive.TipoDeUsuario)
+            switch (App.Admins.AdminActive.TipoDeUsuario)
             {
                 case TipoUsuario.Bibliotecario:
                     TabJefe.IsEnabled = TabDirector.IsEnabled = false;
@@ -64,7 +64,7 @@ namespace Biblioteca.GUI
                     TabDirector.IsSelected = true;
                     break;
                 default:
-                    App.Login.Logout();
+                    App.Admins.Logout();
                     new Inicio().Show();
                     Close();
                     break;
@@ -80,12 +80,12 @@ namespace Biblioteca.GUI
                     if (_connectionMessage.Status) break;
                     Thread.Sleep(5000);
                 }
-                _connectionMessage = App.Login.TestConnection();
+                _connectionMessage = App.Admins.TestConnection();
                 count++;
                 if (_connectionMessage.Status)
                 {
                     _connectionMessage.Mensaje = string.Format("Estado: Conectado al servidor. Versión {0}",
-                        App.Login.FetchVersion());
+                        App.Admins.FetchVersion());
                     break;
                 }
 
@@ -99,12 +99,12 @@ namespace Biblioteca.GUI
         private void Conn_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             lblStatus.Content = _connectionMessage.Mensaje;
-            if (App.Login.AdminActive.TipoDeUsuario == TipoUsuario.Bibliotecario)
+            if (App.Admins.AdminActive.TipoDeUsuario == TipoUsuario.Bibliotecario)
                 TileBibliAdminUsers.IsEnabled =
                     TileBibliAdminLibros.IsEnabled =
                         TileBibliAdminPrestamos.IsEnabled = 
                             TileBibliVisualizarMorosidad.IsEnabled = true;
-            else if (App.Login.AdminActive.TipoDeUsuario == TipoUsuario.Jefebiblioteca)
+            else if (App.Admins.AdminActive.TipoDeUsuario == TipoUsuario.Jefebiblioteca)
                 TileJefeAdminUsers.IsEnabled =
                     TileJefeAdminLibros.IsEnabled =
                         TileJefeAdminPrestamos.IsEnabled =
@@ -198,14 +198,8 @@ namespace Biblioteca.GUI
             var result = await this.ShowMessageAsync("¿Qué desea hacer?", "Seleccione \"Agregar\" para ingresar un nuevo bibliotecario. Si desea modificar un bibliotecario existente seleccione \"Buscar\"",
             MessageDialogStyle.AffirmativeAndNegative, settings);
 
-            if (result == MessageDialogResult.Affirmative)
-            {
-                //ToDo Agregar Bibliotecarios
-            }
-            else
-            {
-                //ToDo Modificar Bibliotecarios
-            }
+            new AdminManager(result == MessageDialogResult.Affirmative).Show();
+            Close();
         }
         #endregion
         #region Director
@@ -221,14 +215,8 @@ namespace Biblioteca.GUI
             var result = await this.ShowMessageAsync("¿Qué desea hacer?", "Seleccione \"Agregar\" para ingresar un nuevo Jefe de Biblioteca. Si desea modificar un Jefe de Biblioteca existente seleccione \"Buscar\"",
             MessageDialogStyle.AffirmativeAndNegative, settings);
 
-            if (result == MessageDialogResult.Affirmative)
-            {
-                //ToDo Agregar Jefe de Biblioteca
-            }
-            else
-            {
-                //ToDo Modificar Jefe de Biblioteca
-            }
+            new AdminManager(result == MessageDialogResult.Affirmative).Show();
+            Close();
         }
         private void BtnVisualizarLog_Click(object sender, RoutedEventArgs e)
         {
@@ -239,7 +227,7 @@ namespace Biblioteca.GUI
         #region General Events
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
-            App.Login.Logout();
+            App.Admins.Logout();
             new Inicio().Show();
             Close();
         }
