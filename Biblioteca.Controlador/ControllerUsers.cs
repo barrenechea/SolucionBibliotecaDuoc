@@ -104,7 +104,7 @@ namespace Biblioteca.Controlador
 
                 if (!executeUser.Status) return executeUser;
                 #endregion
-                var ficha = FetchLastNroFicha();
+                var ficha = FetchNroFicha(((Usuario)PersonaPersistence).Run);
                 if ((Usuario)PersonaPersistence is Funcionario)
                 {
                     #region Insert into Funcionario
@@ -171,10 +171,7 @@ namespace Biblioteca.Controlador
             arrayObjects = new object[] { PersonaPersistence.Nombre, PersonaPersistence.Apellido, PersonaPersistence.Direccion, PersonaPersistence.CodComuna, PersonaPersistence.Run };
 
             var executePer = Execute(sqlSentence, arrayParameters, arrayObjects);
-            if (!executePer.Status)
-            {
-                return executePer;
-            }
+            if (!executePer.Status) return executePer;
             #endregion
             #region Update Telefono
             Execute("DELETE FROM Telefono WHERE rut=@Run;", new[] { "@Run" }, new object[] { PersonaPersistence.Run });
@@ -186,61 +183,51 @@ namespace Biblioteca.Controlador
             arrayObjects = new object[] { PersonaPersistence.Run, "9" + PersonaPersistence.FonoCel };
             Execute(sqlSentence, arrayParameters, arrayObjects);
             #endregion
-            //ToDo Continue here
-            if (PersonaPersistence is Usuario)
+
+            if (!(PersonaPersistence is Usuario)) return executePer;
+
+            #region Update Usuario
+            sqlSentence = "UPDATE Usuario SET estado = @Estado, fec_nac = @FecNac WHERE nro_ficha = @NroFicha;";
+            arrayParameters = new[] { "@Estado", "@FecNac", "@NroFicha" };
+            arrayObjects = new object[] { ((Usuario)PersonaPersistence).Estado, ((Usuario)PersonaPersistence).FecNacimiento, ((Usuario)PersonaPersistence).NroFicha };
+            var executeUser = Execute(sqlSentence, arrayParameters, arrayObjects);
+
+            if (!executeUser.Status) return executeUser;
+            #endregion
+            Message execute;
+            if ((Usuario)PersonaPersistence is Funcionario)
             {
-                #region Insert into Usuario
-                sqlSentence = "INSERT INTO Usuario (rut, estado, fec_nac) VALUES (@Run, @Estado, @FecNacimiento);";
-                arrayParameters = new[] { "@Run", "@Estado", "@FecNacimiento" };
-                arrayObjects = new object[] { ((Usuario)PersonaPersistence).Run, ((Usuario)PersonaPersistence).Estado, ((Usuario)PersonaPersistence).FecNacimiento };
-                var executeUser = Execute(sqlSentence, arrayParameters, arrayObjects);
+                #region Update Funcionario
+                sqlSentence = "UPDATE Funcionario SET cargo = @Cargo WHERE nro_ficha = @NroFicha;";
+                arrayParameters = new[] { "@Cargo", "@NroFicha" };
+                arrayObjects = new object[] { ((Funcionario)PersonaPersistence).Cargo, ((Usuario)PersonaPersistence).NroFicha };
 
-                if (!executeUser.Status) return executeUser;
-                #endregion
-                var ficha = FetchLastNroFicha();
-                if ((Usuario)PersonaPersistence is Funcionario)
-                {
-                    #region Insert into Funcionario
-                    sqlSentence = "INSERT INTO Funcionario (nro_ficha, cargo) VALUES (@NroFicha, @Cargo);";
-                    arrayParameters = new[] { "@NroFicha", "@Cargo" };
-                    arrayObjects = new object[] { ficha, ((Funcionario)PersonaPersistence).Cargo };
-
-                    var executeFuncionario = Execute(sqlSentence, arrayParameters, arrayObjects);
-                    if (executeFuncionario.Status) executeFuncionario.Mensaje = string.Format("Funcionario agregado. N° de Ficha: {0}", ficha);
-                    PersonaPersistence = null;
-                    return executeFuncionario;
-                    #endregion
-                }
-                if ((Usuario)PersonaPersistence is Estudiante)
-                {
-                    #region Insert into Estudiante
-                    sqlSentence = "INSERT INTO Estudiante (nro_ficha, curso) VALUES (@NroFicha, @Curso);";
-                    arrayParameters = new[] { "@NroFicha", "@Curso" };
-                    arrayObjects = new object[] { ficha, ((Estudiante)PersonaPersistence).Curso };
-
-                    var executeEstudiante = Execute(sqlSentence, arrayParameters, arrayObjects);
-                    if (executeEstudiante.Status) executeEstudiante.Mensaje = string.Format("Estudiante agregado. N° de Ficha: {0}", ficha);
-                    PersonaPersistence = null;
-                    return executeEstudiante;
-                    #endregion
-                }
-            }
-            else if (PersonaPersistence is Apoderado)
-            {
-                #region Insert into Apoderado
-                sqlSentence = "INSERT INTO Apoderado (rut, nro_ficha, parentesco) VALUES (@Run, @NroFicha, @Parentesco);";
-                arrayParameters = new[] { "@Run", "@NroFicha", "@Parentesco" };
-                arrayObjects = new object[] { ((Apoderado)PersonaPersistence).Run, ((Apoderado)PersonaPersistence).NroFicha, ((Apoderado)PersonaPersistence).Parentesco };
-
-                var executeApoderado = Execute(sqlSentence, arrayParameters, arrayObjects);
-                if (executeApoderado.Status) executeApoderado.Mensaje = "Apoderado agregado exitosamente";
-                PersonaPersistence = null;
-                return executeApoderado;
+                execute = Execute(sqlSentence, arrayParameters, arrayObjects);
+                    
                 #endregion
             }
-            return executePer;
+            else
+            {
+                #region Update Estudiante
+                sqlSentence = "UPDATE Estudiante SET curso = @Curso WHERE nro_ficha = @NroFicha;";
+                arrayParameters = new[] { "@Curso", "@NroFicha" };
+                arrayObjects = new object[] { ((Estudiante)PersonaPersistence).Curso, ((Usuario)PersonaPersistence).NroFicha };
+
+                execute = Execute(sqlSentence, arrayParameters, arrayObjects);
+                #endregion
+                if(!execute.Status) return execute;
+                #region Update Parentesco
+                sqlSentence = "UPDATE Apoderado SET parentesco = @Parentesco WHERE rut = @RunApoderado AND nro_ficha = @NroFicha;";
+                arrayParameters = new[] { "@Parentesco", "@RunApoderado", "@NroFicha" };
+                arrayObjects = new object[] { Parentesco, RunApoderado, ((Usuario)PersonaPersistence).NroFicha };
+
+                execute = Execute(sqlSentence, arrayParameters, arrayObjects);
+                #endregion
+            }
+            if (execute.Status) execute.Mensaje = string.Format("Ficha N° {0} actualizada", ((Usuario)PersonaPersistence).NroFicha);
+            PersonaPersistence = null;
+            return execute;
         }
-        //ToDo Update method
         #endregion
         #region Select querys
         public List<Comuna> FetchComunas()
@@ -313,7 +300,6 @@ namespace Biblioteca.Controlador
                 {
                     if (row.Field<string>("telefono").StartsWith("9"))
                         fonoCel = row.Field<string>("telefono").Substring(1);
-
                     else
                         fonoFijo = row.Field<string>("telefono").Substring(1);
                 }
@@ -321,9 +307,9 @@ namespace Biblioteca.Controlador
             }
             return new Message(true);
         }
-        public int FetchLastNroFicha()
+        public int FetchNroFicha(string run)
         {
-            var nroFicha = Select("SELECT MAX(nro_ficha) FROM Usuario;");
+            var nroFicha = Select("SELECT MAX(nro_ficha) FROM Usuario WHERE rut = @Run;", new[] { "@Run" }, new object[] { run });
             return nroFicha.Rows[0].Field<int>(0);
         }
         #endregion

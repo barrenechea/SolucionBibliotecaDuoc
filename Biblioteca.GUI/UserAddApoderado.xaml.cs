@@ -81,7 +81,7 @@ namespace Biblioteca.GUI
             if (insertEstudiante.Status)
             {
                 var preload = App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text,
-                    (int) cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, App.Users.FetchLastNroFicha(),
+                    (int) cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, App.Users.FetchNroFicha(txtRun.Text),
                     txtParentesco.Text);
                 if (preload.Status)
                 {

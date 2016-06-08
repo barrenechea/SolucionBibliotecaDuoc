@@ -13,6 +13,7 @@ namespace Biblioteca.GUI
     {
         #region Attributes
         private readonly bool _isAdd;
+        private string _nroFicha;
         private bool _isEstudiante;
         #endregion
         #region Constructor
@@ -64,6 +65,7 @@ namespace Biblioteca.GUI
             var exists = App.Users.FetchUsuario(nroFicha);
             if (exists.Status)
             {
+                _nroFicha = nroFicha;
                 LoadData();
                 switchEnabledAccount.Visibility = Visibility.Visible;
             }
@@ -284,16 +286,14 @@ namespace Biblioteca.GUI
                 }
             }
             else
-            {
                 App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, true, txtCargo.Text);
-            }
 
             var execute = App.Users.Insert();
             if (execute.Status)
             {
                 if (_isEstudiante)
                 {
-                    var insertApoderado = App.Users.InsertApoderadoOnly(txtRunApoderado.Text, App.Users.FetchLastNroFicha(), txtParentesco.Text);
+                    var insertApoderado = App.Users.InsertApoderadoOnly(txtRunApoderado.Text, App.Users.FetchNroFicha(txtRun.Text), txtParentesco.Text);
                     if (!insertApoderado.Status)
                     {
                         lblStatus.Content = insertApoderado.Mensaje + " (Apoderado)";
@@ -309,7 +309,20 @@ namespace Biblioteca.GUI
         }
         private void ExecuteUpdate()
         {
-            //ToDo Implementation
+            if (_isEstudiante)
+                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, switchEnabledAccount.IsChecked.Value, txtCurso.Text, txtRunApoderado.Text, txtParentesco.Text, int.Parse(_nroFicha));
+            else
+                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, switchEnabledAccount.IsChecked.Value, txtCargo.Text, int.Parse(_nroFicha));
+
+            var execute = App.Users.Update();
+
+            if (execute.Status)
+            {
+                new PanelAdmin(execute).Show();
+                Close();
+            }
+            else
+                lblStatus.Content = execute.Mensaje + " (Usuario)";
         }
         private async void GoCreateApoderado()
         {
