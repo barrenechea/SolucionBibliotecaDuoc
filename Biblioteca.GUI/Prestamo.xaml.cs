@@ -43,7 +43,9 @@ namespace Biblioteca.GUI
         private void BtnExecute_Click(object sender, RoutedEventArgs e)
         {
             if (!Validation()) return;
+            //lblStatus.Content = App.Prestamo.SumarDias(DateTime.Now, 5);
             Execute();
+
         }
 
         private bool Validation()

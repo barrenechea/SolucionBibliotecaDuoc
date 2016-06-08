@@ -42,6 +42,7 @@
     <Compile Include="Administrador.cs" />
     <Compile Include="Apoderado.cs" />
     <Compile Include="Comuna.cs" />
+    <Compile Include="DetallePrestamo.cs" />
     <Compile Include="Enum\TipoUsuario.cs" />
     <Compile Include="Estudiante.cs" />
     <Compile Include="Funcionario.cs" />

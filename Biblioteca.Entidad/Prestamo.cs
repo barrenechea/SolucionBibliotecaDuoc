@@ -8,10 +8,12 @@ namespace Biblioteca.Entidad
 {
     public class Prestamo
     {
+        #region Attributes
         private DateTime _fechaPrestamo;
         private int _codPrestamo;
         private int _nroFicha;
-
+        #endregion
+        #region Gets and Sets
         public int NroFicha
         {
             get { return _nroFicha; }
@@ -29,20 +31,20 @@ namespace Biblioteca.Entidad
             get { return _fechaPrestamo; }
             set { _fechaPrestamo = value; }
         }
-
-
-
+        #endregion
+        #region Constructor
         public Prestamo(int codPrestamo, DateTime fechaPrestamo, int nroFicha)
         {
-            CodPrestamo = codPrestamo;
-            FechaPrestamo = fechaPrestamo;
-            NroFicha = nroFicha;
+            _codPrestamo = codPrestamo;
+            _fechaPrestamo = fechaPrestamo;
+            _nroFicha = nroFicha;
         }
 
         public Prestamo(DateTime fechaPrestamo, int nroFicha)
         {
-            FechaPrestamo = fechaPrestamo;
-            NroFicha = nroFicha;
+            _fechaPrestamo = fechaPrestamo;
+            _nroFicha = nroFicha;
         }
+        #endregion
     }
 }
