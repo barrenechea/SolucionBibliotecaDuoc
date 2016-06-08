@@ -338,6 +338,7 @@ namespace Biblioteca.GUI
         }
         #endregion
         #region Event Handlers
+
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
         {
             var test = App.Libros.TestConnection();

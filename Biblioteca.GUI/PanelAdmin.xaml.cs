@@ -171,6 +171,8 @@ namespace Biblioteca.GUI
             }
             else if (result == MessageDialogResult.Negative)
             {
+                new PrestamoExtender().Show();
+                Close();
                 //ToDo Extender préstamo
             }
             else

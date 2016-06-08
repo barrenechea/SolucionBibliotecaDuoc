@@ -71,6 +71,9 @@
     <Compile Include="Prestamo.xaml.cs">
       <DependentUpon>Prestamo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PrestamoExtender.xaml.cs">
+      <DependentUpon>PrestamoExtender.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
@@ -127,6 +130,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Prestamo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PrestamoExtender.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

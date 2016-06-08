@@ -1,0 +1,38 @@
+﻿<Controls:MetroWindow x:Class="Biblioteca.GUI.PrestamoExtender"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      Title="Sistema Biblioteca" Height="335.821" Width="502.986"
+                      IsMaxRestoreButtonEnabled="False" ShowIconOnTitleBar="False"
+                      BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
+                      ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Loaded="WindowHasLoaded">
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button x:Name="BtnLogout" ToolTip="Cerrar sesión" Click="BtnLogout_OnClick">
+                <Controls:PackIconModern Kind="DoorLeave" Width="18" Height="18" />
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Button Style="{DynamicResource MetroCircleButtonStyle}" ToolTip="Volver" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="50" Height="50" Click="BtnVolver_Click">
+            <Controls:PackIconModern Kind="ArrowLeft" Width="25" Height="25" />
+        </Button>
+        <Label Content="Extender préstamos" HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush}" FontSize="{DynamicResource TabItemFontSize}"/>
+        <Button Name="BtnVerDetalle" Content="Extender prestamo" IsEnabled="False" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" VerticalAlignment="Bottom"/>
+
+        <Label Content="Nombre estudiante" HorizontalAlignment="Left" Margin="65,88,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblNomEstudiante" Content="" HorizontalAlignment="Left" Margin="239,88,0,0" VerticalAlignment="Top" Width="69"/>
+        <Label Content="Libro" HorizontalAlignment="Left" Margin="65,119,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblNomLibro" Content="" HorizontalAlignment="Left" Margin="239,119,0,0" VerticalAlignment="Top"/>
+        <Label Content="Plazo extendido" HorizontalAlignment="Left" Margin="65,150,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblExtendido" Content="" HorizontalAlignment="Left" Margin="239,150,0,0" VerticalAlignment="Top"/>
+        <Label Content="FechaDevolucion" HorizontalAlignment="Left" Margin="65,181,0,0" VerticalAlignment="Top"/>
+        <Label Name="lblDevolucion" Content="" HorizontalAlignment="Left" Margin="239,181,0,0" VerticalAlignment="Top"/>
+
+
+
+
+
+
+    </Grid>
+</Controls:MetroWindow>
