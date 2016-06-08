@@ -18,7 +18,7 @@
             <Controls:PackIconModern Kind="ArrowLeft" Width="25" Height="25" />
         </Button>
         <Label Content="Extender préstamos" HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush}" FontSize="{DynamicResource TabItemFontSize}"/>
-        <Button Name="BtnVerDetalle" Content="Extender prestamo" IsEnabled="False" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" VerticalAlignment="Bottom"/>
+        <Button Name="btnExtender" Content="Extender prestamo" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" VerticalAlignment="Bottom" Click="BtnExtender_Click"/>
 
         <Label Content="Nombre estudiante" HorizontalAlignment="Left" Margin="65,88,0,0" VerticalAlignment="Top"/>
         <Label Name="lblNomEstudiante" Content="" HorizontalAlignment="Left" Margin="239,88,0,0" VerticalAlignment="Top" Width="69"/>
