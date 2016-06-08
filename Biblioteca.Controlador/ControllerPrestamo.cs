@@ -22,13 +22,14 @@ namespace Biblioteca.Controlador
         /// <param name="codLibros">Codigos de libros que se solicitan</param>
         /// <param name="devolucion">Días en los que se debe devolver el libro</param>
         /// <returns>Message, indicates status of the preload, and a message in case of failure</returns>
-        public Message PreloadPrestamo(int nroFicha, string[] codLibros, int devolucion)
+        public Message PreloadPrestamo(int nroFicha, string[] codLibros)
         {
             Message msg;
             try
             {
                 PrestamoPersistence = new Prestamo(DateTime.Now, nroFicha);
                 var codPrestamo = CodigoLibro(nroFicha);
+                var devolucion = 0;
                 foreach (var codLibro  in codLibros)
                 {
                     DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, devolucion), false, 0, codPrestamo, codLibro.Trim()));
@@ -131,6 +132,12 @@ namespace Biblioteca.Controlador
             }
             return fecha;
         }
+
+        public Message DescuentaLibro(string codLibro)
+        {
+            return Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = '@CodLibro';", new []{ "CodLibro" }, new object[] { codLibro });
+        }
+
         #endregion
     }
 }

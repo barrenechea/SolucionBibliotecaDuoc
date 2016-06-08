@@ -20,6 +20,7 @@ namespace Biblioteca.GUI
     /// </summary>
     public partial class Prestamo
     {
+        private readonly bool _isAdd;
         public Prestamo()
         {
             InitializeComponent();
@@ -40,8 +41,11 @@ namespace Biblioteca.GUI
 
         private void BtnExecute_Click(object sender, RoutedEventArgs e)
         {
-            if (!Validation()) return;
-            //lblStatus.Content = App.Prestamo.SumarDias(DateTime.Now, 5);
+            if (Validation())
+            {
+                
+            }
+            
             //Execute();
 
         }
@@ -90,7 +94,7 @@ namespace Biblioteca.GUI
                 {
                     if (prestados + codigos.Length > 5)
                     {
-                        lblStatus.Content = "Los funcionarios no pueden solicitar más de cinco libros";
+                        lblStatus.Content = "Los funcionarios no pueden tener más de cinco libros";
                         txtCodLibro.Focus();
                         return false;
                     }
@@ -128,32 +132,32 @@ namespace Biblioteca.GUI
             return true;
         }
 
-        //private void Execute()
-        //{
-        //    if (App.Libros.TestConnection().Status)
-        //    {
-        //        var preload = App.Prestamo.PreloadPrestamo(DateTime.Now, int.Parse(txtNroFicha.Text.ToUpper()));
+        private void Execute()
+        {
+            if (App.Libros.TestConnection().Status)
+            {
+                var preload = App.Prestamo.PreloadPrestamo(int.Parse(txtNroFicha.Text), txtCodLibro.Text.Split(','));
 
-        //        if (preload.Status)
-        //        {
-        //            var result = _isAdd ? App.Prestamo.Insert() : App.Libros.Update();
+                if (preload.Status)
+                {
+                    var result = _isAdd ? App.Prestamo.Insert() : App.Libros.Update();
 
-        //            if (result.Status)
-        //            {
-        //                new PanelAdmin(result).Show();
-        //                Close();
-        //            }
-        //            else
-        //                lblStatus.Content = result.Mensaje;
-        //        }
-        //        else
-        //            lblStatus.Content = preload.Mensaje;
-        //    }
-        //    else
-        //    {
-        //        ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
-        //    }
-        //}
+                    if (result.Status)
+                    {
+                        new PanelAdmin(result).Show();
+                        Close();
+                    }
+                    else
+                        lblStatus.Content = result.Mensaje;
+                }
+                else
+                    lblStatus.Content = preload.Mensaje;
+            }
+            else
+            {
+                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
+            }
+        }
 
         private async void ShowNormalDialog(string title, string message)
         {
