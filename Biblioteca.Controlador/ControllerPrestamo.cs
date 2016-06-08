@@ -82,7 +82,7 @@ namespace Biblioteca.Controlador
         public Message UsuarioActivado(string nroFicha)
         {
             var estado = Select("SELECT estado from Usuario WHERE nro_ficha = @Nro_ficha;", new[] { "@Nro_ficha" }, new object[] { nroFicha });
-            return new Message(estado.Rows[0].Field<bool>(0), estado.Rows[0].Field<bool>(0) ? null : "El usuario tiene préstamos pendientes.");
+            return new Message(estado.Rows[0].Field<bool>(0), estado.Rows[0].Field<bool>(0) ? null : "Usuario tiene sanción activa.");
         }
 
         public Message ExistsNroFicha(string nroFicha)
@@ -103,13 +103,25 @@ namespace Biblioteca.Controlador
             return new Message(exists, exists ? null : "El libro "+codLibro+" no se encuentra disponible");
         }
 
-        public int CodigoLibro(int numFicha)
+        public int LibrosPrestados(string nroFicha)
+        {
+            var exists = Select("SELECT count(dp.cod_prestamo) " +
+                               "FROM detalle_prestamo dp " +
+                               "JOIN prestamo p " +
+                               "ON dp.cod_prestamo = p.cod_prestamo " +
+                               "JOIN usuario u ON p.nro_ficha = u.nro_ficha " +
+                               "WHERE u.nro_ficha = @NroFicha AND libro_devuelto=0;"
+                               , new [] { "@NroFicha" } , new object[] { nroFicha });
+            return exists.Rows[0].Field<int>(0);
+        }
+
+        private int CodigoLibro(int numFicha)
         {
             var codigo = Select("SELECT MAX(cod_prestamo) FROM prestamo WHERE nro_ficha = @NroFicha;", new [] { "@NroFicha" }, new object[] {numFicha});
             return codigo.Rows[0].Field<int>(0);
         }
 
-        public DateTime SumarDias(DateTime fecha, int dias)
+        private DateTime SumarDias(DateTime fecha, int dias)
         {
             for (var i = 0; i < dias; i++)
             {

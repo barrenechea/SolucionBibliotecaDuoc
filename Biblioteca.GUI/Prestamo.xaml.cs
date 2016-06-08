@@ -20,8 +20,6 @@ namespace Biblioteca.GUI
     /// </summary>
     public partial class Prestamo
     {
-        private readonly bool _isAdd;
-
         public Prestamo()
         {
             InitializeComponent();
@@ -73,6 +71,7 @@ namespace Biblioteca.GUI
             var resultado = App.Prestamo.ExistsNroFicha(txtNroFicha.Text);
             if (resultado.Status)
             {
+                var prestados = App.Prestamo.LibrosPrestados(txtNroFicha.Text);
                 if (App.Users.IsStudent(int.Parse(txtNroFicha.Text)))
                 {
                     if (codigos.Length > 1)
@@ -81,10 +80,15 @@ namespace Biblioteca.GUI
                         txtCodLibro.Focus();
                         return false;
                     }
+                    if (prestados > 1)
+                    {
+                        lblStatus.Content =  "El estudiante tiene un prestamo pendiente";
+                        return false;
+                    }
                 }
                 else
                 {
-                    if (codigos.Length > 5)
+                    if (prestados + codigos.Length > 5)
                     {
                         lblStatus.Content = "Los funcionarios no pueden solicitar más de cinco libros";
                         txtCodLibro.Focus();
