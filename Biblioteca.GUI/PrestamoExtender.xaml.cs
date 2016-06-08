@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Biblioteca.Entidad;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -48,8 +49,16 @@ namespace Biblioteca.GUI
             var exists = App.Users.FetchUsuario(nroFicha);
             if (exists.Status)
             {
-                _nroFicha = nroFicha;
-                LoadData();
+                if (App.Users.IsStudent(int.Parse(nroFicha)))
+                {
+                    _nroFicha = nroFicha;
+                    LoadData();
+                }
+                else
+                {
+                    new PanelAdmin(new Message(false, "Sólo los estudiantes pueden extender un préstamo")).Show();
+                    Close();
+                }
             }
             else
             {
@@ -60,7 +69,7 @@ namespace Biblioteca.GUI
 
         private void LoadData()
         {
-            
+            //toDo llenar los labels
         }
 
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
@@ -72,7 +81,7 @@ namespace Biblioteca.GUI
 
         private void BtnVolver_Click(object sender, RoutedEventArgs e)
         {
-            new Inicio().Show();
+            new PanelAdmin().Show();
             Close();
         }
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
@@ -82,7 +91,7 @@ namespace Biblioteca.GUI
 
         private void BtnExtender_Click(object sender, RoutedEventArgs e)
         {
-
+            //toDo extender el prestamo según tipo de libro y sumar 1 a la cosa de extender.
         }
 
     }
