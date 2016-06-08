@@ -123,10 +123,11 @@ namespace Biblioteca.GUI
                     lblStatus.Content = resultado.Mensaje;
                     return false;
                 }
-                resultado = App.Prestamo.LibroDisponible(cod.Trim());
-                if (!resultado.Status)
+                var librosDisponibles = App.Prestamo.LibroDisponible(cod.Trim());
+                var librosIguales = App.Prestamo.StockLibros(codigos, cod.Trim());
+                if (librosDisponibles < 1 || librosIguales > librosDisponibles)
                 {
-                    lblStatus.Content = resultado.Mensaje;
+                    lblStatus.Content = "No hay suficientes libros";
                     return false;
                 }
             }

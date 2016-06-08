@@ -114,11 +114,23 @@ namespace Biblioteca.Controlador
             return new Message(exists, exists ? null : "El libro " + codLibro + " no existe");
         }
 
-        public Message LibroDisponible(string codLibro)
+        public int LibroDisponible(string codLibro)
         {
-            var exists = Select("SELECT * from Libro WHERE cod_libro = @CodLibro and nro_copias > 0;", new[] { "@CodLibro" }, new object[] { codLibro }).Rows.Count != 0;
-            return new Message(exists, exists ? null : "El libro "+codLibro+" no se encuentra disponible");
+            var exists = Select("SELECT count(*) from Libro WHERE cod_libro = @CodLibro and nro_copias > 0;", new[] { "@CodLibro" }, new object[] { codLibro });
+            return (int)exists.Rows[0].Field<long>(0);
         }
+
+        public int StockLibros(string[] codigos, string codLibro)
+        {
+            var cantidad = 0;
+            for (int i = 0; i < codigos.Length; i++)
+            {
+                if (codigos[i].Trim().Equals(codLibro))
+                    cantidad++;
+            }
+            return cantidad;
+        }
+
 
         public int LibrosPrestados(string nroFicha)
         {
@@ -149,12 +161,12 @@ namespace Biblioteca.Controlador
             return fecha;
         }
 
-        public Message DescuentaLibro(string codLibro)
+        public void DescuentaLibro(string codLibro)
         {
-            return Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new []{ "CodLibro" }, new object[] { codLibro });
+            Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new []{ "CodLibro" }, new object[] { codLibro });
         }
 
-        public int TipoLibro(string codLibro)
+        private int TipoLibro(string codLibro)
         {
             var query = Select("SELECT cod_tipo FROM Libro WHERE cod_libro = @CodLibro", new[] {"@CodLibro"},
                 new object[] {codLibro});
