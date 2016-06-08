@@ -86,8 +86,10 @@ namespace Biblioteca.Controlador
             foreach (var dp in DetPrestamoPersistence)
             {
                 var arrayObjects = new object[] { dp.FecDevolucion, dp.LibroDevuelto, dp.Renovacion, dp.CodPrestamo, dp.CodLibro.Trim() };
-                return Execute(sqlSentence, arrayParameters, arrayObjects);
+                var exec = Execute(sqlSentence, arrayParameters, arrayObjects);
+                if (!exec.Status) return exec;
             }
+            return new Message(true, "Prestamo ingresado exitosamente");
         }
         #endregion
 
