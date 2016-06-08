@@ -42,11 +42,6 @@ namespace Biblioteca.GUI
         {
             if (!Validation()) return;
             ExecutePrestamo();
-            ExecuteDetallePrestamo();
-            foreach (var libro in txtCodLibro.Text.Split(','))
-            {
-                App.Prestamo.DescuentaLibro(libro.ToUpper().Trim());
-            }
         }
 
         private bool Validation()
@@ -142,8 +137,7 @@ namespace Biblioteca.GUI
                     
                     if (result.Status)
                     {
-                        new PanelAdmin(result).Show();
-                        Close();
+                        ExecuteDetallePrestamo();
                     }
                     else
                         lblStatus.Content = result.Mensaje;
@@ -168,6 +162,10 @@ namespace Biblioteca.GUI
 
                     if (result.Status)
                     {
+                        foreach (var libro in txtCodLibro.Text.Split(','))
+                        {
+                            App.Prestamo.DescuentaLibro(libro.ToUpper().Trim());
+                        }
                         new PanelAdmin(result).Show();
                         Close();
                     }
