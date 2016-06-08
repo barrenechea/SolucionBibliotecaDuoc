@@ -93,7 +93,6 @@ namespace Biblioteca.Controlador
             return new Message(true, "Prestamo ingresado exitosamente");
         }
         #endregion
-
         #region Utils
         #region Usuario
 
@@ -144,6 +143,11 @@ namespace Biblioteca.Controlador
             return (int)exists.Rows[0].Field<long>(0);
         }
 
+        /// <summary>
+        /// Indica la cantidad de libros que tienen prestados los usuarios
+        /// </summary>
+        /// <param name="nroFicha">Numero e ficha del usuario al que se le revisará</param>
+        /// <returns>int con la cantidad de libros</returns>
         public int LibrosPrestados(string nroFicha)
         {
             var exists = Select("SELECT count(dp.cod_prestamo) " +
@@ -156,11 +160,20 @@ namespace Biblioteca.Controlador
             return (int)exists.Rows[0].Field<long>(0);
         }
 
+        /// <summary>
+        /// Descuenta un libro
+        /// </summary>
+        /// <param name="codLibro">Código del libro que se descontará</param>
         public void DescuentaLibro(string codLibro)
         {
             Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new[] { "CodLibro" }, new object[] { codLibro });
         }
 
+        /// <summary>
+        /// Indica el numero del tipo de un libro
+        /// </summary>
+        /// <param name="codLibro">Código del libro a buscar</param>
+        /// <returns>int con el numero del tipo de libro</returns>
         private int TipoLibro(string codLibro)
         {
             var query = Select("SELECT cod_tipo FROM Libro WHERE cod_libro = @CodLibro", new[] { "@CodLibro" },
@@ -169,12 +182,24 @@ namespace Biblioteca.Controlador
         }
         #endregion
         #region Prestamo
+
+        /// <summary>
+        /// Indica el codigo del ultimo préstamo que un usuario realizó
+        /// </summary>
+        /// <param name="numFicha">número de ficha que se buscará</param>
+        /// <returns>int con el codigo del préstamo</returns>
         private int CodigoPrestamo(int numFicha)
         {
             var codigo = Select("SELECT MAX(cod_prestamo) FROM prestamo WHERE nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { numFicha });
             return codigo.Rows[0].Field<int>(0);
         }
 
+        /// <summary>
+        /// Suma dias hábiles
+        /// </summary>
+        /// <param name="fecha">fecha a la que se le van a sumar los dias</param>
+        /// <param name="dias">cantidad de días hábiles que se le sumarán</param>
+        /// <returns></returns>
         private DateTime SumarDias(DateTime fecha, int dias)
         {
             for (var i = 0; i < dias; i++)

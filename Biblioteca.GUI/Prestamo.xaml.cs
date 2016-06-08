@@ -52,6 +52,10 @@ namespace Biblioteca.GUI
             }
         }
 
+        /// <summary>
+        /// validaciones del formulario segun el modelo de negocio
+        /// </summary>
+        /// <returns>bool de confirmacion de que está todo ok </returns>
         private bool Validation()
         {
             if (string.IsNullOrWhiteSpace(txtNroFicha.Text))
