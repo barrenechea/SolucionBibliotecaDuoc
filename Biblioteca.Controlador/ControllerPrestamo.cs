@@ -112,7 +112,7 @@ namespace Biblioteca.Controlador
                                "JOIN usuario u ON p.nro_ficha = u.nro_ficha " +
                                "WHERE u.nro_ficha = @NroFicha AND libro_devuelto=0;"
                                , new [] { "@NroFicha" } , new object[] { nroFicha });
-            return exists.Rows[0].Field<int>(0);
+            return (int)exists.Rows[0].Field<long>(0);
         }
 
         private int CodigoLibro(int numFicha)
