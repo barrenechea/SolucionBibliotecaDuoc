@@ -11,7 +11,7 @@
             <TabItem Header="Acceso Administrativo">
                 <Grid>
                     <Label Content="Usuario:" Margin="10,10,284,0" VerticalAlignment="Top"/>
-                    <TextBox Name="txtUsuario" Height="23" Margin="87,11,10,0" MaxLength="10" VerticalAlignment="Top"/>
+                    <TextBox Name="txtUsuario" Height="23" Margin="87,11,10,0" MaxLength="15" VerticalAlignment="Top"/>
                     <Label Content="Contraseña:" Margin="10,42,284,0" VerticalAlignment="Top"/>
                     <PasswordBox Name="txtPassword" Margin="87,42,10,0" MaxLength="15" VerticalAlignment="Top" Controls:PasswordBoxHelper.CapsLockWarningToolTip="Mayúsculas activadas"/>
                     <Button Style="{DynamicResource AccentedSquareButtonStyle}" Content="Iniciar sesión" Margin="0,88,10,6" HorizontalAlignment="Right" Width="251" Controls:ControlsHelper.ContentCharacterCasing="Normal" Click="BtnIniciarSesion_Click"/>
