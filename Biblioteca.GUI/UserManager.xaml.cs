@@ -3,13 +3,12 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Biblioteca.Entidad;
-using Biblioteca.Entidad.Enum;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
 {
     /// <summary>
-    /// Interaction logic for NewUser.xaml
+    /// Interaction logic for UserManager.xaml
     /// </summary>
     public partial class UserManager
     {
@@ -19,6 +18,10 @@ namespace Biblioteca.GUI
         private bool _isEstudiante;
         #endregion
         #region Constructor
+        /// <summary>
+        /// Generates a new instance of UserManager
+        /// </summary>
+        /// <param name="isAdd">Determines if the Window is going to be used to Add an Usuario or not</param>
         public UserManager(bool isAdd)
         {
             InitializeComponent();
@@ -30,6 +33,10 @@ namespace Biblioteca.GUI
         }
         #endregion
         #region Custom Methods
+        /// <summary>
+        /// Shows a Select Dialog, to select if it's going to add an Estudiante or Funcionario
+        /// Only executed when Adding Usuario, not Modifying them.
+        /// </summary>
         private async void SelectTypeDialog()
         {
             var settings = new MetroDialogSettings
@@ -45,6 +52,9 @@ namespace Biblioteca.GUI
             _isEstudiante = result == MessageDialogResult.Affirmative;
             FixWindow();
         }
+        /// <summary>
+        /// Opens an Input Dialog inside the Window and attempts to fetch an Usuario
+        /// </summary>
         private async void SearchUserDialog()
         {
             txtRun.IsEnabled = txtRunApoderado.IsEnabled = false;
@@ -77,6 +87,9 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
+        /// <summary>
+        /// Load a Libro data onto the Window Controls
+        /// </summary>
         private void LoadData()
         {
             _isEstudiante = App.Users.PersonaPersistence is Estudiante;
@@ -101,6 +114,9 @@ namespace Biblioteca.GUI
             switchEnabledAccount.IsChecked = ((Usuario)App.Users.PersonaPersistence).Estado;
             FixWindow();
         }
+        /// <summary>
+        /// Modifies labels, titles and other stuff, based on the parameter received by the Constructor.
+        /// </summary>
         private void FixWindow()
         {
             lblTitulo.Content = BtnExecute.Content = _isAdd
@@ -113,6 +129,10 @@ namespace Biblioteca.GUI
 
             App.Users.ClearPersistantData();
         }
+        /// <summary>
+        /// Method that validates the form inside the Window
+        /// </summary>
+        /// <returns>If the validation was successful or not</returns>
         private bool Validation()
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
@@ -305,6 +325,11 @@ namespace Biblioteca.GUI
             lblStatus.Content = string.Empty;
             return true;
         }
+        /// <summary>
+        /// Method that validates a chilean RUN
+        /// </summary>
+        /// <param name="run">RUN to validate</param>
+        /// <returns>Boolean that indicates if the RUN is valid or not</returns>
         private bool RUNValidate(string run)
         {
             try
@@ -331,6 +356,10 @@ namespace Biblioteca.GUI
                 return false;
             }
         }
+        /// <summary>
+        /// Calls to the Users Controller, and executes the Insert query.
+        /// In case of success, it's returned to the PanelAdmin Window.
+        /// </summary>
         private void ExecuteAdd()
         {
             if (_isEstudiante)
@@ -364,6 +393,10 @@ namespace Biblioteca.GUI
             else
                 lblStatus.Content = execute.Mensaje + " (Usuario)";
         }
+        /// <summary>
+        /// Calls to the Users Controller, and executes the Update query.
+        /// In case of success, it's returned to the PanelAdmin Window.
+        /// </summary>
         private void ExecuteUpdate()
         {
             if (_isEstudiante)
@@ -381,19 +414,31 @@ namespace Biblioteca.GUI
             else
                 lblStatus.Content = execute.Mensaje + " (Usuario)";
         }
+        /// <summary>
+        /// Shows an alert dialog and redirects to an UserAddApoderado Window
+        /// </summary>
         private async void GoCreateApoderado()
         {
             await this.ShowMessageAsync("Error", "No se ha encontrado el apoderado. Se redirigirá a la ventana de creación");
             new UserAddApoderado().Show();
             Close();
         }
+        /// <summary>
+        /// Shows just an alert inside the Window
+        /// </summary>
+        /// <param name="title">Title of the alert</param>
+        /// <param name="message">Message of the alert</param>
         private async void ShowNormalDialog(string title, string message)
         {
             await this.ShowMessageAsync(title, message);
         }
         #endregion
         #region Event Handlers
-
+        /// <summary>
+        /// Event that loads itself when the Window was loaded
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
         {
             var test = App.Libros.TestConnection();
@@ -414,6 +459,11 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Logout button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
             App.Users.ClearPersistantData();
@@ -421,24 +471,40 @@ namespace Biblioteca.GUI
             new Inicio().Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             App.Users.ClearPersistantData();
             new PanelAdmin().Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Execute button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnExecute_Click(object sender, RoutedEventArgs e)
         {
-            if (!Validation()) return;
-
-            if (App.Libros.TestConnection().Status)
+            if (App.Users.TestConnection().Status)
             {
+                if (!Validation()) return;
+
                 if (_isAdd) ExecuteAdd();
                 else ExecuteUpdate();
             }
             else
                 ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
         }
+        /// <summary>
+        /// Event triggered when user modifies the RUN fields.
+        /// This will remove dot chars '.' from the field automatically.
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void txtRun_TextChanged(object sender, TextChangedEventArgs e)
         {
             txtRun.Text = txtRun.Text.Replace(".", "");

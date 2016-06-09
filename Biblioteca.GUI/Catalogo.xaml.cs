@@ -18,12 +18,18 @@ namespace Biblioteca.GUI
         private List<TipoLibro> _tipoLibros; 
         #endregion
         #region Constructor
+        /// <summary>
+        /// Generates a new Instance of Catalogo
+        /// </summary>
         public Catalogo()
         {
             InitializeComponent();
         }
         #endregion
         #region Custom Methods
+        /// <summary>
+        /// Shows all the details of a selected Libro from the DataGrid as a Dialog inside the Window
+        /// </summary>
         private void ShowDetail()
         {
             var libro = (Libro)lstLibros.SelectedItem;
@@ -45,12 +51,22 @@ namespace Biblioteca.GUI
             
             ShowNormalDialog("Detalle de Libro", sb.ToString());
         }
+        /// <summary>
+        /// Shows just an alert inside the Window
+        /// </summary>
+        /// <param name="title">Title of the alert</param>
+        /// <param name="message">Message of the alert</param>
         private async void ShowNormalDialog(string title, string message)
         {
             await this.ShowMessageAsync(title, message);
         }
         #endregion
         #region Event Handlers
+        /// <summary>
+        /// Event that loads itself when the Window was loaded
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             var test = App.Admins.TestConnection();
@@ -72,14 +88,29 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
+        /// <summary>
+        /// Triggered event when the User clicks on something at the DataGrid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void lstLibros_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BtnVerDetalle.IsEnabled = lstLibros.SelectedIndex != -1;
         }
+        /// <summary>
+        /// Event that loads when the user clicks on the Ver Detalle button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnVerDetalle_Click(object sender, RoutedEventArgs e)
         {
             ShowDetail();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnVolver_Click(object sender, RoutedEventArgs e)
         {
             new Inicio().Show();

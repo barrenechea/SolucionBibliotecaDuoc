@@ -12,6 +12,12 @@ namespace Biblioteca.Controlador
         public Administrador AdminPersistence { get; private set; }
         #endregion
         #region Login Methods
+        /// <summary>
+        /// Tries to login onto the system
+        /// </summary>
+        /// <param name="user">Username</param>
+        /// <param name="pass">Password</param>
+        /// <returns>Message that indicates if the login was successful or not</returns>
         public Message Login(string user, string pass)
         {
             var adminTable = Select("select nombre, apellido, id_usuario, contrasena, estado, tipo_usuario from Administrador where id_usuario=@User;", new[]{"@User"}, new object[]{user});
@@ -33,12 +39,25 @@ namespace Biblioteca.Controlador
 
             return new Message(true);
         }
+        /// <summary>
+        /// Removes the persistant logged account from the memory
+        /// </summary>
         public void Logout()
         {
             AdminActive = null;
         }
         #endregion
         #region Preload Method
+        /// <summary>
+        /// Method that preload an Administrador into the local memory.
+        /// This is used before executing the Insert or Update methods.
+        /// </summary>
+        /// <param name="nombre">Nombre of the Administrador</param>
+        /// <param name="apellido">Apellido of the Administrador</param>
+        /// <param name="usuario">Username of the account</param>
+        /// <param name="password">Password of the account (mandatory on Insert, optional on Update)</param>
+        /// <param name="status">Indicates if the account is enabled to be used on the system</param>
+        /// <returns></returns>
         public Message PreloadAdmin(string nombre, string apellido, string usuario, string password, bool status)
         {
             Message msg;
@@ -67,6 +86,10 @@ namespace Biblioteca.Controlador
         }
         #endregion
         #region Insert, Update querys
+        /// <summary>
+        /// Insert an Administrador on the database
+        /// </summary>
+        /// <returns>Message that indicates if the Insert was successful or not</returns>
         public Message Insert()
         {
             if (AdminPersistence == null) return new Message(false, "Debe precargar un Administrador");
@@ -91,6 +114,10 @@ namespace Biblioteca.Controlador
             AdminPersistence = null;
             return executeAdmin;
         }
+        /// <summary>
+        /// Updates an existing Administrador on the database
+        /// </summary>
+        /// <returns>Message that indicates if the Update was successful or not</returns>
         public Message Update()
         {
             if (AdminPersistence == null) return new Message(false, "Debe precargar un Administrador");
@@ -121,6 +148,11 @@ namespace Biblioteca.Controlador
         }
         #endregion
         #region Select Query
+        /// <summary>
+        /// Fetch an Administrator from the database and it's loaded into Persistence
+        /// </summary>
+        /// <param name="usuario">Username of the Administrador to be loaded</param>
+        /// <returns>Message that indicates if the fetch was successful or not</returns>
         public Message FetchUsuario(string usuario)
         {
             if (string.Equals(usuario.ToLower(), AdminActive.IdUsuario.ToLower())) return new Message(false, "No puede modificarse a si mismo");
@@ -145,9 +177,14 @@ namespace Biblioteca.Controlador
         }
         #endregion
         #region Existance Check Query
+        /// <summary>
+        /// Method that just check if an username exists on the database
+        /// </summary>
+        /// <param name="usuario">Username to be checked</param>
+        /// <returns>Boolean that indicates if the account exists</returns>
         public bool ExistsUsuario(string usuario)
         {
-            return Select("select nombre, apellido, id_usuario, contrasena, estado, tipo_usuario from Administrador where id_usuario=@User;", new[] { "@User" }, new object[] { usuario }).Rows.Count != 0;
+            return Select("select nombre from Administrador where id_usuario=@User;", new[] { "@User" }, new object[] { usuario }).Rows.Count != 0;
         }
         #endregion
     }

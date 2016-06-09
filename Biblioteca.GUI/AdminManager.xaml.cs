@@ -13,6 +13,10 @@ namespace Biblioteca.GUI
         private readonly bool _isAdd;
         #endregion
         #region Constructor
+        /// <summary>
+        /// Generates a new instance of AdminManager
+        /// </summary>
+        /// <param name="isAdd">Determines if the Window is going to be used to Add an Administrator or not</param>
         public AdminManager(bool isAdd)
         {
             _isAdd = isAdd;
@@ -20,6 +24,9 @@ namespace Biblioteca.GUI
         }
         #endregion
         #region Custom Methods
+        /// <summary>
+        /// Opens an Input Dialog inside the Window and attempts to fetch an Administrador
+        /// </summary>
         private async void SearchAdminDialog()
         {
             txtUsuario.IsEnabled = false;
@@ -51,6 +58,9 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
+        /// <summary>
+        /// Load an Administrador data onto the Window Controls
+        /// </summary>
         private void LoadData()
         {
             txtNombre.Text = App.Admins.AdminPersistence.Nombre;
@@ -58,6 +68,9 @@ namespace Biblioteca.GUI
             txtUsuario.Text = App.Admins.AdminPersistence.IdUsuario;
             switchEnabledAccount.IsChecked = App.Admins.AdminPersistence.Estado;
         }
+        /// <summary>
+        /// Modifies labels, titles and other stuff, based on the parameter received by the Constructor.
+        /// </summary>
         private void FixWindow()
         {
             lblTitulo.Content = _isAdd
@@ -70,6 +83,10 @@ namespace Biblioteca.GUI
 
             if (!_isAdd) switchEnabledAccount.Visibility = Visibility.Visible;
         }
+        /// <summary>
+        /// Method that validates the form inside the Window
+        /// </summary>
+        /// <returns>If the validation was successful or not</returns>
         private bool Validation()
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
@@ -167,6 +184,10 @@ namespace Biblioteca.GUI
             lblStatus.Content = string.Empty;
             return true;
         }
+        /// <summary>
+        /// Opens a Confirmation Dialog inside the Window.
+        /// It's being used when an Administrador is being modified, but the password fields were left in blank.
+        /// </summary>
         private async void ConfirmationDialog()
         {
             var settings = new MetroDialogSettings
@@ -183,6 +204,10 @@ namespace Biblioteca.GUI
                 Execute();
             }
         }
+        /// <summary>
+        /// Calls to the Admin Controller, and executes the Insert or Update querys.
+        /// In case of success, it's returned to the PanelAdmin Window.
+        /// </summary>
         private void Execute()
         {
             if (App.Admins.TestConnection().Status)
@@ -209,12 +234,22 @@ namespace Biblioteca.GUI
                 ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
             }
         }
+        /// <summary>
+        /// Shows just an alert inside the Window
+        /// </summary>
+        /// <param name="title">Title of the alert</param>
+        /// <param name="message">Message of the alert</param>
         private async void ShowNormalDialog(string title, string message)
         {
             await this.ShowMessageAsync(title, message);
         }
         #endregion
         #region Event Handler Methods
+        /// <summary>
+        /// Event that loads itself when the Window was loaded
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
         {
             FixWindow();
@@ -229,23 +264,35 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
-
+        /// <summary>
+        /// Event that loads when user clicks on the Logout button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
             App.Admins.Logout();
             new Inicio().Show();
             Close();
         }
-
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             new PanelAdmin().Show();
             Close();
         }
-
+        /// <summary>
+        /// Event that loads when user clicks on the Execute button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnExecute_Click(object sender, RoutedEventArgs e)
         {
-            if (App.Libros.TestConnection().Status)
+            if (App.Admins.TestConnection().Status)
             {
                 if (!Validation()) return;
 

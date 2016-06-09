@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Biblioteca.Entidad;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
@@ -13,6 +12,10 @@ namespace Biblioteca.GUI
         private readonly bool _isAdd;
         #endregion
         #region Constructor
+        /// <summary>
+        /// Generates a new instance of LibroManager
+        /// </summary>
+        /// <param name="isAdd">Determines if the Window is going to be used to Add a Libro or not</param>
         public LibroManager(bool isAdd)
         {
             InitializeComponent();
@@ -23,6 +26,9 @@ namespace Biblioteca.GUI
         }
         #endregion
         #region Custom Methods
+        /// <summary>
+        /// Opens an Input Dialog inside the Window
+        /// </summary>
         private async void SearchLibroDialog()
         {
             var settings = new MetroDialogSettings
@@ -43,6 +49,10 @@ namespace Biblioteca.GUI
                 SearchLibro(result);
             }
         }
+        /// <summary>
+        /// Fetch and load a Libro data onto the Window Controls
+        /// </summary>
+        /// <param name="codLibro">Codigo de Libro to fetch</param>
         private void SearchLibro(string codLibro)
         {
             var exists = App.Libros.FetchLibro(codLibro);
@@ -67,6 +77,10 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
+        /// <summary>
+        /// Method that validates the form inside the Window
+        /// </summary>
+        /// <returns>If the validation was successful or not</returns>
         private bool Validation()
         {
             if (string.IsNullOrWhiteSpace(txtCodLibro.Text))
@@ -211,6 +225,10 @@ namespace Biblioteca.GUI
             lblStatus.Content = string.Empty;
             return true;
         }
+        /// <summary>
+        /// Calls to the Libro Controller, and executes the Insert or Update querys.
+        /// In case of success, it's returned to the PanelAdmin Window.
+        /// </summary>
         private void Execute()
         {
             if (App.Libros.TestConnection().Status)
@@ -237,12 +255,22 @@ namespace Biblioteca.GUI
                 ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
             }
         }
+        /// <summary>
+        /// Shows just an alert inside the Window
+        /// </summary>
+        /// <param name="title">Title of the alert</param>
+        /// <param name="message">Message of the alert</param>
         private async void ShowNormalDialog(string title, string message)
         {
             await this.ShowMessageAsync(title, message);
         }
         #endregion
         #region Event Handlers
+        /// <summary>
+        /// Event that loads itself when the Window was loaded
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void LibroManager_OnLoaded(object sender, RoutedEventArgs e)
         {
             var test = App.Libros.TestConnection();
@@ -260,17 +288,37 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
             App.Admins.Logout();
             new Inicio().Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Execute button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnExecute_Click(object sender, RoutedEventArgs e)
         {
-            if (!Validation()) return;
-            Execute();
+            if (App.Libros.TestConnection().Status)
+            {
+                if (!Validation()) return;
+                Execute();
+            }
+            else
+                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             new PanelAdmin().Show();

@@ -41,6 +41,11 @@ namespace Biblioteca.Controlador
         }
         #endregion
         #region Insert, Update querys
+        /// <summary>
+        /// Insert a Libro into the database.
+        /// ¡Preload is required before executing this!
+        /// </summary>
+        /// <returns>Message that indicates if the Insert was successful or nor</returns>
         public Message Insert()
         {
             if(LibroPersistence == null) return new Message(false, "Debe precargar los datos de un libro");
@@ -71,6 +76,11 @@ namespace Biblioteca.Controlador
             LibroPersistence = null;
             return executeLib;
         }
+        /// <summary>
+        /// Update an existing Libro on the database.
+        /// ¡Preload is required before executing this!
+        /// </summary>
+        /// <returns>Message that indicates if the Update was successful or nor</returns>
         public Message Update()
         {
             if (LibroPersistence == null) return new Message(false, "Debe precargar los datos de un libro");
@@ -98,6 +108,10 @@ namespace Biblioteca.Controlador
         }
         #endregion
         #region Select querys
+        /// <summary>
+        /// Fetch all Libros existing on the database that has at least 1 copia available
+        /// </summary>
+        /// <returns>List of available Libros</returns>
         public List<Libro> FetchAllAvailable()
         {
             var libroTable = Select("SELECT cod_libro, titulo, autor, categoria, argumento, ubicacion, editorial, cod_tipo, nro_paginas, nro_copias FROM Libro WHERE nro_copias > 0;");
@@ -118,6 +132,10 @@ namespace Biblioteca.Controlador
             }
             return libroList;
         }
+        /// <summary>
+        /// Fetch all TipoLibro from the database
+        /// </summary>
+        /// <returns>List of TipoLibro</returns>
         public List<TipoLibro> FetchTipoLibros()
         {
             var tipoLibroTable = Select("SELECT cod_tipo, nom_tipo FROM Tipo_libro ORDER BY nom_tipo;");
@@ -131,6 +149,11 @@ namespace Biblioteca.Controlador
             }
             return listado;
         }
+        /// <summary>
+        /// Fetch an specific Libro from the database and loads it into Persistence
+        /// </summary>
+        /// <param name="codLibro">Codigo de Libro to search</param>
+        /// <returns>Message that indicates if the fetch was successful or not</returns>
         public Message FetchLibro(string codLibro)
         {
             var libroSelected = Select(
@@ -155,6 +178,9 @@ namespace Biblioteca.Controlador
         }
         #endregion
         #region Custom method
+        /// <summary>
+        /// Removes all persistant data inside this Controller
+        /// </summary>
         public void ClearPersistantData()
         {
             LibroPersistence = null;

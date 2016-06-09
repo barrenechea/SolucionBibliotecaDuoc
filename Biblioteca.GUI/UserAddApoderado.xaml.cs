@@ -1,7 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
-using Biblioteca.Entidad;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
 {
@@ -11,6 +10,9 @@ namespace Biblioteca.GUI
     public partial class UserAddApoderado
     {
         #region Constructor
+        /// <summary>
+        /// Generates a new instance of UserAddApoderado
+        /// </summary>
         public UserAddApoderado()
         {
             InitializeComponent();
@@ -22,6 +24,10 @@ namespace Biblioteca.GUI
         }
         #endregion
         #region Custom Methods
+        /// <summary>
+        /// Method that validates the form inside the Window
+        /// </summary>
+        /// <returns>If the validation was successful or not</returns>
         private bool Validation()
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text))
@@ -130,6 +136,10 @@ namespace Biblioteca.GUI
             lblStatus.Content = string.Empty;
             return true;
         }
+        /// <summary>
+        /// Calls to the Users Controller, and executes the Insert query.
+        /// In case of success, it's returned to the PanelAdmin Window.
+        /// </summary>
         private void AddApoderado()
         {
             var insertEstudiante = App.Users.Insert();
@@ -156,23 +166,52 @@ namespace Biblioteca.GUI
             }
             lblStatus.Content = insertEstudiante.Mensaje + " (Estudiante)";
         }
+        /// <summary>
+        /// Shows just an alert inside the Window
+        /// </summary>
+        /// <param name="title">Title of the alert</param>
+        /// <param name="message">Message of the alert</param>
+        private async void ShowNormalDialog(string title, string message)
+        {
+            await this.ShowMessageAsync(title, message);
+        }
         #endregion
         #region Event Handlers
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
             App.Admins.Logout();
             new Inicio().Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             new UserManager(true).Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Agregar button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnAgregar_OnClick(object sender, RoutedEventArgs e)
         {
-            if (!Validation()) return;
-            AddApoderado();
+            if (App.Users.TestConnection().Status)
+            {
+                if (!Validation()) return;
+                AddApoderado();
+            }
+            else
+                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
         }
         #endregion
     }

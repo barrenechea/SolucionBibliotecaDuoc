@@ -18,6 +18,9 @@ namespace Biblioteca.GUI
         private Message _connectionMessage;
         #endregion
         #region Constructors
+        /// <summary>
+        /// Generates a new instance of PanelAdmin
+        /// </summary>
         public PanelAdmin()
         {
             InitializeComponent();
@@ -29,6 +32,10 @@ namespace Biblioteca.GUI
             _checkConnection.RunWorkerCompleted += Conn_RunWorkerCompleted;
             _checkConnection.RunWorkerAsync();
         }
+        /// <summary>
+        /// Generates a new instance of PanelAdmin
+        /// </summary>
+        /// <param name="msg">Message to be shown when the Window has loaded</param>
         public PanelAdmin(Message msg)
         {
             InitializeComponent();
@@ -42,6 +49,9 @@ namespace Biblioteca.GUI
         }
         #endregion
         #region Custom Methods
+        /// <summary>
+        /// Fix the Window content, based on the TipoCuenta of the current logged Administrador
+        /// </summary>
         private void RearrangeFixWindow()
         {
             // Hide unused tabs based on admin privileges
@@ -70,6 +80,11 @@ namespace Biblioteca.GUI
                     break;
             }
         }
+        /// <summary>
+        /// What the BackgroundWorker does while it's running the task
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void Conn_DoWork(object sender, DoWorkEventArgs e)
         {
             var count = 0;
@@ -92,10 +107,20 @@ namespace Biblioteca.GUI
                 ((BackgroundWorker)sender).ReportProgress(count);
             }
         }
+        /// <summary>
+        /// What the BackgroundWorker updates on the Window when progress has changed
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void Conn_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             lblStatus.Content = string.Format("Estado: {0} (Intento {1})", _connectionMessage.Mensaje, e.ProgressPercentage);
         }
+        /// <summary>
+        /// What the BackgroundWorker does when has finished running the task
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void Conn_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             lblStatus.Content = _connectionMessage.Mensaje;
@@ -113,6 +138,11 @@ namespace Biblioteca.GUI
             else
                 TileDirectorAdminAdministradores.IsEnabled = TileDirectorLog.IsEnabled = true;
         }
+        /// <summary>
+        /// Shows just an alert inside the Window
+        /// </summary>
+        /// <param name="title">Title of the alert</param>
+        /// <param name="message">Message of the alert</param>
         private async void ShowNormalDialog(string title, string message)
         {
             await this.ShowMessageAsync(title, message);
@@ -120,6 +150,11 @@ namespace Biblioteca.GUI
         #endregion
         #region Event Handlers
         #region Bibliotecarios y Jefes
+        /// <summary>
+        /// Event that loads when user clicks on the Administrar Usuarios button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private async void BtnAdminUsuarios_Click(object sender, RoutedEventArgs e)
         {
             var settings = new MetroDialogSettings
@@ -135,6 +170,11 @@ namespace Biblioteca.GUI
             new UserManager(result == MessageDialogResult.Affirmative).Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Administrar Libros button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private async void BtnAdminLibros_Click(object sender, RoutedEventArgs e)
         {
             var settings = new MetroDialogSettings
@@ -150,6 +190,11 @@ namespace Biblioteca.GUI
             new LibroManager(result == MessageDialogResult.Affirmative).Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Administrar Prestamos button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private async void BtnAdminPrestamos_Click(object sender, RoutedEventArgs e)
         {
             var settings = new MetroDialogSettings
@@ -180,12 +225,22 @@ namespace Biblioteca.GUI
                 //ToDo Devolución
             }
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Visualizar Hoja de Morosidad button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnVisualizarMorosidad_Click(object sender, RoutedEventArgs e)
         {
             //ToDo Visualizar Hojas de Morosidad
         }
         #endregion
         #region JefeBiblioteca
+        /// <summary>
+        /// Event that loads when user clicks on the Administrar Bibliotecarios button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private async void BtnAdminBibliotecarios_Click(object sender, RoutedEventArgs e)
         {
             var settings = new MetroDialogSettings
@@ -203,6 +258,11 @@ namespace Biblioteca.GUI
         }
         #endregion
         #region Director
+        /// <summary>
+        /// Event that loads when user clicks on the Administrar Jefes de Biblioteca button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private async void BtnAdminJefes_Click(object sender, RoutedEventArgs e)
         {
             var settings = new MetroDialogSettings
@@ -218,6 +278,11 @@ namespace Biblioteca.GUI
             new AdminManager(result == MessageDialogResult.Affirmative).Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads when user clicks on the Visualizar Log button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnVisualizarLog_Click(object sender, RoutedEventArgs e)
         {
             //ToDo Visualizar Log
@@ -225,12 +290,22 @@ namespace Biblioteca.GUI
         #endregion
 
         #region General Events
+        /// <summary>
+        /// Event that loads when user clicks on the Logout button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
             App.Admins.Logout();
             new Inicio().Show();
             Close();
         }
+        /// <summary>
+        /// Event that loads itself when the Window was loaded
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
         private void PanelAdmin_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (_showMessage == null) return;

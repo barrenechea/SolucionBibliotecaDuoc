@@ -18,6 +18,10 @@ namespace Biblioteca.Controlador
         private static string _password;
         #endregion
         #region Constructor
+        /// <summary>
+        /// Constructor of this class.
+        /// Consider that this is an abstract class, so this is going to be loaded from a child class.
+        /// </summary>
         protected ControllerDatabase()
         {
             FetchConfig();
@@ -30,6 +34,9 @@ namespace Biblioteca.Controlador
         }
         #endregion
         #region Ini creation and read methods
+        /// <summary>
+        /// Fetch all parameters from the external config file
+        /// </summary>
         private static void FetchConfig()
         {
             IniFix();
@@ -41,7 +48,10 @@ namespace Biblioteca.Controlador
             _username = parser.GetSetting("BIBLIOTECA", "USERNAME");
             _password = parser.GetSetting("BIBLIOTECA", "PASSWORD");
         }
-
+        /// <summary>
+        /// Checks if the external config file exists or not.
+        /// If doesn't exist, it creates the file.
+        /// </summary>
         private static void IniFix()
         {
             if (File.Exists("config.ini")) return;
@@ -61,7 +71,7 @@ namespace Biblioteca.Controlador
         /// <summary>
         /// Just a basic connection testing method.
         /// </summary>
-        /// <returns>Boolean that indicates if the connection is succesfull</returns>
+        /// <returns>Boolean that indicates if the connection is successful or not</returns>
         public Message TestConnection()
         {
             try
@@ -103,38 +113,6 @@ namespace Biblioteca.Controlador
             catch
             {
                 return new Message(false, "Unable to fetch version");
-            }
-            finally
-            {
-                _connection.Close();
-            }
-        }
-        /// <summary>
-        /// Insert, update or delete something into the database.
-        /// Do NOT use this method if you're inserting parameters on your SQL sentence!
-        /// </summary>
-        /// <param name="sentence">The sentence to be executed</param>
-        /// <returns>Message that indicates if the execution was successful or not</returns>
-        protected Message Execute(string sentence)
-        {
-            try
-            {
-                _connection.Open();
-                using (var cmd = new MySqlCommand(sentence, _connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                return new Message(true);
-            }
-            catch (MySqlException e)
-            {
-                switch (e.Number)
-                {
-                    case 1062:
-                        return new Message(false, "1");
-                    default:
-                        return new Message(false, e.Message);
-                }
             }
             finally
             {
