@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
@@ -77,15 +78,51 @@ namespace Biblioteca.GUI
                 txtNombre.Focus();
                 return false;
             }
+            if (txtNombre.Text.Length < 2)
+            {
+                lblStatus.Content = "Debe tener mínimo 2 caracteres";
+                txtNombre.Focus();
+                return false;
+            }
+            if (txtNombre.Text.Any(char.IsDigit))
+            {
+                lblStatus.Content = "El campo no puede tener dígitos";
+                txtNombre.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtApellido.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtApellido.Focus();
                 return false;
             }
+            if (txtApellido.Text.Length < 2)
+            {
+                lblStatus.Content = "Debe tener mínimo 2 caracteres";
+                txtApellido.Focus();
+                return false;
+            }
+            if (txtApellido.Text.Any(char.IsDigit))
+            {
+                lblStatus.Content = "El campo no puede tener dígitos";
+                txtApellido.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtUsuario.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
+                txtUsuario.Focus();
+                return false;
+            }
+            if (txtUsuario.Text.Length < 5)
+            {
+                lblStatus.Content = "Debe tener mínimo 5 caracteres";
+                txtUsuario.Focus();
+                return false;
+            }
+            if (txtUsuario.Text.Any(char.IsDigit))
+            {
+                lblStatus.Content = "El campo no puede tener dígitos";
                 txtUsuario.Focus();
                 return false;
             }
@@ -111,12 +148,22 @@ namespace Biblioteca.GUI
                     return false;
                 }
             }
-            if (!string.Equals(txtPassword.Password, txtPasswordCheck.Password))
+            if (!string.IsNullOrWhiteSpace(txtPassword.Password))
             {
-                lblStatus.Content = "Las contraseñas no coinciden";
-                txtPassword.Focus();
-                return false;
+                if (txtPassword.Password.Length < 6)
+                {
+                    lblStatus.Content = "Debe tener mínimo 6 caracteres";
+                    txtPassword.Focus();
+                    return false;
+                }
+                if (!string.Equals(txtPassword.Password, txtPasswordCheck.Password))
+                {
+                    lblStatus.Content = "Las contraseñas no coinciden";
+                    txtPassword.Focus();
+                    return false;
+                }
             }
+            
             lblStatus.Content = string.Empty;
             return true;
         }

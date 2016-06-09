@@ -75,9 +75,21 @@ namespace Biblioteca.GUI
                 txtCodLibro.Focus();
                 return false;
             }
+            if (txtCodLibro.Text.Length < 4)
+            {
+                lblStatus.Content = "Debe tener mínimo 4 caracteres";
+                txtCodLibro.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtTitulo.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
+                txtTitulo.Focus();
+                return false;
+            }
+            if (txtTitulo.Text.Length < 2)
+            {
+                lblStatus.Content = "Debe tener mínimo 2 caracteres";
                 txtTitulo.Focus();
                 return false;
             }
@@ -87,9 +99,21 @@ namespace Biblioteca.GUI
                 txtAutor.Focus();
                 return false;
             }
+            if (txtAutor.Text.Length < 2)
+            {
+                lblStatus.Content = "Debe tener mínimo 2 caracteres";
+                txtAutor.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtCategoria.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
+                txtCategoria.Focus();
+                return false;
+            }
+            if (txtCategoria.Text.Length < 4)
+            {
+                lblStatus.Content = "Debe tener mínimo 4 caracteres";
                 txtCategoria.Focus();
                 return false;
             }
@@ -99,15 +123,33 @@ namespace Biblioteca.GUI
                 txtArgumento.Focus();
                 return false;
             }
+            if (txtArgumento.Text.Length < 10)
+            {
+                lblStatus.Content = "Debe tener mínimo 10 caracteres";
+                txtArgumento.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtUbicacion.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtUbicacion.Focus();
                 return false;
             }
+            if (txtUbicacion.Text.Length < 2)
+            {
+                lblStatus.Content = "Debe tener mínimo 2 caracteres";
+                txtUbicacion.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtEditorial.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
+                txtEditorial.Focus();
+                return false;
+            }
+            if (txtEditorial.Text.Length < 2)
+            {
+                lblStatus.Content = "Debe tener mínimo 2 caracteres";
                 txtEditorial.Focus();
                 return false;
             }
@@ -150,6 +192,12 @@ namespace Biblioteca.GUI
                 if (_isAdd && i <= 0)
                 {
                     lblStatus.Content = "El número de copias debe ser mayor a 0";
+                    txtNroCopias.Focus();
+                    return false;
+                }
+                if (!_isAdd && i < 0)
+                {
+                    lblStatus.Content = "El número de copias debe ser mayor o igual a 0";
                     txtNroCopias.Focus();
                     return false;
                 }

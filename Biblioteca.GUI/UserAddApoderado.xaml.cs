@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using Biblioteca.Entidad;
 
@@ -29,15 +30,57 @@ namespace Biblioteca.GUI
                 txtNombre.Focus();
                 return false;
             }
+            if (txtNombre.Text.Length < 2)
+            {
+                lblStatus.Content = "Debe tener mínimo 2 caracteres";
+                txtNombre.Focus();
+                return false;
+            }
+            if (txtNombre.Text.Any(char.IsDigit))
+            {
+                lblStatus.Content = "El campo no puede tener dígitos";
+                txtNombre.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtApellido.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
                 txtApellido.Focus();
                 return false;
             }
+            if (txtApellido.Text.Length < 2)
+            {
+                lblStatus.Content = "Debe tener mínimo 2 caracteres";
+                txtApellido.Focus();
+                return false;
+            }
+            if (txtApellido.Text.Any(char.IsDigit))
+            {
+                lblStatus.Content = "El campo no puede tener dígitos";
+                txtApellido.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtDireccion.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
+                txtDireccion.Focus();
+                return false;
+            }
+            if (txtDireccion.Text.Length < 5)
+            {
+                lblStatus.Content = "Debe tener mínimo 5 caracteres";
+                txtDireccion.Focus();
+                return false;
+            }
+            if (!txtDireccion.Text.Any(char.IsDigit))
+            {
+                lblStatus.Content = "El campo debe tener letras y números";
+                txtDireccion.Focus();
+                return false;
+            }
+            if (!txtDireccion.Text.Any(char.IsLetter))
+            {
+                lblStatus.Content = "El campo debe tener letras y números";
                 txtDireccion.Focus();
                 return false;
             }
@@ -60,6 +103,12 @@ namespace Biblioteca.GUI
                 txtFonoFijo.Focus();
                 return false;
             }
+            if (txtFonoFijo.Text.Length < 7)
+            {
+                lblStatus.Content = "Debe tener mínimo 7 caracteres";
+                txtFonoFijo.Focus();
+                return false;
+            }
             if (string.IsNullOrWhiteSpace(txtFonoCel.Text))
             {
                 lblStatus.Content = "Debe llenar todos los campos";
@@ -69,6 +118,12 @@ namespace Biblioteca.GUI
             if (!int.TryParse(txtFonoCel.Text, out i))
             {
                 lblStatus.Content = "El teléfono sólo debe tener números";
+                txtFonoCel.Focus();
+                return false;
+            }
+            if (txtFonoCel.Text.Length < 8)
+            {
+                lblStatus.Content = "Debe tener mínimo 8 caracteres";
                 txtFonoCel.Focus();
                 return false;
             }
