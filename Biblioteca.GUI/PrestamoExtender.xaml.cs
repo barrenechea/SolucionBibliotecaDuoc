@@ -57,6 +57,7 @@ namespace Biblioteca.GUI
                     {
                         new PanelAdmin(new Message(false, "El estudiante no tiene préstamo pendiente")).Show();
                         Close();
+                        return;
                     }
                     _nroFicha = int.Parse(nroFicha);
                     LoadData();
@@ -66,7 +67,6 @@ namespace Biblioteca.GUI
                     new PanelAdmin(new Message(false, "Sólo los estudiantes pueden extender un préstamo")).Show();
                     Close();
                 }
-                
             }
             else
             {
