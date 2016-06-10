@@ -23,8 +23,7 @@ namespace Biblioteca.GUI
     public partial class PrestamoExtender
     {
         private int _nroFicha;
-        private DetallePrestamo _detallePrestamo;
-
+        
         public PrestamoExtender()
         {
             InitializeComponent();
@@ -51,11 +50,13 @@ namespace Biblioteca.GUI
             var exists = App.Users.FetchUsuario(nroFicha);
             if (exists.Status)
             {
-                if (App.Users.IsStudent(int.Parse(nroFicha)))
+                exists = App.Users.IsStudent(int.Parse(nroFicha));
+                if (exists.Status)
                 {
-                    if (App.Prestamo.LibrosPrestados(nroFicha) == 0)
+                    exists = App.Prestamo.FetchPrestamo(nroFicha);
+                    if (!exists.Status)
                     {
-                        new PanelAdmin(new Message(false, "El estudiante no tiene préstamo pendiente")).Show();
+                        new PanelAdmin(exists).Show();
                         Close();
                         return;
                     }
@@ -64,7 +65,7 @@ namespace Biblioteca.GUI
                 }
                 else
                 {
-                    new PanelAdmin(new Message(false, "Sólo los estudiantes pueden extender un préstamo")).Show();
+                    new PanelAdmin(exists).Show();
                     Close();
                 }
             }
@@ -77,19 +78,21 @@ namespace Biblioteca.GUI
 
         private void LoadData()
         {
-            _detallePrestamo = App.Prestamo.InfoLibroPrestado(_nroFicha);
+            
             lblNomEstudiante.Content = App.Users.PersonaPersistence.Nombre + " " + App.Users.PersonaPersistence.Apellido;
-            lblDevolucion.Content = _detallePrestamo.FecDevolucion.ToString("dd-MM-yyyy");
-            lblExtendido.Content = _detallePrestamo.Renovacion;
-            lblNomLibro.Content = _detallePrestamo.CodLibro.ToUpper();
-            if (_detallePrestamo.Renovacion >= 3 )
+            lblDevolucion.Content = App.Prestamo.DetPrestamoPersistence.FecDevolucion.ToString("dd-MM-yyyy");
+            lblExtendido.Content = App.Prestamo.DetPrestamoPersistence.Renovacion;
+            lblNomLibro.Content = App.Prestamo.DetPrestamoPersistence.CodLibro.ToUpper();
+            
+            if (App.Prestamo.DetPrestamoPersistence.Renovacion >= 3 )
             {
                 btnExtender.IsEnabled = false;
                 lblStatus.Content = "No se puede extender un libro más de tres veces";
             }
-            if (_detallePrestamo.FecDevolucion >= DateTime.Now) return;
+            if (App.Prestamo.DetPrestamoPersistence.FecDevolucion >= DateTime.Now) return;
             btnExtender.IsEnabled = false;
             lblStatus.Content = "El alumno tiene morosidad, no puede extender el libro";
+            
         }
 
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
@@ -101,9 +104,12 @@ namespace Biblioteca.GUI
 
         private void BtnVolver_Click(object sender, RoutedEventArgs e)
         {
+            App.Prestamo.ClearPersistantData();
+            App.Users.ClearPersistantData();
             new PanelAdmin().Show();
             Close();
         }
+
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
         {
             SearchPrestamoDialog();
@@ -112,7 +118,7 @@ namespace Biblioteca.GUI
         private void BtnExtender_Click(object sender, RoutedEventArgs e)
         {
             var codPrestamo = App.Prestamo.CodigoPrestamo(_nroFicha);
-            App.Prestamo.ExtenderPrestamo(codPrestamo.ToString(),_detallePrestamo.CodLibro,_detallePrestamo.FecDevolucion);
+            App.Prestamo.ExtenderPrestamo(codPrestamo.ToString(), App.Prestamo.DetPrestamoPersistence.CodLibro, App.Prestamo.DetPrestamoPersistence.FecDevolucion);
             LoadData();
         }
     }

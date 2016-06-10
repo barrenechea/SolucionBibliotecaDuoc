@@ -11,8 +11,9 @@ namespace Biblioteca.Controlador
 {
     public class ControllerPrestamo : ControllerDatabase
     {
-        public Prestamo PrestamoPersistence { get; private set; }
-        private List<DetallePrestamo> DetPrestamoPersistence { get; set; }
+        private Prestamo PrestamoPersistence { get; set; }
+        private List<DetallePrestamo> DetPrestamoPersistenceList { get; set; }
+        public DetallePrestamo DetPrestamoPersistence { get; set; }
 
         #region Preload method
 
@@ -47,14 +48,14 @@ namespace Biblioteca.Controlador
             Message msg;
             try
             {
-                DetPrestamoPersistence = new List<DetallePrestamo>();
+                DetPrestamoPersistenceList = new List<DetallePrestamo>();
                 var codPrestamo = CodigoPrestamo(nroFicha);
                 foreach (var codLibro in codLibros)
                 {
                     if (TipoLibro(codLibro.Trim()) == 4)
-                        DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, 5), false, 0, codPrestamo, codLibro.Trim()));
+                        DetPrestamoPersistenceList.Add(new DetallePrestamo(SumarDias(DateTime.Now, 5), false, 0, codPrestamo, codLibro.Trim()));
                     else
-                        DetPrestamoPersistence.Add(new DetallePrestamo(SumarDias(DateTime.Now, 3), false, 0, codPrestamo, codLibro.Trim()));
+                        DetPrestamoPersistenceList.Add(new DetallePrestamo(SumarDias(DateTime.Now, 3), false, 0, codPrestamo, codLibro.Trim()));
                 }
                 msg = new Message(true);
             }
@@ -83,7 +84,7 @@ namespace Biblioteca.Controlador
             var sqlSentence = "INSERT INTO Detalle_prestamo(fec_devolucion, libro_devuelto, renovacion, cod_prestamo, cod_libro) " +
                           "VALUES (@FecDevolucion, @LibroDevuelto, @Renovacion, @CodPrestamo, @CodLibro);";
             var arrayParameters = new[] { "@FecDevolucion", "@LibroDevuelto", "@Renovacion", "@CodPrestamo", "@CodLibro" };
-            foreach (var dp in DetPrestamoPersistence)
+            foreach (var dp in DetPrestamoPersistenceList)
             {
                 var arrayObjects = new object[] { dp.FecDevolucion, dp.LibroDevuelto, dp.Renovacion, dp.CodPrestamo, dp.CodLibro.Trim() };
                 var exec = Execute(sqlSentence, arrayParameters, arrayObjects);
@@ -210,13 +211,21 @@ namespace Biblioteca.Controlador
             return fecha;
         }
 
-        public DetallePrestamo InfoLibroPrestado(int numFicha)
+        public Message FetchPrestamo(string nroFicha)
         {
             var table = Select("SELECT dp.fec_devolucion, dp.cod_libro, dp.renovacion " +
                                        "FROM Prestamo p " +
                                        "JOIN Detalle_prestamo dp ON p.cod_prestamo = dp.cod_prestamo " +
-                                       "WHERE p.nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { numFicha });
-            return new DetallePrestamo(table.Rows[0].Field<DateTime>("fec_devolucion"), table.Rows[0].Field<string>("cod_libro"),table.Rows[0].Field<int>("renovacion"));
+                                       "WHERE p.nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { nroFicha });
+            DetPrestamoPersistence = new DetallePrestamo(table.Rows[0].Field<DateTime>("fec_devolucion"), table.Rows[0].Field<string>("cod_libro"),table.Rows[0].Field<int>("renovacion"));
+            return LibrosPrestados(nroFicha) == 0 ? new Message(false, "El estudiante no tiene préstamo pendiente") : new Message(true);
+        }
+
+        public void ClearPersistantData()
+        {
+            DetPrestamoPersistence = null;
+            DetPrestamoPersistenceList = null;
+            PrestamoPersistence = null;
         }
 
         public void ExtenderPrestamo(string codPrestamo, string codLibro, DateTime fecDevolucion)

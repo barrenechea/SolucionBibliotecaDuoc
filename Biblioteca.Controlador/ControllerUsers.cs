@@ -327,7 +327,7 @@ namespace Biblioteca.Controlador
             var fonoFijo = string.Empty;
             var fonoCel = string.Empty;
 
-            if (IsStudent(nroFicha))
+            if (IsStudent(nroFicha).Status)
             {
                 sqlSentence =
                     "SELECT Persona.rut, Persona.nombre, Persona.apellido, Persona.direccion, Persona.cod_comuna, " +
@@ -420,12 +420,13 @@ namespace Biblioteca.Controlador
         /// Checks if an specific Numero de Ficha is an Estudiante
         /// </summary>
         /// <param name="nroFicha">Numero de Ficha to be searched</param>
-        /// <returns>Boolean that indicates if the specified Numero de Ficha is an Estudiante or not</returns>
-        public bool IsStudent(int nroFicha)
+        /// <returns>Message that indicates if the specified Numero de Ficha is an Estudiante or not</returns>
+        public Message IsStudent(int nroFicha)
         {
             var studentTable = Select("SELECT curso FROM Estudiante WHERE nro_ficha=@NroFicha;", new[] { "@NroFicha" }, new object[] { nroFicha });
-            return studentTable.Rows.Count != 0;
+            return studentTable.Rows.Count != 0 ? new Message(true) : new Message(false, "El usuario no es un estudiante");
         }
+
         #endregion
         #region Custom Method
         /// <summary>
