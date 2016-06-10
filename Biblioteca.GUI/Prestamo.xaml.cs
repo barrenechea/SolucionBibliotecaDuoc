@@ -96,7 +96,7 @@ namespace Biblioteca.GUI
                         txtCodLibro.Focus();
                         return false;
                     }
-                    if (prestados > 1)
+                    if (prestados >= 1)
                     {
                         lblStatus.Content = "El estudiante tiene un prestamo pendiente";
                         return false;

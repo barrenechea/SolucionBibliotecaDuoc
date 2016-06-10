@@ -57,6 +57,13 @@ namespace Biblioteca.Entidad
             _codPrestamo = codPrestamo;
             _codLibro = codLibro;
         }
+
+        public DetallePrestamo(DateTime fecDevolucion, string codLibro, int renovacion)
+        {
+            _fecDevolucion = fecDevolucion;
+            _codLibro = codLibro;
+            _renovacion = renovacion;
+        }
         #endregion
     }
 }

@@ -11,7 +11,7 @@ namespace Biblioteca.Controlador
 {
     public class ControllerPrestamo : ControllerDatabase
     {
-        private Prestamo PrestamoPersistence { get; set; }
+        public Prestamo PrestamoPersistence { get; private set; }
         private List<DetallePrestamo> DetPrestamoPersistence { get; set; }
 
         #region Preload method
@@ -187,7 +187,7 @@ namespace Biblioteca.Controlador
         /// </summary>
         /// <param name="numFicha">número de ficha que se buscará</param>
         /// <returns>int con el codigo del préstamo</returns>
-        private int CodigoPrestamo(int numFicha)
+        public int CodigoPrestamo(int numFicha)
         {
             var codigo = Select("SELECT MAX(cod_prestamo) FROM prestamo WHERE nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { numFicha });
             return codigo.Rows[0].Field<int>(0);
@@ -209,6 +209,25 @@ namespace Biblioteca.Controlador
             }
             return fecha;
         }
+
+        public DetallePrestamo InfoLibroPrestado(int numFicha)
+        {
+            var table = Select("SELECT dp.fec_devolucion, dp.cod_libro, dp.renovacion " +
+                                       "FROM Prestamo p " +
+                                       "JOIN Detalle_prestamo dp ON p.cod_prestamo = dp.cod_prestamo " +
+                                       "WHERE p.nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { numFicha });
+            return new DetallePrestamo(table.Rows[0].Field<DateTime>("fec_devolucion"), table.Rows[0].Field<string>("cod_libro"),table.Rows[0].Field<int>("renovacion"));
+        }
+
+        public void ExtenderPrestamo(string codPrestamo, string codLibro, DateTime fecDevolucion)
+        {
+            var newFecha = SumarDias(fecDevolucion, TipoLibro(codLibro) == 4 ? 5 : 3);
+            var sqlSentence = "UPDATE Detalle_prestamo SET fec_devolucion= @NewFecha, renovacion = renovacion+1 WHERE cod_prestamo = @CodPrestamo;"; 
+            var arrayParameters = new[] { "@NewFecha", "@CodPrestamo" };
+            var arrayObjects = new object[] { newFecha, codPrestamo };
+            Execute(sqlSentence, arrayParameters, arrayObjects);
+        }
+
         #endregion
         #endregion
     }
