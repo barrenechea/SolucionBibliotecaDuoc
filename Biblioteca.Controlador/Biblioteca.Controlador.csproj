@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ControllerDatabase.cs" />
+    <Compile Include="ControllerHojaMorosidad.cs" />
     <Compile Include="ControllerLibro.cs" />
     <Compile Include="ControllerPrestamo.cs" />
     <Compile Include="ControllerUsers.cs" />

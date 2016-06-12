@@ -2,7 +2,7 @@
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      Title="Sistema Biblioteca" Height="335.821" Width="407.986"
+                      Title="Sistema Biblioteca" Height="442.721" Width="376.986"
                       IsMaxRestoreButtonEnabled="False" ShowIconOnTitleBar="False"
                       BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
                       ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Loaded="WindowHasLoaded">
@@ -17,23 +17,20 @@
         <Button Style="{DynamicResource MetroCircleButtonStyle}" ToolTip="Volver" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="50" Height="50" Click="BtnVolver_Click">
             <Controls:PackIconModern Kind="ArrowLeft" Width="25" Height="25" />
         </Button>
-        <Label Content="Extender préstamos" HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush}" FontSize="{DynamicResource TabItemFontSize}"/>
-        <Button Name="btnExtender" Content="Extender prestamo" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" VerticalAlignment="Bottom" Click="BtnExtender_Click"/>
+        <Label Name="lblTitulo" Content="WindowTitle" HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush}" FontSize="{DynamicResource TabItemFontSize}"/>
 
-        <Label Content="Nombre estudiante" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top"/>
-        <Label Name="lblNomEstudiante" Content="" HorizontalAlignment="Left" Margin="169,88,0,0" VerticalAlignment="Top" Width="221"/>
-        <Label Content="Libro" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"/>
-        <Label Name="lblNomLibro" Content="" HorizontalAlignment="Left" Margin="169,119,0,0" VerticalAlignment="Top" Width="221"/>
-        <Label Content="Plazo extendido" HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top"/>
-        <Label Name="lblExtendido" Content="" HorizontalAlignment="Left" Margin="169,150,0,0" VerticalAlignment="Top" Width="221"/>
-        <Label Content="FechaDevolucion" HorizontalAlignment="Left" Margin="10,181,0,0" VerticalAlignment="Top"/>
-        <Label Name="lblDevolucion" Content="" HorizontalAlignment="Left" Margin="169,181,0,0" VerticalAlignment="Top" Width="221"/>
-        <Label Name ="lblStatus" Content="" HorizontalAlignment="Left" Height="25" Margin="10,212,0,0" VerticalAlignment="Top" Width="380" Foreground="Red"/>
+        <Label Content="Nombre usuario:" HorizontalAlignment="Left" Margin="10,88,0,0" VerticalAlignment="Top" Width="113"/>
+        <Label Name="lblNomUsuario" Content="" HorizontalAlignment="Right" Margin="0,88,10,0" VerticalAlignment="Top" Width="231"/>
+        <Label Content="Fecha devolución:" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top" Width="113"/>
+        <Label Name="lblDevolucion" Content="" HorizontalAlignment="Right" Margin="0,119,10,0" VerticalAlignment="Top" Width="231"/>
 
+        <Grid Name="grdExtender" Visibility="Visible" Margin="0,150,0,236" RenderTransformOrigin="0.03,-0.67">
+            <Label Content="Veces extendido:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="113" Margin="10,0,0,0"/>
+            <Label x:Name="lblExtendido" Content="" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Top" Width="231"/>
+        </Grid>
 
-
-
-
-
+        <Label Name ="lblStatus" Content="" Height="25" Margin="10,0,10,43" HorizontalContentAlignment="Center" VerticalAlignment="Bottom" Foreground="Red"/>
+        <Button Name="btnExecute" Content="btnContent" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" VerticalAlignment="Bottom" Click="BtnExecute_Click"/>
+        <DataGrid Name="lstLibro" HorizontalAlignment="Left" Margin="10,181,0,0" VerticalAlignment="Top" Width="349" Height="158"/>
     </Grid>
 </Controls:MetroWindow>

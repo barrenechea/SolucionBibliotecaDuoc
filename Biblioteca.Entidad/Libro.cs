@@ -20,7 +20,7 @@ namespace Biblioteca.Entidad
         public string CodLibro
         {
             get { return _codLibro; }
-            set
+            private set
             {
                 if (value == string.Empty)
                     throw new ArgumentException("Debe ingresar un cod de libro");
@@ -130,6 +130,13 @@ namespace Biblioteca.Entidad
             CodTipo = codTipo;
             NroPaginas = nroPaginas;
             NroCopias = nroCopias;
+        }
+
+        public Libro(string codLibro, string titulo, string autor)
+        {
+            CodLibro = codLibro;
+            Titulo = titulo;
+            Autor = autor;
         }
         #endregion
     }

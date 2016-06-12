@@ -87,7 +87,7 @@ namespace Biblioteca.GUI
             var resultado = App.Prestamo.ExistsNroFicha(txtNroFicha.Text);
             if (resultado.Status)
             {
-                var prestados = App.Prestamo.LibrosPrestados(txtNroFicha.Text);
+                var prestados = App.Prestamo.CantLibrosPrestados(txtNroFicha.Text);
                 if (App.Users.IsStudent(int.Parse(txtNroFicha.Text)).Status)
                 {
                     if (codigos.Length > 1)

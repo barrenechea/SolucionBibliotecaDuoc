@@ -212,17 +212,11 @@ namespace Biblioteca.GUI
             {
                 new Prestamo().Show();
                 Close();
-                //ToDo Nuevo préstamo
-            }
-            else if (result == MessageDialogResult.Negative)
-            {
-                new PrestamoExtender().Show();
-                Close();
-                //ToDo Extender préstamo
             }
             else
             {
-                //ToDo Devolución
+                new PrestamoExtender(result == MessageDialogResult.Negative).Show();
+                Close();
             }
         }
         /// <summary>

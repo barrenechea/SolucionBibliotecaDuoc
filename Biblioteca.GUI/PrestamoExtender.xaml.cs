@@ -23,10 +23,14 @@ namespace Biblioteca.GUI
     public partial class PrestamoExtender
     {
         private int _nroFicha;
+        private readonly bool _isExtend;
         
-        public PrestamoExtender()
+        public PrestamoExtender(bool isExtend)
         {
+            
             InitializeComponent();
+            _isExtend = isExtend;
+            lblTitulo.Content = btnExecute.Content = _isExtend ? "Extender prestamo" : "Devolver libro";
         }
 
         private async void SearchPrestamoDialog()
@@ -46,27 +50,36 @@ namespace Biblioteca.GUI
                 Close();
                 return;
             }
-
+            _nroFicha = int.Parse(nroFicha);
             var exists = App.Users.FetchUsuario(nroFicha);
             if (exists.Status)
             {
+                exists = App.Prestamo.FetchPrestamo(nroFicha);
+                if (!exists.Status)
+                {
+                    new PanelAdmin(exists).Show();
+                    Close();
+                    return;
+                }
                 exists = App.Users.IsStudent(int.Parse(nroFicha));
                 if (exists.Status)
                 {
-                    exists = App.Prestamo.FetchPrestamo(nroFicha);
-                    if (!exists.Status)
-                    {
-                        new PanelAdmin(exists).Show();
-                        Close();
-                        return;
-                    }
                     _nroFicha = int.Parse(nroFicha);
                     LoadData();
                 }
                 else
                 {
-                    new PanelAdmin(exists).Show();
-                    Close();
+                    if (_isExtend)
+                    {
+                        new PanelAdmin(exists).Show();
+                        Close();
+                    }
+                    else
+                    {
+                        _nroFicha = int.Parse(nroFicha);
+                        LoadData();
+                    }
+                    
                 }
             }
             else
@@ -79,20 +92,25 @@ namespace Biblioteca.GUI
         private void LoadData()
         {
             
-            lblNomEstudiante.Content = App.Users.PersonaPersistence.Nombre + " " + App.Users.PersonaPersistence.Apellido;
+            lblNomUsuario.Content = string.Format("{0} {1}", App.Users.PersonaPersistence.Nombre, App.Users.PersonaPersistence.Apellido);
             lblDevolucion.Content = App.Prestamo.DetPrestamoPersistence.FecDevolucion.ToString("dd-MM-yyyy");
+            var libroList = App.Prestamo.InfoLibrosPrestados(_nroFicha);
+            lstLibro.ItemsSource = libroList;
+            if (_isExtend) FixWindow();
+        }
+
+        private void FixWindow()
+        {
+            grdExtender.Visibility = Visibility.Visible;
             lblExtendido.Content = App.Prestamo.DetPrestamoPersistence.Renovacion;
-            lblNomLibro.Content = App.Prestamo.DetPrestamoPersistence.CodLibro.ToUpper();
-            
-            if (App.Prestamo.DetPrestamoPersistence.Renovacion >= 3 )
+            if (App.Prestamo.DetPrestamoPersistence.Renovacion >= 3)
             {
-                btnExtender.IsEnabled = false;
+                btnExecute.IsEnabled = false;
                 lblStatus.Content = "No se puede extender un libro más de tres veces";
             }
             if (App.Prestamo.DetPrestamoPersistence.FecDevolucion >= DateTime.Now) return;
-            btnExtender.IsEnabled = false;
+            btnExecute.IsEnabled = false;
             lblStatus.Content = "El alumno tiene morosidad, no puede extender el libro";
-            
         }
 
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
@@ -104,22 +122,50 @@ namespace Biblioteca.GUI
 
         private void BtnVolver_Click(object sender, RoutedEventArgs e)
         {
-            App.Prestamo.ClearPersistantData();
-            App.Users.ClearPersistantData();
+            Clear();
             new PanelAdmin().Show();
             Close();
+        }
+
+        private void Clear()
+        {
+            App.Prestamo.ClearPersistantData();
+            App.Users.ClearPersistantData();
         }
 
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
         {
             SearchPrestamoDialog();
+            var libroList = App.Prestamo.InfoLibrosPrestados(_nroFicha);
+            lstLibro.ItemsSource = libroList;
+            for (var i = 3; i < 10; i++)
+            {
+                lstLibro.Columns[i].Visibility = Visibility.Hidden;        
+            }
+            lstLibro.Columns[0].Header = "CODIGO";
         }
 
-        private void BtnExtender_Click(object sender, RoutedEventArgs e)
+        private void BtnExecute_Click(object sender, RoutedEventArgs e)
         {
             var codPrestamo = App.Prestamo.CodigoPrestamo(_nroFicha);
-            App.Prestamo.ExtenderPrestamo(codPrestamo.ToString(), App.Prestamo.DetPrestamoPersistence.CodLibro, App.Prestamo.DetPrestamoPersistence.FecDevolucion);
-            LoadData();
+            if (_isExtend)
+            {
+                App.Prestamo.ExtenderPrestamo(codPrestamo.ToString(), App.Prestamo.DetPrestamoPersistence.CodLibro,
+                    App.Prestamo.DetPrestamoPersistence.FecDevolucion);
+                LoadData();
+            }
+            else
+            {
+                if (App.Prestamo.DetPrestamoPersistence.FecDevolucion < DateTime.Now)
+                {
+                    App.Prestamo.HojaDeMorosidad(_nroFicha,App.Prestamo.DiasAtraso(App.Prestamo.DetPrestamoPersistence.FecDevolucion));
+                    lblStatus.Content = App.Prestamo.DiasAtraso(App.Prestamo.DetPrestamoPersistence.FecDevolucion);
+                }
+                var res = App.Prestamo.DevolverLibro(codPrestamo.ToString(), App.Prestamo.DetPrestamoPersistence.CodLibro,
+                    App.Prestamo.DetPrestamoPersistence.FecDevolucion);
+                new PanelAdmin(res).Show();
+                Close();
+            }
         }
     }
 }

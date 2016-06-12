@@ -148,7 +148,7 @@ namespace Biblioteca.Controlador
         /// </summary>
         /// <param name="nroFicha">Numero e ficha del usuario al que se le revisará</param>
         /// <returns>int con la cantidad de libros</returns>
-        public int LibrosPrestados(string nroFicha)
+        public int CantLibrosPrestados(string nroFicha)
         {
             var exists = Select("SELECT count(dp.cod_prestamo) " +
                                "FROM detalle_prestamo dp " +
@@ -180,6 +180,7 @@ namespace Biblioteca.Controlador
                 new object[] { codLibro });
             return query.Rows[0].Field<int>(0);
         }
+
         #endregion
         #region Prestamo
 
@@ -211,14 +212,47 @@ namespace Biblioteca.Controlador
             return fecha;
         }
 
+        public int DiasAtraso(DateTime fecha)
+        {
+            var contador = 0;
+            var auxFecha = int.Parse((fecha - DateTime.Now).ToString("%d"));
+
+            for (var i = 0; i < auxFecha; i++)
+            {
+                fecha = fecha.AddDays(-1);
+                if (fecha.DayOfWeek != DayOfWeek.Sunday && fecha.DayOfWeek != DayOfWeek.Saturday)
+                    contador ++;
+            }
+            return contador;
+        }
+
         public Message FetchPrestamo(string nroFicha)
         {
             var table = Select("SELECT dp.fec_devolucion, dp.cod_libro, dp.renovacion " +
                                        "FROM Prestamo p " +
                                        "JOIN Detalle_prestamo dp ON p.cod_prestamo = dp.cod_prestamo " +
-                                       "WHERE p.nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { nroFicha });
+                                       "WHERE p.nro_ficha = @NroFicha AND dp.libro_devuelto = 0;", new[] { "@NroFicha" }, new object[] { nroFicha });
+            if(table.Rows.Count==0) return new Message(false, "No tiene préstamos pendientes");
             DetPrestamoPersistence = new DetallePrestamo(table.Rows[0].Field<DateTime>("fec_devolucion"), table.Rows[0].Field<string>("cod_libro"),table.Rows[0].Field<int>("renovacion"));
-            return LibrosPrestados(nroFicha) == 0 ? new Message(false, "El estudiante no tiene préstamo pendiente") : new Message(true);
+            return CantLibrosPrestados(nroFicha) == 0 ? new Message(false, "El estudiante no tiene préstamo pendiente") : new Message(true);
+        }
+
+        public List<Libro> InfoLibrosPrestados(int nroFicha)
+        {
+            var libroTable = Select("SELECT dp.cod_libro, l.titulo, l.autor " +
+                                    "FROM Prestamo p " +
+                                    "JOIN Detalle_prestamo dp " +
+                                    "ON p.cod_prestamo = dp.cod_prestamo " +
+                                    "JOIN Libro l ON l.cod_libro = dp.cod_libro " +
+                                    "WHERE p.nro_ficha = @NroFicha AND dp.libro_devuelto = 0;",
+                                    new[] { "@NroFicha" }, new object[] { nroFicha });
+            var libroList = new List<Libro>();
+            for (var i = 0; i < libroTable.Rows.Count; i++)
+            {
+                libroList.Add(new Libro(libroTable.Rows[i].Field<string>("cod_libro"),
+                    libroTable.Rows[i].Field<string>("titulo"),libroTable.Rows[i].Field<string>("autor")));
+            }
+            return libroList;
         }
 
         public void ClearPersistantData()
@@ -237,6 +271,26 @@ namespace Biblioteca.Controlador
             Execute(sqlSentence, arrayParameters, arrayObjects);
         }
 
+        public Message DevolverLibro(string codPrestamo, string codLibro, DateTime fecDevolucion)
+        {
+            var sqlSentence = "UPDATE Detalle_prestamo SET libro_devuelto = 1 WHERE cod_prestamo = @CodPrestamo and cod_libro = @CodLibro;";
+            var arrayParameters = new[] { "@CodPrestamo", "@CodLibro" };
+            var arrayObjects = new object[] { codPrestamo, codLibro };
+            Execute(sqlSentence, arrayParameters, arrayObjects);
+
+            if (fecDevolucion < DateTime.Now)
+            {
+                return new Message(false, "El usuario ha quedado registrado en la hoja de morosidad. Revise en el Panel de administración para más información");
+            }
+            return new Message(true);
+
+        }
+
+        public Message HojaDeMorosidad(int nroFicha, int diasAtrasados)
+        {
+            //if()
+            return new Message(true);
+        }
         #endregion
         #endregion
     }
