@@ -24,12 +24,14 @@ namespace Biblioteca.GUI
     {
         private int _nroFicha;
         private readonly bool _isExtend;
+        private List<Libro> _dataGridList = new List<Libro>(); 
         
         public PrestamoExtender(bool isExtend)
         {
             
             InitializeComponent();
             _isExtend = isExtend;
+            lstLibro.ItemsSource = _dataGridList;
             lblTitulo.Content = btnExecute.Content = _isExtend ? "Extender prestamo" : "Devolver libro";
         }
 
@@ -95,7 +97,11 @@ namespace Biblioteca.GUI
             lblNomUsuario.Content = string.Format("{0} {1}", App.Users.PersonaPersistence.Nombre, App.Users.PersonaPersistence.Apellido);
             lblDevolucion.Content = App.Prestamo.DetPrestamoPersistence.FecDevolucion.ToString("dd-MM-yyyy");
             var libroList = App.Prestamo.InfoLibrosPrestados(_nroFicha);
-            lstLibro.ItemsSource = libroList;
+            foreach (var lib in libroList)
+            {
+                _dataGridList.Add(lib);
+            }
+            lstLibro.Items.Refresh();
             if (_isExtend) FixWindow();
         }
 
@@ -136,11 +142,10 @@ namespace Biblioteca.GUI
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
         {
             SearchPrestamoDialog();
-            var libroList = App.Prestamo.InfoLibrosPrestados(_nroFicha);
-            lstLibro.ItemsSource = libroList;
+
             for (var i = 3; i < 10; i++)
             {
-                lstLibro.Columns[i].Visibility = Visibility.Hidden;        
+                lstLibro.Columns[i].Visibility = Visibility.Hidden;
             }
             lstLibro.Columns[0].Header = "CODIGO";
         }
