@@ -94,8 +94,8 @@ namespace Biblioteca.GUI
             
             lblNomUsuario.Content = string.Format("{0} {1}", App.Users.PersonaPersistence.Nombre, App.Users.PersonaPersistence.Apellido);
             lblDevolucion.Content = App.Prestamo.DetPrestamoPersistence.FecDevolucion.ToString("dd-MM-yyyy");
-            var libroList = App.Prestamo.InfoLibrosPrestados(_nroFicha);
-            lstLibro.ItemsSource = libroList;
+            //var libroList = App.Prestamo.InfoLibrosPrestados(_nroFicha);
+            //lstLibro.ItemsSource = libroList;
             if (_isExtend) FixWindow();
         }
 
