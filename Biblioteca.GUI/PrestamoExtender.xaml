@@ -24,7 +24,7 @@
         <Label Content="Fecha devolución:" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top" Width="113"/>
         <Label Name="lblDevolucion" Content="" HorizontalAlignment="Right" Margin="0,119,10,0" VerticalAlignment="Top" Width="231"/>
 
-        <Grid Name="grdExtender" Visibility="Visible" Margin="0,150,0,236" RenderTransformOrigin="0.03,-0.67">
+        <Grid Name="grdExtender" Visibility="Hidden" Margin="0,150,0,236" RenderTransformOrigin="0.03,-0.67">
             <Label Content="Veces extendido:" HorizontalAlignment="Left" VerticalAlignment="Top" Width="113" Margin="10,0,0,0"/>
             <Label x:Name="lblExtendido" Content="" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Top" Width="231"/>
         </Grid>

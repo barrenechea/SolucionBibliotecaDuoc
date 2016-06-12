@@ -56,7 +56,7 @@ namespace Biblioteca.GUI
             var exists = App.Users.FetchUsuario(nroFicha);
             if (exists.Status)
             {
-                exists = App.Prestamo.FetchPrestamo(nroFicha);
+                exists = App.Prestamo.FetchPrestamo(_nroFicha);
                 if (!exists.Status)
                 {
                     new PanelAdmin(exists).Show();
@@ -93,11 +93,13 @@ namespace Biblioteca.GUI
 
         private void LoadData()
         {
-            
+            if (_isExtend)
+            {
+                lblDevolucion.Visibility = Visibility.Visible;
+                lblDevolucion.Content = App.Prestamo.DetPrestamoPersistenceList[0].FecDevolucion.ToString("dd-MM-yyyy");
+            }
             lblNomUsuario.Content = string.Format("{0} {1}", App.Users.PersonaPersistence.Nombre, App.Users.PersonaPersistence.Apellido);
-            lblDevolucion.Content = App.Prestamo.DetPrestamoPersistence.FecDevolucion.ToString("dd-MM-yyyy");
-            var libroList = App.Prestamo.InfoLibrosPrestados(_nroFicha);
-            foreach (var lib in libroList)
+            foreach (var lib in App.Prestamo.InfoLibrosPersistence)
             {
                 _dataGridList.Add(lib);
             }
@@ -108,13 +110,14 @@ namespace Biblioteca.GUI
         private void FixWindow()
         {
             grdExtender.Visibility = Visibility.Visible;
-            lblExtendido.Content = App.Prestamo.DetPrestamoPersistence.Renovacion;
-            if (App.Prestamo.DetPrestamoPersistence.Renovacion >= 3)
+            App.Prestamo.FetchPrestamo(_nroFicha);
+            lblExtendido.Content = App.Prestamo.DetPrestamoPersistenceList[0].Renovacion;
+            if (App.Prestamo.DetPrestamoPersistenceList[0].Renovacion >= 3)
             {
                 btnExecute.IsEnabled = false;
                 lblStatus.Content = "No se puede extender un libro más de tres veces";
             }
-            if (App.Prestamo.DetPrestamoPersistence.FecDevolucion >= DateTime.Now) return;
+            if (App.Prestamo.DetPrestamoPersistenceList[0].FecDevolucion >= DateTime.Now) return;
             btnExecute.IsEnabled = false;
             lblStatus.Content = "El alumno tiene morosidad, no puede extender el libro";
         }
@@ -155,19 +158,19 @@ namespace Biblioteca.GUI
             var codPrestamo = App.Prestamo.CodigoPrestamo(_nroFicha);
             if (_isExtend)
             {
-                App.Prestamo.ExtenderPrestamo(codPrestamo.ToString(), App.Prestamo.DetPrestamoPersistence.CodLibro,
-                    App.Prestamo.DetPrestamoPersistence.FecDevolucion);
+                App.Prestamo.ExtenderPrestamo(codPrestamo.ToString(), App.Prestamo.DetPrestamoPersistenceList[0].CodLibro,
+                    App.Prestamo.DetPrestamoPersistenceList[0].FecDevolucion);
                 LoadData();
             }
             else
             {
-                if (App.Prestamo.DetPrestamoPersistence.FecDevolucion < DateTime.Now)
+                if (App.Prestamo.DetPrestamoPersistenceList[0].FecDevolucion < DateTime.Now)
                 {
-                    App.Prestamo.HojaDeMorosidad(_nroFicha,App.Prestamo.DiasAtraso(App.Prestamo.DetPrestamoPersistence.FecDevolucion));
-                    lblStatus.Content = App.Prestamo.DiasAtraso(App.Prestamo.DetPrestamoPersistence.FecDevolucion);
+                    App.Prestamo.HojaDeMorosidad(_nroFicha, App.Prestamo.DiasAtraso(App.Prestamo.DetPrestamoPersistenceList[0].FecDevolucion));
+                    lblStatus.Content = App.Prestamo.DiasAtraso(App.Prestamo.DetPrestamoPersistenceList[0].FecDevolucion);
                 }
-                var res = App.Prestamo.DevolverLibro(codPrestamo.ToString(), App.Prestamo.DetPrestamoPersistence.CodLibro,
-                    App.Prestamo.DetPrestamoPersistence.FecDevolucion);
+                var res = App.Prestamo.DevolverLibro(codPrestamo.ToString(), App.Prestamo.DetPrestamoPersistenceList[0].CodLibro,
+                    App.Prestamo.DetPrestamoPersistenceList[0].FecDevolucion);
                 new PanelAdmin(res).Show();
                 Close();
             }

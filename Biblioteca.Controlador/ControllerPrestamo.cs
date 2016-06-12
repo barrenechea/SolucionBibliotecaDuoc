@@ -12,7 +12,8 @@ namespace Biblioteca.Controlador
     public class ControllerPrestamo : ControllerDatabase
     {
         private Prestamo PrestamoPersistence { get; set; }
-        private List<DetallePrestamo> DetPrestamoPersistenceList { get; set; }
+        public List<DetallePrestamo> DetPrestamoPersistenceList { get; set; }
+        public List<Libro> InfoLibrosPersistence { get; set; }
         public DetallePrestamo DetPrestamoPersistence { get; set; }
 
         #region Preload method
@@ -226,38 +227,30 @@ namespace Biblioteca.Controlador
             return contador;
         }
 
-        public Message FetchPrestamo(string nroFicha)
+        public Message FetchPrestamo(int nroFicha)
         {
-            var table = Select("SELECT dp.fec_devolucion, dp.cod_libro, dp.renovacion " +
-                                       "FROM Prestamo p " +
-                                       "JOIN Detalle_prestamo dp ON p.cod_prestamo = dp.cod_prestamo " +
-                                       "WHERE p.nro_ficha = @NroFicha AND dp.libro_devuelto = 0;", new[] { "@NroFicha" }, new object[] { nroFicha });
-            if(table.Rows.Count==0) return new Message(false, "No tiene préstamos pendientes");
-            DetPrestamoPersistence = new DetallePrestamo(table.Rows[0].Field<DateTime>("fec_devolucion"), table.Rows[0].Field<string>("cod_libro"),table.Rows[0].Field<int>("renovacion"));
-            return CantLibrosPrestados(nroFicha) == 0 ? new Message(false, "El estudiante no tiene préstamo pendiente") : new Message(true);
-        }
-
-        public List<Libro> InfoLibrosPrestados(int nroFicha)
-        {
-            var libroTable = Select("SELECT dp.cod_libro, l.titulo, l.autor " +
+            DetPrestamoPersistenceList = new List<DetallePrestamo>();
+            InfoLibrosPersistence = new List<Libro>();
+            var table = Select("SELECT dp.cod_libro, l.titulo, l.autor, dp.fec_devolucion, dp.cod_libro, dp.renovacion " +
                                     "FROM Prestamo p " +
                                     "JOIN Detalle_prestamo dp " +
                                     "ON p.cod_prestamo = dp.cod_prestamo " +
                                     "JOIN Libro l ON l.cod_libro = dp.cod_libro " +
                                     "WHERE p.nro_ficha = @NroFicha AND dp.libro_devuelto = 0;",
                                     new[] { "@NroFicha" }, new object[] { nroFicha });
-            var libroList = new List<Libro>();
-            for (var i = 0; i < libroTable.Rows.Count; i++)
+            if (table.Rows.Count == 0) return new Message(false, "No tiene préstamos pendientes");
+            for (var i = 0; i < table.Rows.Count; i++)
             {
-                libroList.Add(new Libro(libroTable.Rows[i].Field<string>("cod_libro"),
-                    libroTable.Rows[i].Field<string>("titulo"),libroTable.Rows[i].Field<string>("autor")));
+                InfoLibrosPersistence.Add(new Libro(table.Rows[i].Field<string>("cod_libro"),
+                    table.Rows[i].Field<string>("titulo"),table.Rows[i].Field<string>("autor")));
+                DetPrestamoPersistenceList.Add(new DetallePrestamo(table.Rows[i].Field<DateTime>("fec_devolucion"),
+                    table.Rows[i].Field<string>("cod_libro"), table.Rows[i].Field<int>("renovacion")));
             }
-            return libroList;
+            return CantLibrosPrestados(nroFicha.ToString()) == 0 ? new Message(false, "No tiene préstamos pendientes") : new Message(true);
         }
 
         public void ClearPersistantData()
         {
-            DetPrestamoPersistence = null;
             DetPrestamoPersistenceList = null;
             PrestamoPersistence = null;
         }
