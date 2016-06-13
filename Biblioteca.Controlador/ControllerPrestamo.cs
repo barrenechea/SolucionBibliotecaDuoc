@@ -140,8 +140,8 @@ namespace Biblioteca.Controlador
         /// <returns>int con la cantidad de libros</returns>
         public int LibroDisponible(string codLibro)
         {
-            var exists = Select("SELECT count(*) from Libro WHERE cod_libro = @CodLibro and nro_copias > 0;", new[] { "@CodLibro" }, new object[] { codLibro });
-            return (int)exists.Rows[0].Field<long>(0);
+            var exists = Select("SELECT nro_copias from Libro WHERE cod_libro = @CodLibro;", new[] { "@CodLibro" }, new object[] { codLibro });
+            return exists.Rows[0].Field<int>(0);
         }
 
         /// <summary>
@@ -255,34 +255,59 @@ namespace Biblioteca.Controlador
             PrestamoPersistence = null;
         }
 
-        public void ExtenderPrestamo(string codPrestamo, string codLibro, DateTime fecDevolucion)
+        public Message ExtenderPrestamo(int codPrestamo, string codLibro, DateTime fecDevolucion)
         {
             var newFecha = SumarDias(fecDevolucion, TipoLibro(codLibro) == 4 ? 5 : 3);
             var sqlSentence = "UPDATE Detalle_prestamo SET fec_devolucion= @NewFecha, renovacion = renovacion+1 WHERE cod_prestamo = @CodPrestamo;"; 
             var arrayParameters = new[] { "@NewFecha", "@CodPrestamo" };
             var arrayObjects = new object[] { newFecha, codPrestamo };
             Execute(sqlSentence, arrayParameters, arrayObjects);
+            return new Message(true,
+                string.Format("Nueva fecha de devolución: {0}", newFecha.ToString("dd-MM-yyyy")));
+            //toDo Problemas con la fecha.
         }
 
-        public Message DevolverLibro(string codPrestamo, string codLibro, DateTime fecDevolucion)
+        public Message DevolverLibro(int codPrestamo, string codLibro, DateTime fecDevolucion, bool isStudent)
         {
             var sqlSentence = "UPDATE Detalle_prestamo SET libro_devuelto = 1 WHERE cod_prestamo = @CodPrestamo and cod_libro = @CodLibro;";
             var arrayParameters = new[] { "@CodPrestamo", "@CodLibro" };
             var arrayObjects = new object[] { codPrestamo, codLibro };
             Execute(sqlSentence, arrayParameters, arrayObjects);
 
-            if (fecDevolucion < DateTime.Now)
-            {
-                return new Message(false, "El usuario ha quedado registrado en la hoja de morosidad. Revise en el Panel de administración para más información");
-            }
-            return new Message(true);
-
+            if (!isStudent) return new Message(true, "Devolución realizada con éxito.");
+            return fecDevolucion < DateTime.Now ? new Message(false, "El usuario ha quedado registrado en la hoja de morosidad. Revise en el Panel de administración para más información") : new Message(true, "Devolución realizada con éxito.");
         }
 
-        public Message HojaDeMorosidad(int nroFicha, int diasAtrasados)
+        public int CodigoPrestamoLibro(int nroFicha,  string codLibro)
         {
-            //if()
-            return new Message(true);
+            var sqlSentence = "SELECT MAX(dp.cod_prestamo) " +
+                              "FROM prestamo p " +
+                              "JOIN detalle_prestamo dp " +
+                              "WHERE p.nro_ficha = @NroFicha " +
+                              "AND dp.cod_libro = @CodLibro;";
+            var arrayParameters = new[] {"@NroFicha","@CodLibro"};
+            var arrayObjects = new object[] {nroFicha, codLibro};
+            var codigo = Select(sqlSentence, arrayParameters, arrayObjects);
+            return codigo.Rows[0].Field<int>(0);
+        }
+
+        public void HojaDeMorosidad(int nroFicha, int diasAtrasados, string codLibro)
+        {
+            var sancion="";
+            if (diasAtrasados <= 2)
+                sancion = "3 días sin pedir libros";
+            if (diasAtrasados > 2 && diasAtrasados < 4)
+                sancion = "5 días sin pedir libros.";
+            if (diasAtrasados > 5)
+                sancion = "7 días de suspensión más citación al apoderado.";
+
+            var sqlSentence = "INSERT INTO Hoja_morosidad(fecha, sancion, dias_atraso, nro_ficha, cod_libro) " +
+                              "VALUES (@Fecha,@Sancion,@DiasAtraso,@NroFicha,@CodLibro)";
+            var arrayParameters = new[] { "@Fecha", "@Sancion", "@DiasAtraso", "@NroFicha", "@CodLibro"};
+            var arrayObjects = new object[] {DateTime.Now, sancion, diasAtrasados, nroFicha, codLibro};
+            Execute(sqlSentence, arrayParameters, arrayObjects);
+
+            Execute("UPDATE Usuario set estado = 0 WHERE nro_ficha = @NroFicha", new []{"@NroFicha"}, new object[]{nroFicha});
         }
         #endregion
         #endregion
