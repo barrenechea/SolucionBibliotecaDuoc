@@ -71,6 +71,9 @@
     <Compile Include="Catalogo.xaml.cs">
       <DependentUpon>Catalogo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HojaMorosidad.xaml.cs">
+      <DependentUpon>HojaMorosidad.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PrestamoAdd.xaml.cs">
       <DependentUpon>PrestamoAdd.xaml</DependentUpon>
     </Compile>
@@ -133,6 +136,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Catalogo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HojaMorosidad.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
