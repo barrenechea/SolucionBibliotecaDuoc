@@ -12,6 +12,7 @@ namespace Biblioteca.GUI
     /// </summary>
     public partial class PrestamoManager
     {
+
         #region Attributes
         private readonly List<Libro> _dataGridList;
         private readonly bool _isExtend;

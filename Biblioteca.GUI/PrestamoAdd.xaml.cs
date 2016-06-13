@@ -8,6 +8,7 @@ namespace Biblioteca.GUI
     /// </summary>
     public partial class PrestamoAdd
     {
+
         #region Constructor
         /// <summary>
         /// Generates a new instance of PrestamoAdd
