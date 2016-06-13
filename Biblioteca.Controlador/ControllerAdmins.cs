@@ -5,7 +5,7 @@ using Biblioteca.Entidad.Enum;
 
 namespace Biblioteca.Controlador
 {
-    public class ControllerAdmins : ControllerDatabase
+    public class ControllerAdmins : ControllerLog
     {
         #region Attributes
         public Administrador AdminActive { get; private set; }
@@ -36,6 +36,9 @@ namespace Biblioteca.Controlador
                 return new Message(false, "La cuenta no está correctamente configurada");
 
             AdminActive = new Administrador(adminTable.Rows[0].Field<string>(0), adminTable.Rows[0].Field<string>(1), adminTable.Rows[0].Field<string>(2), adminTable.Rows[0].Field<string>(3), adminTable.Rows[0].Field<bool>(4), char.Parse(adminTable.Rows[0].Field<string>(5)));
+
+            LogUsername = AdminActive.IdUsuario;
+            Log("Inicio de sesión");
 
             return new Message(true);
         }
@@ -105,6 +108,7 @@ namespace Biblioteca.Controlador
 
             if (executeAdmin.Status)
             {
+                Log(string.Format("Nuevo {0}: {1}", AdminPersistence.TipoDeUsuarioChar == 'J' ? "Jefe Biblioteca" : "Bibliotecario", AdminPersistence.IdUsuario));
                 executeAdmin.Mensaje = string.Format("{0} agregado exitosamente", AdminPersistence.TipoDeUsuarioChar == 'J' ? "Jefe Biblioteca" : "Bibliotecario");
                 AdminPersistence = null;
                 return executeAdmin;
@@ -141,6 +145,7 @@ namespace Biblioteca.Controlador
             var executeUpdate = Execute(sqlSentence, arrayParameters, arrayObjects);
             if (executeUpdate.Status)
             {
+                Log(string.Format("Modificado {0}: {1}", AdminPersistence.TipoDeUsuarioChar == 'J' ? "Jefe Biblioteca" : "Bibliotecario", AdminPersistence.IdUsuario));
                 executeUpdate.Mensaje = string.Format("{0} modificado exitosamente", AdminPersistence.TipoDeUsuarioChar == 'J' ? "Jefe Biblioteca" : "Bibliotecario");
                 AdminPersistence = null;
             }

@@ -4,7 +4,7 @@ using Biblioteca.Entidad;
 
 namespace Biblioteca.Controlador
 {
-    public class ControllerLibro : ControllerDatabase
+    public class ControllerLibro : ControllerLog
     {
         #region Attribute
         public Libro LibroPersistence { get; private set; }
@@ -67,6 +67,7 @@ namespace Biblioteca.Controlador
 
             if (executeLib.Status)
             {
+                Log(string.Format("Agregó libro {0}", LibroPersistence.CodLibro));
                 executeLib.Mensaje = string.Format("Libro {0} agregado exitosamente", LibroPersistence.CodLibro);
                 LibroPersistence = null;
                 return executeLib;
@@ -102,7 +103,10 @@ namespace Biblioteca.Controlador
 
             var executeUpdate = Execute(sqlSentence, arrayParameters, arrayObjects);
             if (executeUpdate.Status)
+            {
+                Log(string.Format("Modificó libro {0}", LibroPersistence.CodLibro));
                 executeUpdate.Mensaje = string.Format("Libro {0} modificado exitosamente", LibroPersistence.CodLibro);
+            }
             LibroPersistence = null;
             return executeUpdate;
         }
@@ -112,7 +116,7 @@ namespace Biblioteca.Controlador
         /// <param name="codLibro">Código del libro que se descontará</param>
         public void Discount(string codLibro)
         {
-            Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new[] { "CodLibro" }, new object[] { codLibro });
+            Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new[] { "@CodLibro" }, new object[] { codLibro });
         }
         /// <summary>
         /// Incrementa en 1 un determinado libro
@@ -120,7 +124,7 @@ namespace Biblioteca.Controlador
         /// <param name="codLibro">Código del libro que se incrementará</param>
         public void Increase(string codLibro)
         {
-            Execute("UPDATE libro SET nro_copias=nro_copias+1 WHERE cod_libro = @CodLibro;", new[] { "CodLibro" }, new object[] { codLibro });
+            Execute("UPDATE libro SET nro_copias=nro_copias+1 WHERE cod_libro = @CodLibro;", new[] { "@CodLibro" }, new object[] { codLibro });
         }
         #endregion
         #region Select querys

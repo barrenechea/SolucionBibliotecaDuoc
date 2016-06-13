@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Biblioteca.Controlador
 {
-    public class ControllerHojaMorosidad : ControllerDatabase
+    public class ControllerHojaMorosidad : ControllerLog
     {
         public void Insert(int nroFicha, int diasAtrasados, string codLibro)
         {
@@ -24,6 +24,8 @@ namespace Biblioteca.Controlador
             Execute(sqlSentence, arrayParameters, arrayObjects);
 
             Execute("UPDATE Usuario set estado = 0 WHERE nro_ficha = @NroFicha", new[] { "@NroFicha" }, new object[] { nroFicha });
+
+            Log(string.Format("Agregó morosidad a ficha {0}", nroFicha));
         }
     }
 }

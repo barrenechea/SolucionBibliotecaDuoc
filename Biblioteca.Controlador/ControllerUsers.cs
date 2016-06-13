@@ -6,7 +6,7 @@ using Biblioteca.Entidad;
 
 namespace Biblioteca.Controlador
 {
-    public class ControllerUsers : ControllerDatabase
+    public class ControllerUsers : ControllerLog
     {
         #region Attributes
         public Persona PersonaPersistence { get; private set; }
@@ -164,6 +164,7 @@ namespace Biblioteca.Controlador
 
                     var executeFuncionario = Execute(sqlSentence, arrayParameters, arrayObjects);
                     if (executeFuncionario.Status) executeFuncionario.Mensaje = string.Format("Funcionario agregado. N° de Ficha: {0}", ficha);
+                    Log(string.Format("Funcionario agregado. Ficha: {0}", ficha));
                     PersonaPersistence = null;
                     return executeFuncionario;
                     #endregion
@@ -177,6 +178,7 @@ namespace Biblioteca.Controlador
 
                     var executeEstudiante = Execute(sqlSentence, arrayParameters, arrayObjects);
                     if (executeEstudiante.Status) executeEstudiante.Mensaje = string.Format("Estudiante agregado. N° de Ficha: {0}", ficha);
+                    Log(string.Format("Estudiante agregado. Ficha: {0}", ficha));
                     PersonaPersistence = null;
                     return executeEstudiante;
                     #endregion
@@ -191,6 +193,7 @@ namespace Biblioteca.Controlador
 
                 var executeApoderado = Execute(sqlSentence, arrayParameters, arrayObjects);
                 if (executeApoderado.Status) executeApoderado.Mensaje = "Apoderado agregado exitosamente";
+                Log(string.Format("Apoderado agregado. RUN: {0} [Ficha asociada: {1}]", PersonaPersistence.Run, ((Apoderado)PersonaPersistence).NroFicha));
                 PersonaPersistence = null;
                 return executeApoderado;
                 #endregion
@@ -209,7 +212,7 @@ namespace Biblioteca.Controlador
             const string sqlSentence = "INSERT INTO Apoderado (rut, nro_ficha, parentesco) VALUES (@Run, @NroFicha, @Parentesco);";
             var arrayParameters = new[] { "@Run", "@NroFicha", "@Parentesco" };
             var arrayObjects = new object[] { run, numFicha, parentesco };
-
+            Log(string.Format("Apoderado asociado. RUN: {0} [Ficha asociada: {1}]", run, numFicha));
             return Execute(sqlSentence, arrayParameters, arrayObjects);
         }
         /// <summary>
@@ -264,7 +267,9 @@ namespace Biblioteca.Controlador
                 arrayObjects = new object[] { ((Funcionario)PersonaPersistence).Cargo, ((Usuario)PersonaPersistence).NroFicha };
 
                 execute = Execute(sqlSentence, arrayParameters, arrayObjects);
-                    
+                if (!execute.Status) return execute;
+                
+                Log(string.Format("Funcionario actualizado. Ficha: {0}", ((Usuario)PersonaPersistence).NroFicha));
                 #endregion
             }
             else
@@ -275,8 +280,10 @@ namespace Biblioteca.Controlador
                 arrayObjects = new object[] { ((Estudiante)PersonaPersistence).Curso, ((Usuario)PersonaPersistence).NroFicha };
 
                 execute = Execute(sqlSentence, arrayParameters, arrayObjects);
+                if (!execute.Status) return execute;
+
+                Log(string.Format("Estudiante actualizado. Ficha: {0}", ((Usuario)PersonaPersistence).NroFicha));
                 #endregion
-                if(!execute.Status) return execute;
                 #region Update Parentesco
                 sqlSentence = "UPDATE Apoderado SET parentesco = @Parentesco WHERE rut = @RunApoderado AND nro_ficha = @NroFicha;";
                 arrayParameters = new[] { "@Parentesco", "@RunApoderado", "@NroFicha" };

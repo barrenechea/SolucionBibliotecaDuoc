@@ -5,7 +5,7 @@ using Biblioteca.Entidad;
 
 namespace Biblioteca.Controlador
 {
-    public class ControllerPrestamo : ControllerDatabase
+    public class ControllerPrestamo : ControllerLog
     {
         #region Attributes
         private Prestamo PrestamoPersistence { get; set; }
@@ -86,9 +86,10 @@ namespace Biblioteca.Controlador
                 var exec = Execute(sqlSentence, arrayParameters, arrayObjects);
                 if (!exec.Status) return exec;
             }
-            
-            ClearPersistantData();
 
+            Log(string.Format("Préstamo generado. ID préstamo: {0}", DetPrestamoPersistenceList[0].CodPrestamo));
+
+            ClearPersistantData();
             return new Message(true, "Prestamo ingresado exitosamente");
         }
         #endregion
@@ -102,7 +103,7 @@ namespace Biblioteca.Controlador
             var arrayObjects = new object[] { newFecha, codPrestamo };
 
             Execute(sqlSentence, arrayParameters, arrayObjects);
-
+            Log(string.Format("Préstamo extendido. ID préstamo: {0}", codPrestamo));
             return new Message(true, string.Format("Nueva fecha de devolución: {0}", newFecha.ToString("dd-MM-yyyy")));
         }
         public Message DevolverLibro(int codPrestamo, string codLibro, bool isStudent)
@@ -111,6 +112,8 @@ namespace Biblioteca.Controlador
             var arrayParameters = new[] { "@CodPrestamo", "@CodLibro" };
             var arrayObjects = new object[] { codPrestamo, codLibro };
             Execute(sqlSentence, arrayParameters, arrayObjects);
+
+            Log(string.Format("Préstamo devuelto. ID préstamo: {0} [Cod. Libro: {1}]", codPrestamo, codLibro));
 
             if (!isStudent) return new Message(true, "Devolución realizada con éxito.");
             return (DetPrestamoPersistenceList[0].FecDevolucion < DateTime.Now) ? new Message(false, "El usuario ha quedado registrado en la hoja de morosidad. Revise en el Panel de administración para más información") : new Message(true, "Devolución realizada con éxito.");

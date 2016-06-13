@@ -24,6 +24,7 @@ namespace Biblioteca.GUI
         public PanelAdmin()
         {
             InitializeComponent();
+            SetLog();
             RearrangeFixWindow();
             _showMessage = null;
             _checkConnection.DoWork += Conn_DoWork;
@@ -39,6 +40,7 @@ namespace Biblioteca.GUI
         public PanelAdmin(Message msg)
         {
             InitializeComponent();
+            SetLog();
             RearrangeFixWindow();
             _showMessage = msg;
             _checkConnection.DoWork += Conn_DoWork;
@@ -137,6 +139,15 @@ namespace Biblioteca.GUI
                                 TileJefeAdminAdministradores.IsEnabled = true;
             else
                 TileDirectorAdminAdministradores.IsEnabled = TileDirectorLog.IsEnabled = true;
+        }
+
+        private void SetLog()
+        {
+            App.Users.LogUsername = App.Admins.AdminActive.IdUsuario;
+            App.Libros.LogUsername = App.Admins.AdminActive.IdUsuario;
+            App.Morosidad.LogUsername = App.Admins.AdminActive.IdUsuario;
+            App.Prestamo.LogUsername = App.Admins.AdminActive.IdUsuario;
+            App.Log.LogUsername = App.Admins.AdminActive.IdUsuario;
         }
         /// <summary>
         /// Shows just an alert inside the Window
