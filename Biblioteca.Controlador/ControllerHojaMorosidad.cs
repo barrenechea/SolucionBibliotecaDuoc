@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Biblioteca.Entidad;
 
 namespace Biblioteca.Controlador
 {
@@ -12,11 +14,11 @@ namespace Biblioteca.Controlador
         {
             string sancion;
             if (diasAtrasados <= 2)
-                sancion = "3 días sin pedir libros";
+                sancion = "A";
             else if (diasAtrasados <= 4)
-                sancion = "5 días sin pedir libros.";
+                sancion = "B";
             else
-                sancion = "7 días de suspensión más citación al apoderado.";
+                sancion = "C";
 
             var sqlSentence = "INSERT INTO Hoja_morosidad(fecha, sancion, dias_atraso, nro_ficha, cod_libro) VALUES (@Fecha, @Sancion, @DiasAtraso, @NroFicha, @CodLibro)";
             var arrayParameters = new[] { "@Fecha", "@Sancion", "@DiasAtraso", "@NroFicha", "@CodLibro" };
@@ -26,6 +28,13 @@ namespace Biblioteca.Controlador
             Execute("UPDATE Usuario set estado = 0 WHERE nro_ficha = @NroFicha", new[] { "@NroFicha" }, new object[] { nroFicha });
 
             Log(string.Format("Agregó morosidad a ficha {0}", nroFicha));
+        }
+
+        public Message FetchHojaMorosidad(int nroFicha)
+        {
+            var table = Select("SELECT COUNT(*) FROM Hoja_morosidad WHERE nro_ficha = @NroFicha;", new[] {"@NroFicha"},
+                new object[] {nroFicha});
+            return (int)table.Rows[0].Field<long>(0) == 0 ? new Message(false, "Estudiante no tiene hoja de morosidad") : new Message(true);
         }
     }
 }
