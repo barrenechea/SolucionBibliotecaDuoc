@@ -11,5 +11,6 @@ namespace Biblioteca.GUI
         public static readonly ControllerUsers Users = new ControllerUsers();
         public static readonly ControllerLibro Libros = new ControllerLibro();
         public static readonly ControllerPrestamo Prestamo = new ControllerPrestamo();
+        public static readonly ControllerHojaMorosidad Morosidad = new ControllerHojaMorosidad();
     }
 }

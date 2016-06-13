@@ -106,6 +106,22 @@ namespace Biblioteca.Controlador
             LibroPersistence = null;
             return executeUpdate;
         }
+        /// <summary>
+        /// Descuenta en 1 un determinado libro
+        /// </summary>
+        /// <param name="codLibro">Código del libro que se descontará</param>
+        public void Discount(string codLibro)
+        {
+            Execute("UPDATE libro SET nro_copias=nro_copias-1 WHERE cod_libro = @CodLibro;", new[] { "CodLibro" }, new object[] { codLibro });
+        }
+        /// <summary>
+        /// Incrementa en 1 un determinado libro
+        /// </summary>
+        /// <param name="codLibro">Código del libro que se incrementará</param>
+        public void Increase(string codLibro)
+        {
+            Execute("UPDATE libro SET nro_copias=nro_copias+1 WHERE cod_libro = @CodLibro;", new[] { "CodLibro" }, new object[] { codLibro });
+        }
         #endregion
         #region Select querys
         /// <summary>
@@ -175,6 +191,44 @@ namespace Biblioteca.Controlador
                 libroSelected.Rows[0].Field<int>("nro_copias"));
 
             return new Message(true);
+        }
+        /// <summary>
+        /// Indica la cantidad de libros que hay en el sistema
+        /// </summary>
+        /// <param name="codLibro">Libro a revisar</param>
+        /// <returns>int con la cantidad de libros</returns>
+        public int AmountAvailable(string codLibro)
+        {
+            var exists = Select("SELECT nro_copias from Libro WHERE cod_libro = @CodLibro;", new[] { "@CodLibro" }, new object[] { codLibro });
+            return exists.Rows.Count == 0 ? 0 : exists.Rows[0].Field<int>(0);
+        }
+        #endregion
+        #region Existance Check querys
+        /// <summary>
+        /// Revisa si el libro que se está solicitando existe en la base de datos
+        /// </summary>
+        /// <param name="codLibro">Codigo del libro a revisar</param>
+        /// <returns>Message con el estado de existencia del libro (True o False). En caso de ser false, se retorna mensaje correspondiente</returns>
+        public Message ExistsLibro(string codLibro)
+        {
+            var exists = Select("SELECT * from Libro WHERE cod_libro = @CodLibro;", new[] { "@CodLibro" }, new object[] { codLibro }).Rows.Count != 0;
+            return new Message(exists, exists ? null : "El libro " + codLibro.Trim() + " no existe");
+        }
+        /// <summary>
+        /// Indica la cantidad de libros que tiene actualmente en préstamo un usuario determinado
+        /// </summary>
+        /// <param name="nroFicha">Numero de ficha del usuario al que se le revisará</param>
+        /// <returns>int con la cantidad de libros</returns>
+        public int CantLibrosPrestados(string nroFicha)
+        {
+            var exists = Select("SELECT count(dp.cod_prestamo) " +
+                               "FROM detalle_prestamo dp " +
+                               "JOIN prestamo p " +
+                               "ON dp.cod_prestamo = p.cod_prestamo " +
+                               "JOIN usuario u ON p.nro_ficha = u.nro_ficha " +
+                               "WHERE u.nro_ficha = @NroFicha AND libro_devuelto=0;"
+                               , new[] { "@NroFicha" }, new object[] { nroFicha });
+            return (int)exists.Rows[0].Field<long>(0);
         }
         #endregion
         #region Custom method

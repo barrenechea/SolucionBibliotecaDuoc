@@ -290,7 +290,7 @@ namespace Biblioteca.Controlador
             return execute;
         }
         #endregion
-        #region Select querys
+        #region Fetch querys
         /// <summary>
         /// Fetch all Comunas at the Database
         /// </summary>
@@ -388,7 +388,7 @@ namespace Biblioteca.Controlador
             return nroFicha.Rows[0].Field<int>(0);
         }
         #endregion
-        #region Existance Check Querys
+        #region Validation Querys
         /// <summary>
         /// Checks if an specific RUN exists on the Database
         /// </summary>
@@ -399,8 +399,16 @@ namespace Biblioteca.Controlador
             var exists = Select("SELECT * from Persona WHERE rut = @Run;", new[] { "@Run" }, new object[] { run }).Rows.Count != 0;
             return new Message(exists, exists ? null : "No se ha encontrado el RUN");
         }
-        #endregion
-        #region Is Student Querys
+        /// <summary>
+        /// Revisa si el número de ficha existe en la base de datos
+        /// </summary>
+        /// <param name="nroFicha"></param>
+        /// <returns>Message con el resultado (True o False). En caso de ser false, se retorna mensaje correspondiente</returns>
+        public Message ExistsNroFicha(string nroFicha)
+        {
+            var exists = Select("SELECT * from Usuario WHERE nro_ficha = @NroFicha;", new[] { "@NroFicha" }, new object[] { nroFicha }).Rows.Count != 0;
+            return new Message(exists, exists ? null : "No se ha encontrado el número de ficha");
+        }
         /// <summary>
         /// Checks if an specific RUN is an Estudiante
         /// </summary>
@@ -426,7 +434,16 @@ namespace Biblioteca.Controlador
             var studentTable = Select("SELECT curso FROM Estudiante WHERE nro_ficha=@NroFicha;", new[] { "@NroFicha" }, new object[] { nroFicha });
             return studentTable.Rows.Count != 0 ? new Message(true) : new Message(false, "El usuario no es un estudiante");
         }
-
+        /// <summary>
+        /// Revisa si un usuario puede pedir libros de a cuerdo a su estado en la base de datos
+        /// </summary>
+        /// <param name="nroFicha">Numero de ficha del usuario a consultar</param>
+        /// <returns>Message con el estado (True o False). En caso de ser false, se retorna mensaje correspondiente</returns>
+        public Message IsEnabled(string nroFicha)
+        {
+            var estado = Select("SELECT estado from Usuario WHERE nro_ficha = @Nro_ficha;", new[] { "@Nro_ficha" }, new object[] { nroFicha });
+            return new Message(estado.Rows[0].Field<bool>(0), estado.Rows[0].Field<bool>(0) ? null : "Usuario tiene sanción activa.");
+        }
         #endregion
         #region Custom Method
         /// <summary>

@@ -1,61 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
 {
     /// <summary>
-    /// Lógica de interacción para Prestamo.xaml
+    /// Lógica de interacción para PrestamoAdd.xaml
     /// </summary>
-    public partial class Prestamo
+    public partial class PrestamoAdd
     {
-        public Prestamo()
+        #region Constructor
+        /// <summary>
+        /// Generates a new instance of PrestamoAdd
+        /// </summary>
+        public PrestamoAdd()
         {
             InitializeComponent();
         }
-
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            new PanelAdmin().Show();
-            Close();
-        }
-
-        private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
-        {
-            App.Admins.Logout();
-            new Inicio().Show();
-            Close();
-        }
-
-        private void BtnExecute_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (App.Prestamo.TestConnection().Status)
-            {
-                if (!Validation()) return;
-                ExecutePrestamo();
-            }
-            else
-            {
-                lblStatus.Content = "Se ha perdido la conexión con el servidor";
-            }
-        }
-
+        #endregion
+        #region Custom Methods
         /// <summary>
         /// validaciones del formulario segun el modelo de negocio
         /// </summary>
-        /// <returns>bool de confirmacion de que están todos los parametros bién </returns>
+        /// <returns>bool de confirmacion de que están todos los parametros bien</returns>
         private bool Validation()
         {
             if (string.IsNullOrWhiteSpace(txtNroFicha.Text))
@@ -84,10 +50,10 @@ namespace Biblioteca.GUI
                 txtCodLibro.Focus();
                 return false;
             }
-            var resultado = App.Prestamo.ExistsNroFicha(txtNroFicha.Text);
+            var resultado = App.Users.ExistsNroFicha(txtNroFicha.Text);
             if (resultado.Status)
             {
-                var prestados = App.Prestamo.CantLibrosPrestados(txtNroFicha.Text);
+                var prestados = App.Libros.CantLibrosPrestados(txtNroFicha.Text);
                 if (App.Users.IsStudent(int.Parse(txtNroFicha.Text)).Status)
                 {
                     if (codigos.Length > 1)
@@ -119,7 +85,7 @@ namespace Biblioteca.GUI
                 return false;
             }
 
-            resultado = App.Prestamo.UsuarioActivado(txtNroFicha.Text);
+            resultado = App.Users.IsEnabled(txtNroFicha.Text);
             if (!resultado.Status)
             {
                 lblStatus.Content = resultado.Mensaje;
@@ -128,14 +94,15 @@ namespace Biblioteca.GUI
             }
             foreach (var cod in codigos)
             {
-                resultado = App.Prestamo.ExistsLibro(cod.Trim());
+                resultado = App.Libros.ExistsLibro(cod.Trim());
                 if (!resultado.Status)
                 {
                     lblStatus.Content = resultado.Mensaje;
                     txtCodLibro.Focus();
                     return false;
                 }
-                var librosDisponibles = App.Prestamo.LibroDisponible(cod.Trim());
+                var librosDisponibles = App.Libros.AmountAvailable(cod.Trim());
+
                 if (librosDisponibles < 1 || codigos.Count(t => t.Trim().Equals(cod.Trim())) > librosDisponibles)
                 {
                     lblStatus.Content = "No hay suficientes libros";
@@ -146,7 +113,10 @@ namespace Biblioteca.GUI
             lblStatus.Content = string.Empty;
             return true;
         }
-
+        /// <summary>
+        /// First part of the execution logic.
+        /// Attempts to insert into the Prestamo table
+        /// </summary>
         private void ExecutePrestamo()
         {
             var preload = App.Prestamo.PreloadPrestamo(int.Parse(txtNroFicha.Text));
@@ -154,20 +124,18 @@ namespace Biblioteca.GUI
             {
                 var result = App.Prestamo.InsertPrestamo();
 
-                if (result.Status)
-                {
-                    ExecuteDetallePrestamo();
-                }
-                else
-                    lblStatus.Content = result.Mensaje;
+                if (result.Status) ExecuteDetallePrestamo();
+                else lblStatus.Content = result.Mensaje;
             }
-            else
-                lblStatus.Content = preload.Mensaje;
+            else lblStatus.Content = preload.Mensaje;
         }
-
+        /// <summary>
+        /// Second and last part of execution logic.
+        /// Attempts to insert into Detalle_prestamo table and returns to PanelAdmin Window
+        /// </summary>
         private void ExecuteDetallePrestamo()
         {
-            var preload = App.Prestamo.PreloadDetallePrestamo(int.Parse(txtNroFicha.Text), txtCodLibro.Text.Split(','));
+            var preload = App.Prestamo.PreloadDetallePrestamo(int.Parse(txtNroFicha.Text),  txtCodLibro.Text.Split(','));
             if (preload.Status)
             {
                 var result = App.Prestamo.InsertDetallePrestamo();
@@ -176,16 +144,52 @@ namespace Biblioteca.GUI
                 {
                     foreach (var libro in txtCodLibro.Text.Split(','))
                     {
-                        App.Prestamo.DescuentaLibro(libro.ToUpper().Trim());
+                        App.Libros.Discount(libro.ToUpper().Trim());
                     }
                     new PanelAdmin(result).Show();
                     Close();
                 }
-                else
-                    lblStatus.Content = result.Mensaje;
+                else lblStatus.Content = result.Mensaje;
             }
-            else
-                lblStatus.Content = preload.Mensaje;
+            else lblStatus.Content = preload.Mensaje;
         }
+        #endregion
+        #region Event Handlers
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            new PanelAdmin().Show();
+            Close();
+        }
+        /// <summary>
+        /// Event that loads when user clicks on the Logout button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
+        {
+            App.Admins.Logout();
+            new Inicio().Show();
+            Close();
+        }
+        /// <summary>
+        /// Event that loads when user clicks on the Execute button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void BtnExecute_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.Prestamo.TestConnection().Status)
+            {
+                if (!Validation()) return;
+                ExecutePrestamo();
+            }
+            else lblStatus.Content = "Se ha perdido la conexión con el servidor";
+        }
+        #endregion
     }
 }

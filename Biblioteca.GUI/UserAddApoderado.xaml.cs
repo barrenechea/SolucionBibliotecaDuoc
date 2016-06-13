@@ -5,7 +5,7 @@ using MahApps.Metro.Controls.Dialogs;
 namespace Biblioteca.GUI
 {
     /// <summary>
-    /// Interaction logic for NewApoderado.xaml
+    /// Interaction logic for UserAddApoderado.xaml
     /// </summary>
     public partial class UserAddApoderado
     {
@@ -178,7 +178,7 @@ namespace Biblioteca.GUI
         #endregion
         #region Event Handlers
         /// <summary>
-        /// Event that loads when user clicks on the Back button
+        /// Event that loads when user clicks on the Logout button
         /// </summary>
         /// <param name="sender">The object that triggered this event</param>
         /// <param name="e">Parameters (optional)</param>
@@ -210,8 +210,7 @@ namespace Biblioteca.GUI
                 if (!Validation()) return;
                 AddApoderado();
             }
-            else
-                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
+            else ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
         }
         #endregion
     }

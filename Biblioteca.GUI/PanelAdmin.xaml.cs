@@ -208,16 +208,10 @@ namespace Biblioteca.GUI
             var result = await this.ShowMessageAsync("¿Qué desea hacer?", "Seleccione una de las opciones a continuación para continuar",
             MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary, settings);
 
-            if (result == MessageDialogResult.Affirmative)
-            {
-                new Prestamo().Show();
-                Close();
-            }
-            else
-            {
-                new PrestamoExtender(result == MessageDialogResult.Negative).Show();
-                Close();
-            }
+            if (result == MessageDialogResult.Affirmative) new PrestamoAdd().Show();
+            else new PrestamoManager(result == MessageDialogResult.Negative).Show();
+
+            Close();
         }
         /// <summary>
         /// Event that loads when user clicks on the Visualizar Hoja de Morosidad button

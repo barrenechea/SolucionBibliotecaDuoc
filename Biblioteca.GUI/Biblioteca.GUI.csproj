@@ -71,11 +71,11 @@
     <Compile Include="Catalogo.xaml.cs">
       <DependentUpon>Catalogo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Prestamo.xaml.cs">
-      <DependentUpon>Prestamo.xaml</DependentUpon>
+    <Compile Include="PrestamoAdd.xaml.cs">
+      <DependentUpon>PrestamoAdd.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PrestamoExtender.xaml.cs">
-      <DependentUpon>PrestamoExtender.xaml</DependentUpon>
+    <Compile Include="PrestamoManager.xaml.cs">
+      <DependentUpon>PrestamoManager.xaml</DependentUpon>
     </Compile>
     <Compile Include="Test.xaml.cs">
       <DependentUpon>Test.xaml</DependentUpon>
@@ -136,11 +136,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Prestamo.xaml">
+    <Page Include="PrestamoAdd.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PrestamoExtender.xaml">
+    <Page Include="PrestamoManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
