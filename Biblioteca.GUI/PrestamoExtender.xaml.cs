@@ -133,6 +133,14 @@ namespace Biblioteca.GUI
             }
         }
 
+        private bool ValidationExtend()
+        {
+            if (App.Prestamo.DetPrestamoPersistenceList[0].Renovacion >= 3)
+                return false;
+            return App.Prestamo.DetPrestamoPersistenceList[0].FecDevolucion >= DateTime.Now;
+        }
+
+
         private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
         {
             App.Admins.Logout();
@@ -171,7 +179,13 @@ namespace Biblioteca.GUI
         /// <param name="e"></param>
         private void lstLibros_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            btnExecute.IsEnabled = lstLibro.SelectedIndex != -1;
+            if(_isExtend)
+            {
+                if(ValidationExtend()) 
+                    btnExecute.IsEnabled = lstLibro.SelectedIndex != -1;    
+            }
+            else
+                btnExecute.IsEnabled = lstLibro.SelectedIndex != -1;
         }
 
         private void BtnExecute_Click(object sender, RoutedEventArgs e)
