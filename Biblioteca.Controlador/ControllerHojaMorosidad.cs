@@ -8,7 +8,7 @@ namespace Biblioteca.Controlador
     public class ControllerHojaMorosidad : ControllerLog
     {
         #region Attribute
-        private List<HojaMorosidad> HojaMorosidadPersistence { get; set; }
+        public List<HojaMorosidad> HojaMorosidadPersistence { get; private set; }
         #endregion
         #region Insert method
         /// <summary>
