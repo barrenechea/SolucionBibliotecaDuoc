@@ -176,7 +176,5 @@ namespace Biblioteca.GUI
                 _vista = false;
             }
         }
-
-
     }
 }

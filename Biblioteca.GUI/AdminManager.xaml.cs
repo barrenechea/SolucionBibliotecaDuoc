@@ -137,13 +137,6 @@ namespace Biblioteca.GUI
                 txtUsuario.Focus();
                 return false;
             }
-            if (txtUsuario.Text.Any(char.IsDigit))
-            {
-                lblStatus.Content = "El campo no puede tener dígitos";
-                txtUsuario.Focus();
-                return false;
-            }
-
             if (_isAdd)
             {
                 if (App.Admins.ExistsUsuario(txtUsuario.Text))

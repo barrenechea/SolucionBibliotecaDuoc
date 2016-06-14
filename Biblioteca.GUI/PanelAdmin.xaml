@@ -16,7 +16,7 @@
     </Controls:MetroWindow.RightWindowCommands>
     
     <Grid>
-        <Controls:PackIconModern Kind="User" Width="50" Foreground="DarkGray" Height="50" Margin="734,10,0,0" />
+        <Controls:PackIconMaterial Kind="Account" Width="50" Foreground="DarkGray" Height="50" Margin="734,10,0,0" />
         <Label Name="lblNombre" Content="Nombre" Foreground="{DynamicResource AccentColorBrush}" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Margin="484,10,0,0" VerticalAlignment="Top" FontSize="{DynamicResource WindowTitleFontSize}" Width="250"/>
         <Label x:Name="lblApellido" Content="Apellido" Foreground="{DynamicResource AccentColorBrush}" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Margin="484,30,0,0" VerticalAlignment="Top" FontSize="{DynamicResource MenuFontSize}" Width="250"/>
 
@@ -72,7 +72,7 @@
             </TabItem>
         </TabControl>
         
-        <Controls:Flyout Name="FlyoutMensaje" Position="Bottom" IsOpen="False" Theme="Inverse" Width="450" Height="56">
+        <Controls:Flyout Name="FlyoutMensaje" IsAutoCloseEnabled="True" Position="Bottom" IsOpen="False" Theme="Inverse" Width="450" Height="56">
             <Grid>
                 <Label Name="lblMessage" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{DynamicResource DialogMessageFontSize}"/>
             </Grid>
