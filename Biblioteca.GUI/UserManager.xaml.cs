@@ -441,7 +441,7 @@ namespace Biblioteca.GUI
         /// <param name="e">Parameters (optional)</param>
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
         {
-            var test = App.Libros.TestConnection();
+            var test = App.Users.TestConnection();
             if (test.Status)
             {
                 cmbComuna.ItemsSource = App.Users.FetchComunas();

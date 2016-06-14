@@ -284,7 +284,8 @@ namespace Biblioteca.GUI
         /// <param name="e">Parameters (optional)</param>
         private void BtnVisualizarLog_Click(object sender, RoutedEventArgs e)
         {
-            //ToDo Visualizar Log
+            new LogView().Show();
+            Close();
         }
         #endregion
 

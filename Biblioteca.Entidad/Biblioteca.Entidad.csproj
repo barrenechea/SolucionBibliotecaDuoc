@@ -47,6 +47,7 @@
     <Compile Include="Estudiante.cs" />
     <Compile Include="Funcionario.cs" />
     <Compile Include="Libro.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Persona.cs" />
     <Compile Include="Prestamo.cs" />
