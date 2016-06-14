@@ -28,10 +28,10 @@
             <Label Content="B - 3 o 4 días de retraso, 5 días sin pedir libros." HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Width="361"/>
             <Label Content="C - 5 o más, 7 días de suspensión más citación al apoderado." HorizontalAlignment="Left" Margin="10,150,0,0" VerticalAlignment="Top" Width="361"/>
             <Label Content="Si no viene apoderado, no se libera la suspensión." HorizontalAlignment="Left" Margin="10,176,0,0" VerticalAlignment="Top" Width="361"/>
-            <DataGrid Name="lstMorosidad" HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top" Height="160" Width="546"/>
+            <DataGrid Name="lstMorosidad" HorizontalAlignment="Left" Margin="10,212,0,0" VerticalAlignment="Top" Height="160" Width="546" IsReadOnly="True"/>
             <Button Name="btnVerDetalle" Content="Ver detalle del alumno" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,5" Controls:ControlsHelper.ContentCharacterCasing="Normal" VerticalAlignment="Bottom" Click="btnVerDetalle_Click"/>
 
-            <Grid  Name="grdDetalle"  Visibility="Hidden" HorizontalAlignment="Left" Height="170" Margin="0,377,0,0" VerticalAlignment="Top" Width="566">
+            <Grid  Name="grdDetalle"  Visibility="Hidden" HorizontalAlignment="Left" Height="170" Margin="0,377,0,0" VerticalAlignment="Top" Width="566" >
 
                 <Label Content="Nombre Estudiante" Name="lblNombre" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="546" FontSize="{DynamicResource ClearTextButtonFontSize}" HorizontalContentAlignment="Center"/>
                 <Label Content="Run:" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Width="99"/>

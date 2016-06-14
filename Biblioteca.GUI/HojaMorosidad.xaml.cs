@@ -124,15 +124,13 @@ namespace Biblioteca.GUI
         {
             if (App.Morosidad.TestConnection().Status)
             {
-                SearchHojaMorosidadDialog();    
+                SearchHojaMorosidadDialog();
             }
             else
             {
                 ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
             }
         }
-        
-        
         /// <summary>
         /// Event that loads when user clicks on the Logout button
         /// </summary>
