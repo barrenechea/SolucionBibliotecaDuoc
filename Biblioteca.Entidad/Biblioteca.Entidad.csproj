@@ -46,6 +46,7 @@
     <Compile Include="Enum\TipoUsuario.cs" />
     <Compile Include="Estudiante.cs" />
     <Compile Include="Funcionario.cs" />
+    <Compile Include="HojaMorosidad.cs" />
     <Compile Include="Libro.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Message.cs" />

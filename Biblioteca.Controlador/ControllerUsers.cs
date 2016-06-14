@@ -12,6 +12,7 @@ namespace Biblioteca.Controlador
         public Persona PersonaPersistence { get; private set; }
         public string RunApoderado { get; private set; }
         public string Parentesco { get; private set; }
+        public Persona ApoderadoPersistence { get; private set; }
         #endregion
         #region Preload methods
         /// <summary>
@@ -360,6 +361,20 @@ namespace Biblioteca.Controlador
                 runTable = Select(sqlSentence, new[] { "@NroFicha" }, new object[] { nroFicha });
                 RunApoderado = runTable.Rows[0].Field<string>("rut");
                 Parentesco = runTable.Rows[0].Field<string>("parentesco");
+                var apoderadoTable = Select("SELECT * FROM Persona WHERE rut = @RunApoderado", new[] {"@RunApoderado"},
+                    new object[] {RunApoderado});
+
+                sqlSentence = "SELECT telefono FROM Telefono WHERE rut=@Run;";
+                phoneTable = Select(sqlSentence, new[] { "@Run" }, new object[] { RunApoderado });
+                foreach (DataRow row in phoneTable.Rows)
+                {
+                    if (row.Field<string>("telefono").StartsWith("9"))
+                        fonoCel = row.Field<string>("telefono").Substring(1);
+
+                    else
+                        fonoFijo = row.Field<string>("telefono").Substring(1);
+                }
+                ApoderadoPersistence = new Persona(apoderadoTable.Rows[0].Field<string>("nombre"), apoderadoTable.Rows[0].Field<string>("apellido"),fonoFijo,fonoCel);
             }
             else
             {

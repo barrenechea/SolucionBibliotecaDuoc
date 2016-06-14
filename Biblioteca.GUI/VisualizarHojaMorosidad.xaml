@@ -1,0 +1,25 @@
+﻿<Controls:MetroWindow x:Class="Biblioteca.GUI.VisualizarHojaMorosidad"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      Title="Sistema Biblioteca" Height="558.001" Width="350"
+                      IsMaxRestoreButtonEnabled="False" ShowIconOnTitleBar="False"
+                      BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
+                      ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button x:Name="BtnLogout" ToolTip="Cerrar sesión" Click="BtnLogout_OnClick">
+                <Controls:PackIconModern Kind="DoorLeave" Width="18" Height="18" />
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    <Grid>
+        <Button Style="{DynamicResource MetroCircleButtonStyle}" ToolTip="Volver" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="50" Height="50" Click="BtnBack_Click">
+            <Controls:PackIconModern Kind="ArrowLeft" Width="25" Height="25" />
+        </Button>
+
+        <Label Content="Hoja de morosidad" HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" Foreground="{DynamicResource AccentColorBrush}" FontSize="{DynamicResource TabItemFontSize}"/>
+        
+        <DataGrid Name="lstHojaMorosidad" HorizontalAlignment="Left" Margin="10,251,0,0" VerticalAlignment="Top" Width="322" Height="266"/>
+    </Grid>
+</Controls:MetroWindow>

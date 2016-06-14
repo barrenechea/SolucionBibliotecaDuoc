@@ -97,6 +97,14 @@ namespace Biblioteca.Entidad
             FonoFijo = fonoFijo;
             FonoCel = fonoCel;
         }
+
+        public Persona(string nombre, string apellido, string fonoFijo, string fonoCel)
+        {
+            Nombre = nombre;
+            Apellido = apellido;
+            FonoFijo = fonoFijo;
+            FonoCel = fonoCel;
+        }
         #endregion
     }
 }
