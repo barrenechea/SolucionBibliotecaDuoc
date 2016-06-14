@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Biblioteca.Entidad;
 
 namespace Biblioteca.Controlador
 {
     public class ControllerHojaMorosidad : ControllerLog
     {
-        public List<HojaMorosidad> HojaMorosidadPersistence { get; set; }
-
+        #region Attribute
+        private List<HojaMorosidad> HojaMorosidadPersistence { get; set; }
+        #endregion
+        #region Insert method
+        /// <summary>
+        /// Insert data into Hoja_morosidad table
+        /// </summary>
+        /// <param name="nroFicha">Nro Ficha associated</param>
+        /// <param name="diasAtrasados">Days of delay on return Libro</param>
+        /// <param name="codLibro">Cod. Libro delayed</param>
         public void Insert(int nroFicha, int diasAtrasados, string codLibro)
         {
             string sancion;
@@ -31,13 +36,17 @@ namespace Biblioteca.Controlador
 
             Log(string.Format("Agregó morosidad a ficha {0}", nroFicha));
         }
-
+        #endregion
+        #region Fetch method
+        /// <summary>
+        /// Fetch a list of Hoja de Morosidad from Hoja_morosidad Table and set into persistence
+        /// </summary>
+        /// <param name="nroFicha">Nro Ficha to search</param>
+        /// <returns>Message that indicates if the fetch was successful or not</returns>
         public Message FetchHojaMorosidad(int nroFicha)
         {
-            var table = Select("SELECT * FROM Hoja_morosidad WHERE nro_ficha = @NroFicha;", new[] {"@NroFicha"},
-                new object[] {nroFicha});
-            if (table.Rows.Count == 0)
-                return new Message(false, "Estudiante no tiene hoja de morosidad");
+            var table = Select("SELECT * FROM Hoja_morosidad WHERE nro_ficha = @NroFicha;", new[] {"@NroFicha"}, new object[] {nroFicha});
+            if (table.Rows.Count == 0) return new Message(false, "Estudiante no tiene hoja de morosidad");
             HojaMorosidadPersistence = new List<HojaMorosidad>();
             for (var i = 0; i < table.Rows.Count; i++)
             {
@@ -45,7 +54,11 @@ namespace Biblioteca.Controlador
                     table.Rows[i].Field<int>("dias_atraso"),table.Rows[i].Field<int>("nro_ficha"),
                     table.Rows[i].Field<string>("cod_libro")));
             }
+
+            Log(string.Format("Visualizó morosidad. Ficha: {0}", nroFicha));
+
             return new Message(true);
         }
+        #endregion
     }
 }
