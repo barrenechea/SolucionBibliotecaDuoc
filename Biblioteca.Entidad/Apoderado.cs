@@ -26,6 +26,7 @@
             NroFicha = numFicha;
             Parentesco = parentesco;
         }
+
         #endregion
     }
 }

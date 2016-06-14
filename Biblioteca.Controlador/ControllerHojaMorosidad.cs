@@ -10,6 +10,8 @@ namespace Biblioteca.Controlador
 {
     public class ControllerHojaMorosidad : ControllerLog
     {
+        public List<HojaMorosidad> HojaMorosidadPersistence { get; set; }
+
         public void Insert(int nroFicha, int diasAtrasados, string codLibro)
         {
             string sancion;
@@ -32,9 +34,18 @@ namespace Biblioteca.Controlador
 
         public Message FetchHojaMorosidad(int nroFicha)
         {
-            var table = Select("SELECT COUNT(*) FROM Hoja_morosidad WHERE nro_ficha = @NroFicha;", new[] {"@NroFicha"},
+            var table = Select("SELECT * FROM Hoja_morosidad WHERE nro_ficha = @NroFicha;", new[] {"@NroFicha"},
                 new object[] {nroFicha});
-            return (int)table.Rows[0].Field<long>(0) == 0 ? new Message(false, "Estudiante no tiene hoja de morosidad") : new Message(true);
+            if (table.Rows.Count == 0)
+                return new Message(false, "Estudiante no tiene hoja de morosidad");
+            HojaMorosidadPersistence = new List<HojaMorosidad>();
+            for (var i = 0; i < table.Rows.Count; i++)
+            {
+                HojaMorosidadPersistence.Add(new HojaMorosidad(table.Rows[i].Field<DateTime>("fecha"), table.Rows[i].Field<string>("sancion"),
+                    table.Rows[i].Field<int>("dias_atraso"),table.Rows[i].Field<int>("nro_ficha"),
+                    table.Rows[i].Field<string>("cod_libro")));
+            }
+            return new Message(true);
         }
     }
 }

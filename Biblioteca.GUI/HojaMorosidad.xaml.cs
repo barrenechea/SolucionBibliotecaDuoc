@@ -24,6 +24,7 @@ namespace Biblioteca.GUI
     {
         private int _nroFicha;
         private bool _isStudent;
+        private bool _vista = false;
         public HojaMorosidad()
         {
             InitializeComponent();
@@ -65,32 +66,70 @@ namespace Biblioteca.GUI
 
         private void WindowLogic()
         {
-            var fetch = App.Morosidad.FetchHojaMorosidad(_nroFicha);
-            if (fetch.Status)
+            var test = App.Morosidad.TestConnection();
+            if (test.Status)
             {
-                fetch = App.Users.IsStudent(_nroFicha);
-                _isStudent = fetch.Status;
-                if (_isStudent)
+                var fetch = App.Morosidad.FetchHojaMorosidad(_nroFicha);
+                if (fetch.Status)
                 {
-                    LoadData();
-                    return;
+                    fetch = App.Users.IsStudent(_nroFicha);
+                    _isStudent = fetch.Status;
+                    if (_isStudent)
+                    {
+                        LoadData();
+                        return;
+                    }
                 }
-            }
 
-            new PanelAdmin(fetch).Show();
-            //Clear();
-            Close();
+                new PanelAdmin(fetch).Show();
+                //Clear();
+                Close();
+            }
+            else
+            {
+                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
+                Close();
+            }
+        }
+
+        private async void ShowNormalDialog(string title, string message)
+        {
+            await this.ShowMessageAsync(title, message);
         }
 
         private void LoadData()
         {
-            lblNroFicha.Content = _nroFicha;
+            if (App.Morosidad.TestConnection().Status)
+            {
+                lblNroFicha.Content = _nroFicha;
+                lblNombre.Content = string.Format("{0} {1}", App.Users.PersonaPersistence.Nombre, App.Users.PersonaPersistence.Apellido);
+                lblRun.Content = App.Users.PersonaPersistence.Run;
+                lblCurso.Content = ((Estudiante)App.Users.PersonaPersistence).Curso;
+                lblFonoFijo.Content = App.Users.PersonaPersistence.FonoFijo;
+                lblFonoCel.Content = App.Users.PersonaPersistence.FonoCel;
+                lblApoderado.Content = string.Format("{0} {1}", App.Users.ApoderadoPersistence.Nombre, App.Users.ApoderadoPersistence.Apellido);
+                lblFonoCelAp.Content = App.Users.ApoderadoPersistence.FonoCel;
+                lblFonoFijoAp.Content = App.Users.ApoderadoPersistence.FonoFijo;
+                lblParentesco.Content = App.Users.Parentesco;
+                lstMorosidad.ItemsSource = App.Morosidad.HojaMorosidadPersistence;    
+            }
+            else
+            {
+                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
+                Close();
+            }
         }
-
 
         private void WindowHasLoaded(object sender, RoutedEventArgs e)
         {
-            SearchHojaMorosidadDialog();
+            if (App.Morosidad.TestConnection().Status)
+            {
+                SearchHojaMorosidadDialog();    
+            }
+            else
+            {
+                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
+            }
         }
         
         
@@ -117,6 +156,27 @@ namespace Biblioteca.GUI
             App.Users.ClearPersistantData();
             new PanelAdmin().Show();
             Close();
+        }
+
+        private void btnVerDetalle_Click(object sender, RoutedEventArgs e)
+        {
+            BtnLogic();
+        }
+
+        private void BtnLogic()
+        {
+            if (!_vista)
+            {
+                grdDetalle.Visibility = Visibility.Visible;
+                btnVerDetalle.Content = "Ocultar detalle";
+                _vista = true;
+            }
+            else
+            {
+                grdDetalle.Visibility = Visibility.Hidden;
+                btnVerDetalle.Content = "Ver detalle del estudiante";
+                _vista = false;
+            }
         }
 
 
