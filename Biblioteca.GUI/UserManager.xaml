@@ -35,7 +35,7 @@
 
         </Grid>
         <Grid Name="GridFuncionario" Visibility="Hidden" Margin="0,321,0,0" Height="93" VerticalAlignment="Top">
-            <TextBox Name="txtCargo" Height="23" Margin="10,5,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Ingrese Cargo"/>
+            <TextBox Name="txtCargo" MaxLength="20" Height="23" Margin="10,5,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Ingrese Cargo"/>
         </Grid>
         <Controls:ToggleSwitch Name="switchEnabledAccount" Visibility="Hidden" OnLabel="Cuenta habilitada" OffLabel="Cuenta deshabilitada" Margin="10,419,10,0" IsChecked="True" VerticalAlignment="Top" />
         <Button Name="BtnExecute" Content="ButtonContent" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" Height="28" VerticalAlignment="Bottom" Click="BtnExecute_Click"/>
