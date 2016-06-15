@@ -75,11 +75,18 @@ namespace Biblioteca.GUI
         /// </summary>
         private void WindowLogic()
         {
-            var fetch = App.Prestamo.FetchPrestamo(_nroFicha);
+            var fetch = App.Users.IsStudent(_nroFicha);
+            if (!fetch.Status && _isExtend)
+            {
+                new PanelAdmin(fetch).Show();
+                Close();
+                return;
+            }
+
+            _isStudent = fetch.Status;
+            fetch = App.Prestamo.FetchPrestamo(_nroFicha);
             if (fetch.Status)
             {
-                fetch = App.Users.IsStudent(_nroFicha);
-                _isStudent = fetch.Status;
                 if (_isStudent || !_isExtend)
                 {
                     LoadData();

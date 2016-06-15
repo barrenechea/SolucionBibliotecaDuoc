@@ -1,18 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using Biblioteca.Entidad;
-using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
@@ -20,18 +7,24 @@ namespace Biblioteca.GUI
     /// <summary>
     /// Interaction logic for HojaMorosidad.xaml
     /// </summary>
-    public partial class HojaMorosidad : MetroWindow
+    public partial class HojaMorosidad
     {
+        #region Attributes
         private int _nroFicha;
-        private bool _isStudent;
-        private bool _vista = false;
+        private bool _vista;
+        #endregion
+        #region Constructor
+        /// <summary>
+        /// Initializes a new HojaMorosidad Window
+        /// </summary>
         public HojaMorosidad()
         {
             InitializeComponent();
         }
-
+        #endregion
+        #region Custom Methods
         /// <summary>
-        /// Opens a Search Dialog, in order to get a Numero de Ficha related to an Usuario
+        /// Opens a Search Dialog, in order to get a Numero de Ficha related to an Estudiante
         /// </summary>
         private async void SearchHojaMorosidadDialog()
         {
@@ -42,7 +35,7 @@ namespace Biblioteca.GUI
                 ColorScheme = MetroDialogOptions.ColorScheme
             };
 
-            var nroFicha = await this.ShowInputAsync("Buscar", "Ingrese el número de ficha del usuario", settings);
+            var nroFicha = await this.ShowInputAsync("Buscar", "Ingrese el número de ficha del estudiante", settings);
 
             if (string.IsNullOrWhiteSpace(nroFicha))
             {
@@ -63,40 +56,43 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
-
+        /// <summary>
+        /// Logic that follows after fetching a Numero de Ficha
+        /// </summary>
         private void WindowLogic()
         {
             var test = App.Morosidad.TestConnection();
             if (test.Status)
             {
-                var fetch = App.Morosidad.FetchHojaMorosidad(_nroFicha);
-                if (fetch.Status)
+                var isStudent = App.Users.IsStudent(_nroFicha);
+                if (!isStudent.Status)
                 {
-                    fetch = App.Users.IsStudent(_nroFicha);
-                    _isStudent = fetch.Status;
-                    if (_isStudent)
+                    new PanelAdmin(isStudent).Show();
+                    Close();
+                }
+                else
+                {
+                    var fetch = App.Morosidad.FetchHojaMorosidad(_nroFicha);
+                    if (fetch.Status)
                     {
                         LoadData();
-                        return;
+                    }
+                    else
+                    {
+                        new PanelAdmin(fetch).Show();
+                        Close();
                     }
                 }
-
-                new PanelAdmin(fetch).Show();
-                //Clear();
-                Close();
             }
             else
             {
-                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
+                new PanelAdmin(test).Show();
                 Close();
             }
         }
-
-        private async void ShowNormalDialog(string title, string message)
-        {
-            await this.ShowMessageAsync(title, message);
-        }
-
+        /// <summary>
+        /// Load data inside Window fields
+        /// </summary>
         private void LoadData()
         {
             if (App.Morosidad.TestConnection().Status)
@@ -111,7 +107,7 @@ namespace Biblioteca.GUI
                 lblFonoCelAp.Content = App.Users.ApoderadoPersistence.FonoCel;
                 lblFonoFijoAp.Content = App.Users.ApoderadoPersistence.FonoFijo;
                 lblParentesco.Content = App.Users.Parentesco;
-                lstMorosidad.ItemsSource = App.Morosidad.HojaMorosidadPersistence;    
+                lstMorosidad.ItemsSource = App.Morosidad.HojaMorosidadPersistence;
             }
             else
             {
@@ -119,48 +115,9 @@ namespace Biblioteca.GUI
                 Close();
             }
         }
-
-        private void WindowHasLoaded(object sender, RoutedEventArgs e)
-        {
-            if (App.Morosidad.TestConnection().Status)
-            {
-                SearchHojaMorosidadDialog();
-            }
-            else
-            {
-                ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
-            }
-        }
         /// <summary>
-        /// Event that loads when user clicks on the Logout button
+        /// Logic related to Ver Detalle button (on press)
         /// </summary>
-        /// <param name="sender">The object that triggered this event</param>
-        /// <param name="e">Parameters (optional)</param>
-        private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
-        {
-            App.Users.ClearPersistantData();
-            App.Admins.Logout();
-            new Inicio().Show();
-            Close();
-        }
-
-        /// <summary>
-        /// Event that loads when user clicks on the Back button
-        /// </summary>
-        /// <param name="sender">The object that triggered this event</param>
-        /// <param name="e">Parameters (optional)</param>
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            App.Users.ClearPersistantData();
-            new PanelAdmin().Show();
-            Close();
-        }
-
-        private void btnVerDetalle_Click(object sender, RoutedEventArgs e)
-        {
-            BtnLogic();
-        }
-
         private void BtnLogic()
         {
             if (!_vista)
@@ -176,5 +133,65 @@ namespace Biblioteca.GUI
                 _vista = false;
             }
         }
+        /// <summary>
+        /// Shows just an alert inside the Window
+        /// </summary>
+        /// <param name="title">Title of the alert</param>
+        /// <param name="message">Message of the alert</param>
+        private async void ShowNormalDialog(string title, string message)
+        {
+            await this.ShowMessageAsync(title, message);
+        }
+        #endregion
+        #region Event Handlers
+        /// <summary>
+        /// Event that triggers automatically when window is initilized
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void WindowHasLoaded(object sender, RoutedEventArgs e)
+        {
+            var test = App.Morosidad.TestConnection();
+
+            if (test.Status) SearchHojaMorosidadDialog();
+            else
+            {
+                new PanelAdmin(test).Show();
+                Close();
+            }
+        }
+        /// <summary>
+        /// Event that loads when user clicks on the Logout button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void BtnLogout_OnClick(object sender, RoutedEventArgs e)
+        {
+            App.Users.ClearPersistantData();
+            App.Admins.Logout();
+            new Inicio().Show();
+            Close();
+        }
+        /// <summary>
+        /// Event that loads when user clicks on the Back button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            App.Users.ClearPersistantData();
+            new PanelAdmin().Show();
+            Close();
+        }
+        /// <summary>
+        /// Event that loads when user clicks on the Ver Detalle button
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void btnVerDetalle_Click(object sender, RoutedEventArgs e)
+        {
+            BtnLogic();
+        }
+        #endregion
     }
 }
