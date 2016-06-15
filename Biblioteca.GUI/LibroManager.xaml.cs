@@ -38,16 +38,25 @@ namespace Biblioteca.GUI
                 ColorScheme = MetroDialogOptions.ColorScheme
             };
 
-            var result = await this.ShowInputAsync("Buscar", "Ingrese un código de libro a buscar", settings);
-            if (result == null || result.Equals(string.Empty))
+            var codLibro = await this.ShowInputAsync("Buscar", "Ingrese un código de libro", settings);
+
+            var check = App.Libros.CheckEmptySearchString(codLibro);
+            if (!check.Status)
             {
-                new PanelAdmin().Show();
-                Close();
+                if (check.Mensaje == null)
+                {
+                    new PanelAdmin().Show();
+                    Close();
+                }
+                else
+                {
+                    new PanelAdmin(check).Show();
+                    Close();
+                }
+                return;
             }
-            else
-            {
-                SearchLibro(result);
-            }
+
+            SearchLibro(codLibro);
         }
         /// <summary>
         /// Fetch and load a Libro data onto the Window Controls

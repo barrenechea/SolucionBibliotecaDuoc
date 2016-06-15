@@ -467,7 +467,7 @@ namespace Biblioteca.Controlador
             return new Message(estado.Rows[0].Field<bool>(0), estado.Rows[0].Field<bool>(0) ? null : "Usuario tiene sanción activa.");
         }
         #endregion
-        #region Custom Method
+        #region Custom Methods
         /// <summary>
         /// Removes all persistant data inside this controller
         /// </summary>
@@ -476,6 +476,16 @@ namespace Biblioteca.Controlador
             PersonaPersistence = null;
             RunApoderado = string.Empty;
             Parentesco = string.Empty;
+        }
+        /// <summary>
+        /// Checks if a Nro de Ficha is null, empty or has some value
+        /// </summary>
+        /// <param name="nroFicha">text to analyze</param>
+        /// <returns>Message that indicates if the string is valid or not</returns>
+        public Message CheckEmptySearchString(object nroFicha)
+        {
+            if (nroFicha == null) return new Message(false);
+            return ((string)nroFicha).Equals("") ? new Message(false, "Debe ingresar un número de ficha") : new Message(true);
         }
         #endregion
     }

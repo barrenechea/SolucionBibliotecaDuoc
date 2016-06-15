@@ -192,5 +192,17 @@ namespace Biblioteca.Controlador
             return Select("select nombre from Administrador where id_usuario=@User;", new[] { "@User" }, new object[] { usuario }).Rows.Count != 0;
         }
         #endregion
+        #region Custom Method
+        /// <summary>
+        /// Checks if a Nombre de Usuario is null, empty or has some value
+        /// </summary>
+        /// <param name="usuario">text to analyze</param>
+        /// <returns>Message that indicates if the string is valid or not</returns>
+        public Message CheckEmptySearchString(object usuario)
+        {
+            if (usuario == null) return new Message(false);
+            return ((string)usuario).Equals("") ? new Message(false, "Debe ingresar un nombre de usuario") : new Message(true);
+        }
+        #endregion
     }
 }

@@ -39,10 +39,19 @@ namespace Biblioteca.GUI
 
             var usuario = await this.ShowInputAsync("Buscar", "Ingrese un nombre de usuario a buscar", settings);
 
-            if (string.IsNullOrWhiteSpace(usuario))
+            var check = App.Admins.CheckEmptySearchString(usuario);
+            if (!check.Status)
             {
-                new PanelAdmin().Show();
-                Close();
+                if (check.Mensaje == null)
+                {
+                    new PanelAdmin().Show();
+                    Close();
+                }
+                else
+                {
+                    new PanelAdmin(check).Show();
+                    Close();
+                }
                 return;
             }
 

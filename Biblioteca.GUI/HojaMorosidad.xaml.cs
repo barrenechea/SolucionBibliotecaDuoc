@@ -37,10 +37,19 @@ namespace Biblioteca.GUI
 
             var nroFicha = await this.ShowInputAsync("Buscar", "Ingrese el número de ficha del estudiante", settings);
 
-            if (string.IsNullOrWhiteSpace(nroFicha))
+            var check = App.Users.CheckEmptySearchString(nroFicha);
+            if (!check.Status)
             {
-                new PanelAdmin().Show();
-                Close();
+                if (check.Mensaje == null)
+                {
+                    new PanelAdmin().Show();
+                    Close();
+                }
+                else
+                {
+                    new PanelAdmin(check).Show();
+                    Close();
+                }
                 return;
             }
 

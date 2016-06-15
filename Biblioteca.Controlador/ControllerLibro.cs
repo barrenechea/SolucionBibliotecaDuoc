@@ -235,13 +235,23 @@ namespace Biblioteca.Controlador
             return (int)exists.Rows[0].Field<long>(0);
         }
         #endregion
-        #region Custom method
+        #region Custom methods
         /// <summary>
         /// Removes all persistant data inside this Controller
         /// </summary>
         public void ClearPersistantData()
         {
             LibroPersistence = null;
+        }
+        /// <summary>
+        /// Checks if a Codigo de Libro is null, empty or has some value
+        /// </summary>
+        /// <param name="codLibro">text to analyze</param>
+        /// <returns>Message that indicates if the string is valid or not</returns>
+        public Message CheckEmptySearchString(object codLibro)
+        {
+            if (codLibro == null) return new Message(false);
+            return ((string)codLibro).Equals("") ? new Message(false, "Debe ingresar un código de libro") : new Message(true);
         }
         #endregion
     }

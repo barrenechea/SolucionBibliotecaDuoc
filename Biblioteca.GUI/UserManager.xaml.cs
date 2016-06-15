@@ -65,12 +65,21 @@ namespace Biblioteca.GUI
                 ColorScheme = MetroDialogOptions.ColorScheme
             };
 
-            var nroFicha = await this.ShowInputAsync("Buscar", "Ingrese un código de usuario a buscar", settings);
+            var nroFicha = await this.ShowInputAsync("Buscar", "Ingrese un número de ficha", settings);
 
-            if (string.IsNullOrWhiteSpace(nroFicha))
+            var check = App.Users.CheckEmptySearchString(nroFicha);
+            if (!check.Status)
             {
-                new PanelAdmin().Show();
-                Close();
+                if (check.Mensaje == null)
+                {
+                    new PanelAdmin().Show();
+                    Close();
+                }
+                else
+                {
+                    new PanelAdmin(check).Show();
+                    Close();
+                }
                 return;
             }
 
