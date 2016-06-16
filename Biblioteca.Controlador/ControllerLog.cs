@@ -19,7 +19,8 @@ namespace Biblioteca.Controlador
         {
             Execute("INSERT INTO Log(actividad, id_usuario) VALUES (@Activity, @LogUsername);", new[] { "@Activity", "@LogUsername" }, new object[] { activity, LogUsername });
         }
-
+        #endregion
+        #region Fetch Query
         /// <summary>
         /// Fetch all data inside Log table
         /// </summary>
