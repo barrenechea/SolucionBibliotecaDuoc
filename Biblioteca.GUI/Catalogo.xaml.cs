@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -14,8 +15,11 @@ namespace Biblioteca.GUI
     public partial class Catalogo
     {
         #region Attributes
-        private List<Libro> _libros;
-        private List<TipoLibro> _tipoLibros; 
+        private readonly BackgroundWorker _fetch = new BackgroundWorker();
+        private readonly List<Libro> _libros;
+        private ProgressDialogController _controller;
+        private List<TipoLibro> _tipoLibros;
+        private Message _connectionMessage;
         #endregion
         #region Constructor
         /// <summary>
@@ -24,9 +28,22 @@ namespace Biblioteca.GUI
         public Catalogo()
         {
             InitializeComponent();
+            _libros = new List<Libro>();
+            _tipoLibros = new List<TipoLibro>();
+            _fetch.DoWork += Fetch_DoWork;
+            _fetch.RunWorkerCompleted += Fetch_RunWorkerCompleted;
         }
         #endregion
         #region Custom Methods
+        /// <summary>
+        /// Async method that initializes the Fetch Dialog
+        /// </summary>
+        private async void InitializeFetchDialog()
+        {
+            _controller = await this.ShowProgressAsync("Por favor espere", "Obteniendo listado de libros disponibles...");
+            _controller.SetIndeterminate();
+            _fetch.RunWorkerAsync();
+        }
         /// <summary>
         /// Shows all the details of a selected Libro from the DataGrid as a Dialog inside the Window
         /// </summary>
@@ -48,7 +65,7 @@ namespace Biblioteca.GUI
             sb.AppendLine(libro.Argumento);
             sb.AppendLine();
             sb.AppendLine(string.Format("Solicita este libro con tu número de ficha, y dando el código: {0}", libro.CodLibro));
-            
+
             ShowNormalDialog("Detalle de Libro", sb.ToString());
         }
         /// <summary>
@@ -61,6 +78,40 @@ namespace Biblioteca.GUI
             await this.ShowMessageAsync(title, message);
         }
         #endregion
+        #region Fetch BackgrounWorker Methods
+        /// <summary>
+        /// What the BackgroundWorker does while it's running the task
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void Fetch_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _connectionMessage = App.Admins.TestConnection();
+            if (_connectionMessage.Status)
+            {
+                var libros = App.Libros.FetchAllAvailable();
+                foreach (var lib in libros) _libros.Add(lib);
+                _tipoLibros = App.Libros.FetchTipoLibros();
+            }
+        }
+        /// <summary>
+        /// What the BackgroundWorker does when has finished running the task
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private async void Fetch_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            await _controller.CloseAsync();
+            if (_connectionMessage.Status)
+                lstLibros.Items.Refresh();
+            else
+            {
+                new Inicio(_connectionMessage).Show();
+                Close();
+            }
+        }
+
+        #endregion
         #region Event Handlers
         /// <summary>
         /// Event that loads itself when the Window was loaded
@@ -69,24 +120,15 @@ namespace Biblioteca.GUI
         /// <param name="e">Parameters (optional)</param>
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var test = App.Admins.TestConnection();
-            if (test.Status)
-            {
-                _libros = App.Libros.FetchAllAvailable();
-                _tipoLibros = App.Libros.FetchTipoLibros();
-                lstLibros.ItemsSource = _libros;
-                lstLibros.Columns[4].Visibility = Visibility.Hidden;
-                lstLibros.Columns[5].Visibility = Visibility.Hidden;
-                lstLibros.Columns[7].Visibility = Visibility.Hidden;
-                lstLibros.Columns[8].Visibility = Visibility.Hidden;
-                lstLibros.Columns[0].Header = "CODIGO";
-                lstLibros.Columns[9].Header = "COPIAS DISPONIBLES";
-            }
-            else
-            {
-                new Inicio(test).Show();
-                Close();
-            }
+            lstLibros.ItemsSource = _libros;
+            lstLibros.Columns[4].Visibility = Visibility.Hidden;
+            lstLibros.Columns[5].Visibility = Visibility.Hidden;
+            lstLibros.Columns[7].Visibility = Visibility.Hidden;
+            lstLibros.Columns[8].Visibility = Visibility.Hidden;
+            lstLibros.Columns[0].Header = "CODIGO";
+            lstLibros.Columns[9].Header = "COPIAS DISPONIBLES";
+
+            InitializeFetchDialog();
         }
         /// <summary>
         /// Triggered event when the User clicks on something at the DataGrid

@@ -25,7 +25,7 @@
         <PasswordBox Name="txtPassword" MaxLength="60" Height="23" Margin="10,171,10,0" VerticalAlignment="Top" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Ingrese Contraseña"/>
         <PasswordBox x:Name="txtPasswordCheck" MaxLength="60" Height="23" Margin="10,202,10,0" VerticalAlignment="Top" Controls:TextBoxHelper.ClearTextButton="True" Controls:TextBoxHelper.Watermark="Repita Contraseña"/>
         
-        <Controls:ToggleSwitch Name="switchEnabledAccount" Visibility="Hidden" OnLabel="Cuenta habilitada" OffLabel="Cuenta deshabilitada" Margin="10,233,10,0" IsChecked="True" VerticalAlignment="Top" />
+        <Controls:ToggleSwitch Name="switchEnabledAccount" Visibility="Hidden" OnLabel="Cuenta habilitada" OffLabel="Cuenta deshabilitada" Style="{StaticResource MahApps.Metro.Styles.ToggleSwitch.Win10}" Margin="10,233,10,0" IsChecked="True" VerticalAlignment="Top" />
         <Button Name="BtnExecute" Content="ButtonContent" Style="{DynamicResource AccentedSquareButtonStyle}" Margin="10,0,10,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" Height="28" VerticalAlignment="Bottom" Click="BtnExecute_Click"/>
         <Controls:TransitioningContentControl Name="lblStatus" Content="" HorizontalContentAlignment="Center" Foreground="Red" Margin="10,0,10,43" Transition="Right" Height="26" VerticalAlignment="Bottom"/>
         

@@ -1,21 +1,24 @@
 ﻿using System.ComponentModel;
 using System.Threading;
 using System.Windows;
-using System.Windows.Media;
 using Biblioteca.Entidad;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
 {
     /// <summary>
-    /// Lógica de interacción para Inicio1.xaml
+    /// Lógica de interacción para Inicio.xaml
     /// </summary>
     public partial class Inicio
     {
         #region Attributes
         private readonly BackgroundWorker _checkConnection = new BackgroundWorker();
+        private readonly BackgroundWorker _login = new BackgroundWorker();
+        private ProgressDialogController _controller;
         private readonly Message _constructorMessage;
         private Message _connectionMessage;
+        private LoginDialogData _loginData;
+
         #endregion
         #region Constructors
         /// <summary>
@@ -29,6 +32,8 @@ namespace Biblioteca.GUI
             _checkConnection.WorkerReportsProgress = true;
             _checkConnection.ProgressChanged += Conn_ProgressChanged;
             _checkConnection.RunWorkerCompleted += Conn_RunWorkerCompleted;
+            _login.DoWork += Login_DoWork;
+            _login.RunWorkerCompleted += Login_RunWorkerCompleted;
             _checkConnection.RunWorkerAsync();
         }
         /// <summary>
@@ -43,10 +48,12 @@ namespace Biblioteca.GUI
             _checkConnection.WorkerReportsProgress = true;
             _checkConnection.ProgressChanged += Conn_ProgressChanged;
             _checkConnection.RunWorkerCompleted += Conn_RunWorkerCompleted;
+            _login.DoWork += Login_DoWork;
+            _login.RunWorkerCompleted += Login_RunWorkerCompleted;
             _checkConnection.RunWorkerAsync();
         }
         #endregion
-        #region Custom Methods
+        #region Test Connection BackgroundWorker Methods
         /// <summary>
         /// What the BackgroundWorker does while it's running the task
         /// </summary>
@@ -77,7 +84,6 @@ namespace Biblioteca.GUI
         private void Conn_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             lblStatus.Content = string.Format("Estado: {0} (Intento {1})", _connectionMessage.Mensaje, e.ProgressPercentage);
-            lblStatus.Foreground = _connectionMessage.Status ? Brushes.Green : Brushes.Red;
         }
         /// <summary>
         /// What the BackgroundWorker does when has finished running the task
@@ -87,9 +93,76 @@ namespace Biblioteca.GUI
         private void Conn_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             lblStatus.Content = "Estado: Conectado al servidor";
-            lblStatus.Foreground = _connectionMessage.Status ? Brushes.Green : Brushes.Red;
             if (_connectionMessage.Status)
                 btnCatalogo.IsEnabled = btnLogin.IsEnabled = btnBenchmark.IsEnabled = true;
+        }
+        #endregion
+        #region Login BackgrounWorker Methods
+        /// <summary>
+        /// What the BackgroundWorker does while it's running the task
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private void Login_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _connectionMessage = App.Admins.TestConnection();
+            if (_connectionMessage.Status)
+                _connectionMessage = App.Admins.Login(_loginData.Username, _loginData.Password);
+        }
+        /// <summary>
+        /// What the BackgroundWorker does when has finished running the task
+        /// </summary>
+        /// <param name="sender">The object that triggered this event</param>
+        /// <param name="e">Parameters (optional)</param>
+        private async void Login_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            await _controller.CloseAsync();
+            if (_connectionMessage.Status)
+            {
+                new PanelAdmin().Show();
+                Close();
+            }
+            else ShowNormalDialog("Error", _connectionMessage.Mensaje);
+        }
+        #endregion
+        #region Custom Methods
+        /// <summary>
+        /// Generates an async dialog to fetch Login credentials
+        /// </summary>
+        private async void LoginWindow()
+        {
+            var aux = new LoginDialogSettings
+            {
+                EnablePasswordPreview = true,
+                NegativeButtonVisibility = Visibility.Visible,
+                UsernameWatermark = "Nombre de Usuario",
+                PasswordWatermark = "Contraseña",
+                AffirmativeButtonText = "Iniciar sesión",
+                NegativeButtonText = "Cancelar"
+            };
+            var loginData = await this.ShowLoginAsync("Acceder", "Ingrese sus credenciales", aux);
+
+            if (loginData == null) return;
+
+            if (string.IsNullOrWhiteSpace(loginData.Username)) 
+                ShowNormalDialog("Error", "Debe ingresar un usuario");
+            else if (string.IsNullOrWhiteSpace(loginData.Password))
+                ShowNormalDialog("Error", "Debe ingresar una contraseña");
+            else
+            {
+                _loginData = loginData;
+                LoggingIn();
+            }
+            
+        }
+        /// <summary>
+        /// Genetares an async Logging In dialog
+        /// </summary>
+        private async void LoggingIn()
+        {
+            _controller = await this.ShowProgressAsync("Por favor espere", "Iniciando sesión...");
+            _controller.SetIndeterminate();
+            _login.RunWorkerAsync();
         }
         /// <summary>
         /// Shows just an alert inside the Window
@@ -119,8 +192,7 @@ namespace Biblioteca.GUI
         /// <param name="e">Parameters (optional)</param>
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            new Login().Show();
-            Close();
+            LoginWindow();
         }
         /// <summary>
         /// Event that loads when user clicks on the Ver Catalogo button

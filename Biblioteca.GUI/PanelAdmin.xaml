@@ -2,11 +2,24 @@
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                      Title="Sistema Biblioteca" Height="500" Width="800"
+                      Title="Sistema Biblioteca" Height="550" Width="800"
                       IsMaxRestoreButtonEnabled="False" ShowIconOnTitleBar="False"
                       BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
                       ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
                       Loaded="PanelAdmin_OnLoaded">
+
+    <Control.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TileStyle" TargetType="Controls:Tile">
+                <Setter Property="IsEnabled" Value="True"></Setter>
+                <Setter Property="TitleFontSize" Value="14" />
+                <Setter Property="FontWeight" Value="DemiBold"/>
+                <Setter Property="TextOptions.TextRenderingMode" Value="Aliased" />
+                <Setter Property="Controls:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource BlackBrush}"/>
+            </Style>
+        </ResourceDictionary>
+    </Control.Resources>
+
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button x:Name="BtnLogout" ToolTip="Cerrar sesión" Click="BtnLogout_OnClick">
@@ -14,7 +27,7 @@
             </Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
-    
+
     <Grid>
         <Controls:PackIconMaterial Kind="Account" Width="50" Foreground="DarkGray" Height="50" Margin="734,10,0,0" />
         <Label Name="lblNombre" Content="Nombre" Foreground="{DynamicResource AccentColorBrush}" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Margin="484,10,0,0" VerticalAlignment="Top" FontSize="{DynamicResource WindowTitleFontSize}" Width="250"/>
@@ -27,51 +40,54 @@
         <TabControl Name="TabControl">
             <TabItem Header="Bibliotecario" Name="TabBibliotecario">
                 <Grid>
-                    <Controls:Tile Name="TileBibliAdminUsers" Title="Administrar Usuarios" IsEnabled="False" TiltFactor="10" Width="150" Height="316" Margin="146,53,492,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminUsuarios_Click">
-                        <Controls:PackIconModern Kind="People" Width="90" Height="80" />
+                    <Label Content="Label" Margin="10,13,10,0" VerticalAlignment="Top"/>
+                    <Controls:Tile Name="TileBibliAdminUsers" Background="#1BA1E2" Title="Administrar Usuarios" Style="{StaticResource TileStyle}" Width="170" Height="345" Margin="135,44,0,0" Cursor="Hand" Click="BtnAdminUsuarios_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Controls:PackIconModern Kind="People" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Name="TileBibliAdminLibros" Title="Administrar Libros" IsEnabled="False" TiltFactor="10" Width="150" Height="150" Margin="314,53,324,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminLibros_Click">
-                        <Controls:PackIconModern Kind="Book" Width="90" Height="80" />
+                    <Controls:Tile Name="TileBibliAdminLibros" Background="#CE352C" Title="Administrar Libros" Style="{StaticResource TileStyle}" Width="170" Height="170" Margin="310,44,0,0" Cursor="Hand" Click="BtnAdminLibros_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Controls:PackIconModern Kind="Book" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Name="TileBibliAdminPrestamos" Title="Administrar Préstamos" IsEnabled="False" TiltFactor="10" Width="150" Height="150" Margin="482,53,156,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminPrestamos_Click">
-                        <Controls:PackIconModern Kind="ClipboardPaperCheck" Width="90" Height="80" />
+                    <Controls:Tile Name="TileBibliAdminPrestamos" Background="#FA6800" Title="Administrar Préstamos" Style="{StaticResource TileStyle}" Width="170" Height="170" Margin="485,44,0,0" Cursor="Hand" Click="BtnAdminPrestamos_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Controls:PackIconModern Kind="ClipboardPaperCheck" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Name="TileBibliVisualizarMorosidad" Title="Visualizar Hojas de Morosidad" IsEnabled="False" TiltFactor="10" Width="Auto" Height="150" Margin="314,219,156,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnVisualizarMorosidad_Click">
-                        <Controls:PackIconModern Kind="PeopleMagnify" Width="90" Height="80" />
+                    <Controls:Tile Name="TileBibliVisualizarMorosidad" Background="#60A917" Title="Visualizar Hojas de Morosidad" Style="{StaticResource TileStyle}" Width="345" Height="170" Margin="310,219,0,0" Cursor="Hand" Click="BtnVisualizarMorosidad_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Controls:PackIconModern Kind="PeopleMagnify" Width="60" Height="60" />
                     </Controls:Tile>
                 </Grid>
             </TabItem>
             <TabItem Header="Jefe Biblioteca" Name="TabJefe">
                 <Grid>
-                    <Controls:Tile Name="TileJefeAdminUsers" Title="Administrar Usuarios" IsEnabled="False" TiltFactor="10" Width="150" Height="316" Margin="68,53,570,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminUsuarios_Click">
-                        <Controls:PackIconModern Kind="People" Width="90" Height="80" />
+                    <Label Content="Label" Margin="10,13,10,0" VerticalAlignment="Top"/>
+                    <Controls:Tile Name="TileJefeAdminUsers" Background="#1BA1E2" Title="Administrar Usuarios" Style="{StaticResource TileStyle}" Width="170" Height="345" Margin="46,44,0,0" Cursor="Hand" Click="BtnAdminUsuarios_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Controls:PackIconModern Kind="People" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Name="TileJefeAdminLibros" Title="Administrar Libros" IsEnabled="False" TiltFactor="10" Width="150" Height="150" Margin="236,53,402,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminLibros_Click">
-                        <Controls:PackIconModern Kind="Book" Width="90" Height="80" />
+                    <Controls:Tile Name="TileJefeAdminLibros" Background="#CE352C" Title="Administrar Libros" Style="{StaticResource TileStyle}" Width="170" Height="170" Margin="221,44,0,0" Cursor="Hand" Click="BtnAdminLibros_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Controls:PackIconModern Kind="Book" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Name="TileJefeAdminPrestamos" Title="Administrar Préstamos" IsEnabled="False" TiltFactor="10" Width="150" Height="150" Margin="404,53,234,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminPrestamos_Click">
-                        <Controls:PackIconModern Kind="ClipboardPaperCheck" Width="90" Height="80" />
+                    <Controls:Tile Name="TileJefeAdminPrestamos" Background="#FA6800" Title="Administrar Préstamos" Style="{StaticResource TileStyle}" Width="170" Height="170" Margin="396,44,0,0" Cursor="Hand" Click="BtnAdminPrestamos_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Controls:PackIconModern Kind="ClipboardPaperCheck" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Name="TileJefeVisualizarMorosidad" Title="Visualizar Hojas de Morosidad" IsEnabled="False" TiltFactor="10" Width="Auto" Height="150" Margin="236,219,234,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnVisualizarMorosidad_Click">
-                        <Controls:PackIconModern Kind="PeopleMagnify" Width="90" Height="80" />
+                    <Controls:Tile Name="TileJefeVisualizarMorosidad" Background="#60A917" Title="Visualizar Hojas de Morosidad" Style="{StaticResource TileStyle}" Width="345" Height="170" Margin="221,219,0,0" Cursor="Hand" Click="BtnVisualizarMorosidad_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <Controls:PackIconModern Kind="PeopleMagnify" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Name="TileJefeAdminAdministradores" Title="Administrar Bibliotecarios" IsEnabled="False" TiltFactor="10" Width="150" Height="316" Margin="572,53,66,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminBibliotecarios_Click">
-                        <Controls:PackIconModern Kind="PeopleProfile" Width="90" Height="80" />
+                    <Controls:Tile Name="TileJefeAdminAdministradores" Background="#F3B200" Title="Administrar Bibliotecarios" Style="{StaticResource TileStyle}" Width="170" Height="345" Margin="571,44,0,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminBibliotecarios_Click" HorizontalAlignment="Left">
+                        <Controls:PackIconModern Kind="PeopleProfile" Width="60" Height="60" />
                     </Controls:Tile>
                 </Grid>
             </TabItem>
             <TabItem Header="Director" Name="TabDirector">
                 <Grid>
-                    <Controls:Tile Name="TileDirectorAdminAdministradores" Title="Administrar Jefes de Biblioteca" IsEnabled="False" TiltFactor="10" Width="Auto" Height="150" Margin="233,55,237,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminJefes_Click">
-                        <Controls:PackIconModern Kind="PeopleProfile" Width="90" Height="80" />
+                    <Label Content="Label" Margin="10,13,10,0" VerticalAlignment="Top"/>
+                    <Controls:Tile Background="#CE352C" Name="TileDirectorAdminAdministradores" Title="Administrar Jefes de Biblioteca" Style="{StaticResource TileStyle}" Width="345" Height="170" Margin="214,44,0,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminJefes_Click" HorizontalAlignment="Left">
+                        <Controls:PackIconModern Kind="PeopleProfile" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Name="TileDirectorLog" Title="Visualizar Log" IsEnabled="False" TiltFactor="10" Width="Auto" Height="150" Margin="233,219,237,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnVisualizarLog_Click">
-                        <Controls:PackIconModern Kind="PageSearch" Width="90" Height="80" />
+                    <Controls:Tile Background="#60A917" Name="TileDirectorLog" Title="Visualizar Log" Style="{StaticResource TileStyle}" Width="345" Height="170" Margin="214,219,0,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnVisualizarLog_Click" HorizontalAlignment="Left">
+                        <Controls:PackIconModern Kind="PageSearch" Width="60" Height="60" />
                     </Controls:Tile>
                 </Grid>
             </TabItem>
         </TabControl>
-        
+
         <Controls:Flyout Name="FlyoutMensaje" IsAutoCloseEnabled="True" Position="Bottom" IsOpen="False" Theme="Inverse" Width="450" Height="56">
             <Grid>
                 <Label Name="lblMessage" Margin="10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="{DynamicResource DialogMessageFontSize}"/>

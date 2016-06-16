@@ -3,15 +3,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1"
-        Title="Sistema Biblioteca" Height="284" Width="400" IsMaxRestoreButtonEnabled="False"
+        Title="Sistema Biblioteca" Height="350" Width="500" IsMaxRestoreButtonEnabled="False"
         ShowIconOnTitleBar="False" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
         Loaded="Inicio_OnLoaded">
+
+    <Control.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TileStyle" TargetType="Controls:Tile">
+                <Setter Property="TitleFontSize" Value="14" />
+                <Setter Property="FontWeight" Value="DemiBold"/>
+                <Setter Property="TextOptions.TextRenderingMode" Value="Aliased" />
+                <Setter Property="Controls:ControlsHelper.MouseOverBorderBrush" Value="{DynamicResource BlackBrush}"/>
+            </Style>
+        </ResourceDictionary>
+    </Control.Resources>
+
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button x:Name="btnBenchmark" Content="Benchmark" ToolTip="Ver rendimiento de la conexión [Se eliminará en el Release final]" Click="BtnBenchmark_OnClicknchmark_Click" IsEnabled="False"/>
+
+            <Button Name="btnLogin" Content="Acceso Administrativo" ToolTip="Permite el acceso al Panel de Administración del Sistema" Click="btnLogin_Click" IsEnabled="False" />
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+
     <Grid>
-        <Controls:Tile Name="btnCatalogo" Title="Ver catálogo" TiltFactor="10" Width="250" Height="140" Click="btnCatalogo_Click" Margin="71,40,71,0" Cursor="Hand" IsEnabled="False" VerticalAlignment="Top">
-            <Controls:PackIconModern Kind="BookOpenText" Width="90" Height="80" />
+        <StatusBar Height="26" VerticalAlignment="Bottom">
+            <StatusBarItem Name="lblStatus" Content="Estado: Conectando al servidor" HorizontalContentAlignment="Center" />
+        </StatusBar>
+
+        <Controls:Tile Name="btnCatalogo" 
+                       Title="Ver catálogo"
+                       Style="{StaticResource TileStyle}"
+                       Width="Auto"
+                       Height="Auto"
+                       Click="btnCatalogo_Click"
+                       Margin="73,64,74,85"
+                       Cursor="Hand"
+                       IsEnabled="False">
+            <Controls:PackIconModern Kind="BookOpenText" Width="80" Height="80" />
         </Controls:Tile>
-        <Button Name="btnLogin" Style="{DynamicResource SquareButtonStyle}" Content="Acceso Administrativo" Margin="0,0,10,10" HorizontalAlignment="Right" Width="151" Click="btnLogin_Click" Controls:ControlsHelper.ContentCharacterCasing="Normal" Controls:ButtonHelper.PreserveTextCase="True" IsEnabled="False" Height="28" VerticalAlignment="Bottom"/>
-        <Controls:TransitioningContentControl Content="Estado: Conectando al servidor" Foreground="Orange" x:Name="lblStatus" Margin="10,10,10,0" HorizontalContentAlignment="Center" Transition="Right" VerticalAlignment="Top" />
-        <Button x:Name="btnBenchmark" Style="{DynamicResource SquareButtonStyle}" Content="Benchmark" Margin="10,0,0,10" Click="BtnBenchmark_OnClicknchmark_Click" Controls:ControlsHelper.ContentCharacterCasing="Normal" Controls:ButtonHelper.PreserveTextCase="True" IsEnabled="False" Height="28" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="93"/>
     </Grid>
 </Controls:MetroWindow>
