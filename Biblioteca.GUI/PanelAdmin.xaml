@@ -40,7 +40,6 @@
         <TabControl Name="TabControl">
             <TabItem Header="Bibliotecario" Name="TabBibliotecario">
                 <Grid>
-                    <Label Content="Label" Margin="10,13,10,0" VerticalAlignment="Top"/>
                     <Controls:Tile Name="TileBibliAdminUsers" Background="#1BA1E2" Title="Administrar Usuarios" Style="{StaticResource TileStyle}" Width="170" Height="345" Margin="135,44,0,0" Cursor="Hand" Click="BtnAdminUsuarios_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Controls:PackIconModern Kind="People" Width="60" Height="60" />
                     </Controls:Tile>
@@ -57,7 +56,6 @@
             </TabItem>
             <TabItem Header="Jefe Biblioteca" Name="TabJefe">
                 <Grid>
-                    <Label Content="Label" Margin="10,13,10,0" VerticalAlignment="Top"/>
                     <Controls:Tile Name="TileJefeAdminUsers" Background="#1BA1E2" Title="Administrar Usuarios" Style="{StaticResource TileStyle}" Width="170" Height="345" Margin="46,44,0,0" Cursor="Hand" Click="BtnAdminUsuarios_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
                         <Controls:PackIconModern Kind="People" Width="60" Height="60" />
                     </Controls:Tile>
@@ -77,11 +75,10 @@
             </TabItem>
             <TabItem Header="Director" Name="TabDirector">
                 <Grid>
-                    <Label Content="Label" Margin="10,13,10,0" VerticalAlignment="Top"/>
-                    <Controls:Tile Background="#CE352C" Name="TileDirectorAdminAdministradores" Title="Administrar Jefes de Biblioteca" Style="{StaticResource TileStyle}" Width="345" Height="170" Margin="214,44,0,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminJefes_Click" HorizontalAlignment="Left">
+                    <Controls:Tile Background="#CE352C" Name="TileDirectorAdminAdministradores" Title="Administrar Jefes de Biblioteca" Style="{StaticResource TileStyle}" Width="345" Height="170" Margin="220,44,0,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnAdminJefes_Click" HorizontalAlignment="Left">
                         <Controls:PackIconModern Kind="PeopleProfile" Width="60" Height="60" />
                     </Controls:Tile>
-                    <Controls:Tile Background="#60A917" Name="TileDirectorLog" Title="Visualizar Log" Style="{StaticResource TileStyle}" Width="345" Height="170" Margin="214,219,0,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnVisualizarLog_Click" HorizontalAlignment="Left">
+                    <Controls:Tile Background="#60A917" Name="TileDirectorLog" Title="Visualizar Log" Style="{StaticResource TileStyle}" Width="345" Height="170" Margin="220,219,0,0" Cursor="Hand" VerticalAlignment="Top" Click="BtnVisualizarLog_Click" HorizontalAlignment="Left">
                         <Controls:PackIconModern Kind="PageSearch" Width="60" Height="60" />
                     </Controls:Tile>
                 </Grid>

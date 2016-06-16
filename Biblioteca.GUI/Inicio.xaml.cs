@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows;
 using Biblioteca.Entidad;
+using MahApps.Metro;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
@@ -27,6 +28,7 @@ namespace Biblioteca.GUI
         public Inicio()
         {
             InitializeComponent();
+            SetAccent("Cobalt");
             _constructorMessage = null;
             _checkConnection.DoWork += Conn_DoWork;
             _checkConnection.WorkerReportsProgress = true;
@@ -43,6 +45,7 @@ namespace Biblioteca.GUI
         public Inicio(Message msg)
         {
             InitializeComponent();
+            SetAccent("Cobalt");
             _constructorMessage = msg;
             _checkConnection.DoWork += Conn_DoWork;
             _checkConnection.WorkerReportsProgress = true;
@@ -126,6 +129,16 @@ namespace Biblioteca.GUI
         }
         #endregion
         #region Custom Methods
+        /// <summary>
+        /// Set a determinated accent to the window
+        /// </summary>
+        /// <param name="accent">Name of the accent (based on MahApps Accents)</param>
+        private static void SetAccent(string accent)
+        {
+            var theme = ThemeManager.DetectAppStyle(Application.Current);
+            var acc = ThemeManager.GetAccent(accent);
+            ThemeManager.ChangeAppStyle(Application.Current, acc, theme.Item1);
+        }
         /// <summary>
         /// Generates an async dialog to fetch Login credentials
         /// </summary>

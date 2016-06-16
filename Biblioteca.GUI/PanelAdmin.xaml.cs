@@ -3,6 +3,7 @@ using System.Threading;
 using System.Windows;
 using Biblioteca.Entidad;
 using Biblioteca.Entidad.Enum;
+using MahApps.Metro;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Biblioteca.GUI
@@ -64,14 +65,17 @@ namespace Biblioteca.GUI
             switch (App.Admins.AdminActive.TipoDeUsuario)
             {
                 case TipoUsuario.Bibliotecario:
+                    SetAccent("Indigo");
                     TabJefe.IsEnabled = TabDirector.IsEnabled = false;
                     TabBibliotecario.IsSelected = true;
                     break;
                 case TipoUsuario.Jefebiblioteca:
+                    SetAccent("Emerald");
                     TabBibliotecario.IsEnabled = TabDirector.IsEnabled = false;
                     TabJefe.IsSelected = true;
                     break;
                 case TipoUsuario.Director:
+                    SetAccent("Red");
                     TabBibliotecario.IsEnabled = TabJefe.IsEnabled = false;
                     TabDirector.IsSelected = true;
                     break;
@@ -81,6 +85,16 @@ namespace Biblioteca.GUI
                     Close();
                     break;
             }
+        }
+        /// <summary>
+        /// Set a determinated accent to the window
+        /// </summary>
+        /// <param name="accent">Name of the accent (based on MahApps Accents)</param>
+        private static void SetAccent(string accent)
+        {
+            var theme = ThemeManager.DetectAppStyle(Application.Current);
+            var acc = ThemeManager.GetAccent(accent);
+            ThemeManager.ChangeAppStyle(Application.Current, acc, theme.Item1);
         }
         /// <summary>
         /// What the BackgroundWorker does while it's running the task
@@ -139,8 +153,12 @@ namespace Biblioteca.GUI
                                 TileJefeAdminAdministradores.IsEnabled = true;
             else
                 TileDirectorAdminAdministradores.IsEnabled = TileDirectorLog.IsEnabled = true;
-        }
 
+        }
+        /// <summary>
+        /// Set the current logged Username to all Controllers, in order to achieve Logging
+        /// activities onto database
+        /// </summary>
         private void SetLog()
         {
             App.Users.LogUsername = App.Admins.AdminActive.IdUsuario;
