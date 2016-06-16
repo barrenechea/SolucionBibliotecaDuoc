@@ -11,7 +11,7 @@
     <Control.Resources>
         <ResourceDictionary>
             <Style x:Key="TileStyle" TargetType="Controls:Tile">
-                <Setter Property="IsEnabled" Value="True"></Setter>
+                <Setter Property="IsEnabled" Value="False"></Setter>
                 <Setter Property="TitleFontSize" Value="14" />
                 <Setter Property="FontWeight" Value="DemiBold"/>
                 <Setter Property="TextOptions.TextRenderingMode" Value="Aliased" />
@@ -22,7 +22,7 @@
 
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button x:Name="BtnLogout" ToolTip="Cerrar sesión" Click="BtnLogout_OnClick">
+            <Button x:Name="BtnLogout" ToolTip="Cerrar sesión" IsEnabled="False" Click="BtnLogout_OnClick">
                 <Controls:PackIconModern Kind="DoorLeave" Width="18" Height="18" />
             </Button>
         </Controls:WindowCommands>

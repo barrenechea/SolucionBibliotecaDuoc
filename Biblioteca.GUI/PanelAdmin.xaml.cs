@@ -140,6 +140,9 @@ namespace Biblioteca.GUI
         private void Conn_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             lblStatus.Content = _connectionMessage.Mensaje;
+
+            BtnLogout.IsEnabled = true;
+
             if (App.Admins.AdminActive.TipoDeUsuario == TipoUsuario.Bibliotecario)
                 TileBibliAdminUsers.IsEnabled =
                     TileBibliAdminLibros.IsEnabled =
