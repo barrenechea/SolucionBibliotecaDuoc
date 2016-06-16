@@ -76,6 +76,9 @@ namespace Biblioteca.Controlador
         {
             try
             {
+                if (_connection.State != ConnectionState.Closed)
+                    return new Message(false, "Por favor espere...");
+                
                 _connection.Open();
                 return new Message(true);
             }
