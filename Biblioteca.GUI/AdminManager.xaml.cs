@@ -29,7 +29,7 @@ namespace Biblioteca.GUI
         /// </summary>
         private async void SearchAdminDialog()
         {
-            txtUsuario.IsEnabled = false;
+            TxtUsuario.IsEnabled = false;
             var settings = new MetroDialogSettings
             {
                 AffirmativeButtonText = "Buscar",
@@ -59,7 +59,7 @@ namespace Biblioteca.GUI
             if (fetch.Status)
             {
                 LoadData();
-                switchEnabledAccount.Visibility = Visibility.Visible;
+                SwitchEnabledAccount.Visibility = Visibility.Visible;
             }
             else
             {
@@ -72,17 +72,17 @@ namespace Biblioteca.GUI
         /// </summary>
         private void LoadData()
         {
-            txtNombre.Text = App.Admins.AdminPersistence.Nombre;
-            txtApellido.Text = App.Admins.AdminPersistence.Apellido;
-            txtUsuario.Text = App.Admins.AdminPersistence.IdUsuario;
-            switchEnabledAccount.IsChecked = App.Admins.AdminPersistence.Estado;
+            TxtNombre.Text = App.Admins.AdminPersistence.Nombre;
+            TxtApellido.Text = App.Admins.AdminPersistence.Apellido;
+            TxtUsuario.Text = App.Admins.AdminPersistence.IdUsuario;
+            SwitchEnabledAccount.IsChecked = App.Admins.AdminPersistence.Estado;
         }
         /// <summary>
         /// Modifies labels, titles and other stuff, based on the parameter received by the Constructor.
         /// </summary>
         private void FixWindow()
         {
-            lblTitulo.Content = _isAdd
+            LblTitulo.Content = _isAdd
                 ? (App.Admins.AdminActive.TipoDeUsuarioChar == 'D' ? ("Agregar Jefe") : ("Agregar Bibliotecario"))
                 : (App.Admins.AdminActive.TipoDeUsuarioChar == 'D' ? ("Modificar Jefe") : ("Modificar Bibliotecario"));
 
@@ -90,7 +90,7 @@ namespace Biblioteca.GUI
                 ? (App.Admins.AdminActive.TipoDeUsuarioChar == 'D' ? ("Agregar Jefe de Biblioteca") : ("Agregar Bibliotecario"))
                 : (App.Admins.AdminActive.TipoDeUsuarioChar == 'D' ? ("Modificar Jefe de Biblioteca") : ("Modificar Bibliotecario"));
 
-            if (!_isAdd) switchEnabledAccount.Visibility = Visibility.Visible;
+            if (!_isAdd) SwitchEnabledAccount.Visibility = Visibility.Visible;
         }
         /// <summary>
         /// Method that validates the form inside the Window
@@ -98,92 +98,92 @@ namespace Biblioteca.GUI
         /// <returns>If the validation was successful or not</returns>
         private bool Validation()
         {
-            if (string.IsNullOrWhiteSpace(txtNombre.Text))
+            if (string.IsNullOrWhiteSpace(TxtNombre.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtNombre.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtNombre.Focus();
                 return false;
             }
-            if (txtNombre.Text.Length < 2)
+            if (TxtNombre.Text.Length < 2)
             {
-                lblStatus.Content = "Debe tener mínimo 2 caracteres";
-                txtNombre.Focus();
+                LblStatus.Content = "Debe tener mínimo 2 caracteres";
+                TxtNombre.Focus();
                 return false;
             }
-            if (txtNombre.Text.Any(char.IsDigit))
+            if (TxtNombre.Text.Any(char.IsDigit))
             {
-                lblStatus.Content = "El campo no puede tener dígitos";
-                txtNombre.Focus();
+                LblStatus.Content = "El campo no puede tener dígitos";
+                TxtNombre.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtApellido.Text))
+            if (string.IsNullOrWhiteSpace(TxtApellido.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtApellido.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtApellido.Focus();
                 return false;
             }
-            if (txtApellido.Text.Length < 2)
+            if (TxtApellido.Text.Length < 2)
             {
-                lblStatus.Content = "Debe tener mínimo 2 caracteres";
-                txtApellido.Focus();
+                LblStatus.Content = "Debe tener mínimo 2 caracteres";
+                TxtApellido.Focus();
                 return false;
             }
-            if (txtApellido.Text.Any(char.IsDigit))
+            if (TxtApellido.Text.Any(char.IsDigit))
             {
-                lblStatus.Content = "El campo no puede tener dígitos";
-                txtApellido.Focus();
+                LblStatus.Content = "El campo no puede tener dígitos";
+                TxtApellido.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtUsuario.Text))
+            if (string.IsNullOrWhiteSpace(TxtUsuario.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtUsuario.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtUsuario.Focus();
                 return false;
             }
-            if (txtUsuario.Text.Length < 5)
+            if (TxtUsuario.Text.Length < 5)
             {
-                lblStatus.Content = "Debe tener mínimo 5 caracteres";
-                txtUsuario.Focus();
+                LblStatus.Content = "Debe tener mínimo 5 caracteres";
+                TxtUsuario.Focus();
                 return false;
             }
             if (_isAdd)
             {
-                if (App.Admins.ExistsUsuario(txtUsuario.Text))
+                if (App.Admins.ExistsUsuario(TxtUsuario.Text))
                 {
-                    lblStatus.Content = "Nombre de usuario ya existe";
-                    txtUsuario.Focus();
+                    LblStatus.Content = "Nombre de usuario ya existe";
+                    TxtUsuario.Focus();
                     return false;
                 }
-                if (string.IsNullOrWhiteSpace(txtPassword.Password))
+                if (string.IsNullOrWhiteSpace(TxtPassword.Password))
                 {
-                    lblStatus.Content = "Debe llenar todos los campos";
-                    txtPassword.Focus();
+                    LblStatus.Content = "Debe llenar todos los campos";
+                    TxtPassword.Focus();
                     return false;
                 }
-                if (string.IsNullOrWhiteSpace(txtPasswordCheck.Password))
+                if (string.IsNullOrWhiteSpace(TxtPasswordCheck.Password))
                 {
-                    lblStatus.Content = "Debe llenar todos los campos";
-                    txtPasswordCheck.Focus();
+                    LblStatus.Content = "Debe llenar todos los campos";
+                    TxtPasswordCheck.Focus();
                     return false;
                 }
             }
-            if (!string.IsNullOrWhiteSpace(txtPassword.Password))
+            if (!string.IsNullOrWhiteSpace(TxtPassword.Password))
             {
-                if (txtPassword.Password.Length < 6)
+                if (TxtPassword.Password.Length < 6)
                 {
-                    lblStatus.Content = "Debe tener mínimo 6 caracteres";
-                    txtPassword.Focus();
+                    LblStatus.Content = "Debe tener mínimo 6 caracteres";
+                    TxtPassword.Focus();
                     return false;
                 }
-                if (!string.Equals(txtPassword.Password, txtPasswordCheck.Password))
+                if (!string.Equals(TxtPassword.Password, TxtPasswordCheck.Password))
                 {
-                    lblStatus.Content = "Las contraseñas no coinciden";
-                    txtPassword.Focus();
+                    LblStatus.Content = "Las contraseñas no coinciden";
+                    TxtPassword.Focus();
                     return false;
                 }
             }
             
-            lblStatus.Content = string.Empty;
+            LblStatus.Content = string.Empty;
             return true;
         }
         /// <summary>
@@ -214,7 +214,7 @@ namespace Biblioteca.GUI
         {
             if (App.Admins.TestConnection().Status)
             {
-                var preload = App.Admins.PreloadAdmin(txtNombre.Text, txtApellido.Text, txtUsuario.Text, txtPassword.Password, (bool)switchEnabledAccount.IsChecked);
+                var preload = App.Admins.PreloadAdmin(TxtNombre.Text, TxtApellido.Text, TxtUsuario.Text, TxtPassword.Password, (bool)SwitchEnabledAccount.IsChecked);
 
                 if (preload.Status)
                 {
@@ -226,10 +226,10 @@ namespace Biblioteca.GUI
                         Close();
                     }
                     else
-                        lblStatus.Content = result.Mensaje;
+                        LblStatus.Content = result.Mensaje;
                 }
                 else
-                    lblStatus.Content = preload.Mensaje;
+                    LblStatus.Content = preload.Mensaje;
             }
             else
             {
@@ -302,7 +302,7 @@ namespace Biblioteca.GUI
 
                 else
                 {
-                    if(string.IsNullOrWhiteSpace(txtPassword.Password)) ConfirmationDialog();
+                    if(string.IsNullOrWhiteSpace(TxtPassword.Password)) ConfirmationDialog();
                     else Execute();
                 }
             }

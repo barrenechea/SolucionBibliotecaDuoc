@@ -21,8 +21,8 @@ namespace Biblioteca.GUI
             InitializeComponent();
             _isAdd = isAdd;
 
-            lblTitulo.Content = BtnExecute.Content = _isAdd ? "Agregar Libro" : "Modificar Libro";
-            txtCodLibro.IsEnabled = _isAdd;
+            LblTitulo.Content = BtnExecute.Content = _isAdd ? "Agregar Libro" : "Modificar Libro";
+            TxtCodLibro.IsEnabled = _isAdd;
         }
         #endregion
         #region Custom Methods
@@ -67,16 +67,16 @@ namespace Biblioteca.GUI
             var exists = App.Libros.FetchLibro(codLibro);
             if (exists.Status)
             {
-                txtCodLibro.Text = App.Libros.LibroPersistence.CodLibro;
-                txtTitulo.Text = App.Libros.LibroPersistence.Titulo;
-                txtAutor.Text = App.Libros.LibroPersistence.Autor;
-                txtCategoria.Text = App.Libros.LibroPersistence.Categoria;
-                txtArgumento.Text = App.Libros.LibroPersistence.Argumento;
-                txtUbicacion.Text = App.Libros.LibroPersistence.Ubicacion;
-                txtEditorial.Text = App.Libros.LibroPersistence.Editorial;
-                cmbTipo.SelectedValue = App.Libros.LibroPersistence.CodTipo;
-                txtNroPag.Text = App.Libros.LibroPersistence.NroPaginas.ToString();
-                txtNroCopias.Text = App.Libros.LibroPersistence.NroCopias.ToString();
+                TxtCodLibro.Text = App.Libros.LibroPersistence.CodLibro;
+                TxtTitulo.Text = App.Libros.LibroPersistence.Titulo;
+                TxtAutor.Text = App.Libros.LibroPersistence.Autor;
+                TxtCategoria.Text = App.Libros.LibroPersistence.Categoria;
+                TxtArgumento.Text = App.Libros.LibroPersistence.Argumento;
+                TxtUbicacion.Text = App.Libros.LibroPersistence.Ubicacion;
+                TxtEditorial.Text = App.Libros.LibroPersistence.Editorial;
+                CmbTipo.SelectedValue = App.Libros.LibroPersistence.CodTipo;
+                TxtNroPag.Text = App.Libros.LibroPersistence.NroPaginas.ToString();
+                TxtNroCopias.Text = App.Libros.LibroPersistence.NroCopias.ToString();
 
                 App.Libros.ClearPersistantData();
             }
@@ -92,146 +92,146 @@ namespace Biblioteca.GUI
         /// <returns>If the validation was successful or not</returns>
         private bool Validation()
         {
-            if (string.IsNullOrWhiteSpace(txtCodLibro.Text))
+            if (string.IsNullOrWhiteSpace(TxtCodLibro.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtCodLibro.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtCodLibro.Focus();
                 return false;
             }
-            if (txtCodLibro.Text.Length < 4)
+            if (TxtCodLibro.Text.Length < 4)
             {
-                lblStatus.Content = "Debe tener mínimo 4 caracteres";
-                txtCodLibro.Focus();
+                LblStatus.Content = "Debe tener mínimo 4 caracteres";
+                TxtCodLibro.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtTitulo.Text))
+            if (string.IsNullOrWhiteSpace(TxtTitulo.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtTitulo.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtTitulo.Focus();
                 return false;
             }
-            if (txtTitulo.Text.Length < 2)
+            if (TxtTitulo.Text.Length < 2)
             {
-                lblStatus.Content = "Debe tener mínimo 2 caracteres";
-                txtTitulo.Focus();
+                LblStatus.Content = "Debe tener mínimo 2 caracteres";
+                TxtTitulo.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtAutor.Text))
+            if (string.IsNullOrWhiteSpace(TxtAutor.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtAutor.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtAutor.Focus();
                 return false;
             }
-            if (txtAutor.Text.Length < 2)
+            if (TxtAutor.Text.Length < 2)
             {
-                lblStatus.Content = "Debe tener mínimo 2 caracteres";
-                txtAutor.Focus();
+                LblStatus.Content = "Debe tener mínimo 2 caracteres";
+                TxtAutor.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtCategoria.Text))
+            if (string.IsNullOrWhiteSpace(TxtCategoria.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtCategoria.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtCategoria.Focus();
                 return false;
             }
-            if (txtCategoria.Text.Length < 4)
+            if (TxtCategoria.Text.Length < 4)
             {
-                lblStatus.Content = "Debe tener mínimo 4 caracteres";
-                txtCategoria.Focus();
+                LblStatus.Content = "Debe tener mínimo 4 caracteres";
+                TxtCategoria.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtArgumento.Text))
+            if (string.IsNullOrWhiteSpace(TxtArgumento.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtArgumento.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtArgumento.Focus();
                 return false;
             }
-            if (txtArgumento.Text.Length < 10)
+            if (TxtArgumento.Text.Length < 10)
             {
-                lblStatus.Content = "Debe tener mínimo 10 caracteres";
-                txtArgumento.Focus();
+                LblStatus.Content = "Debe tener mínimo 10 caracteres";
+                TxtArgumento.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtUbicacion.Text))
+            if (string.IsNullOrWhiteSpace(TxtUbicacion.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtUbicacion.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtUbicacion.Focus();
                 return false;
             }
-            if (txtUbicacion.Text.Length < 2)
+            if (TxtUbicacion.Text.Length < 2)
             {
-                lblStatus.Content = "Debe tener mínimo 2 caracteres";
-                txtUbicacion.Focus();
+                LblStatus.Content = "Debe tener mínimo 2 caracteres";
+                TxtUbicacion.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtEditorial.Text))
+            if (string.IsNullOrWhiteSpace(TxtEditorial.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtEditorial.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtEditorial.Focus();
                 return false;
             }
-            if (txtEditorial.Text.Length < 2)
+            if (TxtEditorial.Text.Length < 2)
             {
-                lblStatus.Content = "Debe tener mínimo 2 caracteres";
-                txtEditorial.Focus();
+                LblStatus.Content = "Debe tener mínimo 2 caracteres";
+                TxtEditorial.Focus();
                 return false;
             }
-            if (cmbTipo.SelectedItem == null)
+            if (CmbTipo.SelectedItem == null)
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                cmbTipo.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                CmbTipo.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtNroPag.Text))
+            if (string.IsNullOrWhiteSpace(TxtNroPag.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtNroPag.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtNroPag.Focus();
                 return false;
             }
             int i;
-            if (int.TryParse(txtNroPag.Text, out i))
+            if (int.TryParse(TxtNroPag.Text, out i))
             {
                 if (i <= 0)
                 {
-                    lblStatus.Content = "El número de paginas debe ser mayor a 0";
-                    txtNroPag.Focus();
+                    LblStatus.Content = "El número de paginas debe ser mayor a 0";
+                    TxtNroPag.Focus();
                     return false;
                 }
             }
             else
             {
-                lblStatus.Content = "Debe ingresar solo números";
-                txtNroPag.Focus();
+                LblStatus.Content = "Debe ingresar solo números";
+                TxtNroPag.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtNroCopias.Text))
+            if (string.IsNullOrWhiteSpace(TxtNroCopias.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtNroCopias.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtNroCopias.Focus();
                 return false;
             }
-            if (int.TryParse(txtNroCopias.Text, out i))
+            if (int.TryParse(TxtNroCopias.Text, out i))
             {
                 if (_isAdd && i <= 0)
                 {
-                    lblStatus.Content = "El número de copias debe ser mayor a 0";
-                    txtNroCopias.Focus();
+                    LblStatus.Content = "El número de copias debe ser mayor a 0";
+                    TxtNroCopias.Focus();
                     return false;
                 }
                 if (!_isAdd && i < 0)
                 {
-                    lblStatus.Content = "El número de copias debe ser mayor o igual a 0";
-                    txtNroCopias.Focus();
+                    LblStatus.Content = "El número de copias debe ser mayor o igual a 0";
+                    TxtNroCopias.Focus();
                     return false;
                 }
             }
             else
             {
-                lblStatus.Content = "Debe ingresar solo números";
-                txtNroCopias.Focus();
+                LblStatus.Content = "Debe ingresar solo números";
+                TxtNroCopias.Focus();
                 return false;
             }
-            lblStatus.Content = string.Empty;
+            LblStatus.Content = string.Empty;
             return true;
         }
         /// <summary>
@@ -242,7 +242,7 @@ namespace Biblioteca.GUI
         {
             if (App.Libros.TestConnection().Status)
             {
-                var preload = App.Libros.PreloadLibro(txtCodLibro.Text.ToUpper(), txtTitulo.Text, txtAutor.Text, txtCategoria.Text, txtArgumento.Text, txtUbicacion.Text, txtEditorial.Text, (int)cmbTipo.SelectedValue, int.Parse(txtNroPag.Text), int.Parse(txtNroCopias.Text));
+                var preload = App.Libros.PreloadLibro(TxtCodLibro.Text.ToUpper(), TxtTitulo.Text, TxtAutor.Text, TxtCategoria.Text, TxtArgumento.Text, TxtUbicacion.Text, TxtEditorial.Text, (int)CmbTipo.SelectedValue, int.Parse(TxtNroPag.Text), int.Parse(TxtNroCopias.Text));
 
                 if (preload.Status)
                 {
@@ -254,10 +254,10 @@ namespace Biblioteca.GUI
                         Close();
                     }
                     else
-                        lblStatus.Content = result.Mensaje;
+                        LblStatus.Content = result.Mensaje;
                 }
                 else
-                    lblStatus.Content = preload.Mensaje;
+                    LblStatus.Content = preload.Mensaje;
             }
             else
             {
@@ -285,11 +285,11 @@ namespace Biblioteca.GUI
             var test = App.Libros.TestConnection();
             if (test.Status)
             {
-                cmbTipo.ItemsSource = App.Libros.FetchTipoLibros();
-                cmbTipo.DisplayMemberPath = "NomTipo";
-                cmbTipo.SelectedValuePath = "CodTipo";
+                CmbTipo.ItemsSource = App.Libros.FetchTipoLibros();
+                CmbTipo.DisplayMemberPath = "NomTipo";
+                CmbTipo.SelectedValuePath = "CodTipo";
                 if (!_isAdd) SearchLibroDialog();
-                else txtCodLibro.Focus();
+                else TxtCodLibro.Focus();
             }
             else
             {

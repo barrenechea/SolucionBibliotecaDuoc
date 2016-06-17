@@ -27,8 +27,10 @@ namespace Biblioteca.GUI
             InitializeComponent();
             _isAdd = isAdd;
 
-            lblTitulo.Content = BtnExecute.Content = _isAdd ? "Agregar Usuario" : "Modificar Usuario";
-            cmbParentesco.ItemsSource = new [] { "Padre", "Madre", "Otro" };
+            LblTitulo.Content = BtnExecute.Content = _isAdd ? "Agregar Usuario" : "Modificar Usuario";
+            CmbParentesco.ItemsSource = new [] { "Padre", "Madre", "Otro" };
+            DateFechaNac.DisplayDateStart = DateTime.Now.AddYears(-100);
+            DateFechaNac.DisplayDateEnd = DateTime.Now.AddYears(-3).AddDays(-1);
             if (_isAdd && App.Users.PersonaPersistence != null) LoadData();
         }
         #endregion
@@ -57,7 +59,7 @@ namespace Biblioteca.GUI
         /// </summary>
         private async void SearchUserDialog()
         {
-            txtRun.IsEnabled = txtRunApoderado.IsEnabled = false;
+            TxtRun.IsEnabled = TxtRunApoderado.IsEnabled = false;
             var settings = new MetroDialogSettings
             {
                 AffirmativeButtonText = "Buscar",
@@ -88,7 +90,7 @@ namespace Biblioteca.GUI
             {
                 _nroFicha = nroFicha;
                 LoadData();
-                switchEnabledAccount.Visibility = Visibility.Visible;
+                SwitchEnabledAccount.Visibility = Visibility.Visible;
             }
             else
             {
@@ -103,24 +105,24 @@ namespace Biblioteca.GUI
         {
             _isEstudiante = App.Users.PersonaPersistence is Estudiante;
 
-            txtNombre.Text = App.Users.PersonaPersistence.Nombre;
-            txtApellido.Text = App.Users.PersonaPersistence.Apellido;
-            txtRun.Text = App.Users.PersonaPersistence.Run;
-            txtDireccion.Text = App.Users.PersonaPersistence.Direccion;
-            cmbComuna.SelectedValue = App.Users.PersonaPersistence.CodComuna;
-            txtFonoFijo.Text = App.Users.PersonaPersistence.FonoFijo;
-            txtFonoCel.Text = App.Users.PersonaPersistence.FonoCel;
-            dateFechaNac.SelectedDate = DateTime.Parse(((Usuario)App.Users.PersonaPersistence).FecNacimiento);
+            TxtNombre.Text = App.Users.PersonaPersistence.Nombre;
+            TxtApellido.Text = App.Users.PersonaPersistence.Apellido;
+            TxtRun.Text = App.Users.PersonaPersistence.Run;
+            TxtDireccion.Text = App.Users.PersonaPersistence.Direccion;
+            CmbComuna.SelectedValue = App.Users.PersonaPersistence.CodComuna;
+            TxtFonoFijo.Text = App.Users.PersonaPersistence.FonoFijo;
+            TxtFonoCel.Text = App.Users.PersonaPersistence.FonoCel;
+            DateFechaNac.SelectedDate = DateTime.Parse(((Usuario)App.Users.PersonaPersistence).FecNacimiento);
 
             if (_isEstudiante)
             {
-                txtRunApoderado.Text = App.Users.RunApoderado;
-                cmbParentesco.SelectedValue = App.Users.Parentesco;
-                txtCurso.Text = ((Estudiante)App.Users.PersonaPersistence).Curso;
+                TxtRunApoderado.Text = App.Users.RunApoderado;
+                CmbParentesco.SelectedValue = App.Users.Parentesco;
+                TxtCurso.Text = ((Estudiante)App.Users.PersonaPersistence).Curso;
             }
             else
-                txtCargo.Text = ((Funcionario)App.Users.PersonaPersistence).Cargo;
-            switchEnabledAccount.IsChecked = ((Usuario)App.Users.PersonaPersistence).Estado;
+                TxtCargo.Text = ((Funcionario)App.Users.PersonaPersistence).Cargo;
+            SwitchEnabledAccount.IsChecked = ((Usuario)App.Users.PersonaPersistence).Estado;
             FixWindow();
         }
         /// <summary>
@@ -128,13 +130,22 @@ namespace Biblioteca.GUI
         /// </summary>
         private void FixWindow()
         {
-            lblTitulo.Content = BtnExecute.Content = _isAdd
+            LblTitulo.Content = BtnExecute.Content = _isAdd
                 ? (_isEstudiante ? ("Agregar Estudiante") : ("Agregar Funcionario"))
                 : (_isEstudiante ? ("Modificar Estudiante") : ("Modificar Funcionario"));
 
-            if (_isEstudiante) GridEstudiante.Visibility = Visibility.Visible;
-            else GridFuncionario.Visibility = Visibility.Visible;
-            if (!_isAdd) switchEnabledAccount.Visibility = Visibility.Visible;
+            if (_isEstudiante)
+            {
+                TxtRunApoderado.Visibility = Visibility.Visible;
+                CmbParentesco.Visibility = Visibility.Visible;
+                TxtCurso.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                TxtCargo.Visibility = Visibility.Visible;
+            }
+
+            SwitchEnabledAccount.Visibility = _isAdd ? Visibility.Collapsed : Visibility.Visible;
 
             App.Users.ClearPersistantData();
         }
@@ -144,194 +155,194 @@ namespace Biblioteca.GUI
         /// <returns>If the validation was successful or not</returns>
         private bool Validation()
         {
-            if (string.IsNullOrWhiteSpace(txtNombre.Text))
+            if (string.IsNullOrWhiteSpace(TxtNombre.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtNombre.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtNombre.Focus();
                 return false;
             }
-            if (txtNombre.Text.Length < 2)
+            if (TxtNombre.Text.Length < 2)
             {
-                lblStatus.Content = "Debe tener mínimo 2 caracteres";
-                txtNombre.Focus();
+                LblStatus.Content = "Debe tener mínimo 2 caracteres";
+                TxtNombre.Focus();
                 return false;
             }
-            if (txtNombre.Text.Any(char.IsDigit))
+            if (TxtNombre.Text.Any(char.IsDigit))
             {
-                lblStatus.Content = "El campo no puede tener dígitos";
-                txtNombre.Focus();
+                LblStatus.Content = "El campo no puede tener dígitos";
+                TxtNombre.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtApellido.Text))
+            if (string.IsNullOrWhiteSpace(TxtApellido.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtApellido.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtApellido.Focus();
                 return false;
             }
-            if (txtApellido.Text.Length < 2)
+            if (TxtApellido.Text.Length < 2)
             {
-                lblStatus.Content = "Debe tener mínimo 2 caracteres";
-                txtApellido.Focus();
+                LblStatus.Content = "Debe tener mínimo 2 caracteres";
+                TxtApellido.Focus();
                 return false;
             }
-            if (txtApellido.Text.Any(char.IsDigit))
+            if (TxtApellido.Text.Any(char.IsDigit))
             {
-                lblStatus.Content = "El campo no puede tener dígitos";
-                txtApellido.Focus();
+                LblStatus.Content = "El campo no puede tener dígitos";
+                TxtApellido.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtRun.Text))
+            if (string.IsNullOrWhiteSpace(TxtRun.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtRun.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtRun.Focus();
                 return false;
             }
-            if (!RUNValidate(txtRun.Text))
+            if (!RUNValidate(TxtRun.Text))
             {
-                lblStatus.Content = "Debe ingresar un RUN válido";
-                txtRun.Focus();
+                LblStatus.Content = "Debe ingresar un RUN válido";
+                TxtRun.Focus();
                 return false;
             }
-            if (dateFechaNac.SelectedDate == null)
+            if (DateFechaNac.SelectedDate == null)
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                dateFechaNac.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                DateFechaNac.Focus();
                 return false;
             }
-            if ((DateTime)dateFechaNac.SelectedDate > DateTime.Now)
+            if ((DateTime)DateFechaNac.SelectedDate > DateTime.Now)
             {
-                lblStatus.Content = "Debe ingresar una fecha válida";
-                dateFechaNac.Focus();
+                LblStatus.Content = "Debe ingresar una fecha válida";
+                DateFechaNac.Focus();
                 return false;
             }
-            if ((DateTime)dateFechaNac.SelectedDate > DateTime.Now.AddYears(-3))
+            if ((DateTime)DateFechaNac.SelectedDate > DateTime.Now.AddYears(-3))
             {
-                lblStatus.Content = "No puede tener menos de 3 años";
-                dateFechaNac.Focus();
+                LblStatus.Content = "No puede tener menos de 3 años";
+                DateFechaNac.Focus();
                 return false;
             }
-            if ((DateTime)dateFechaNac.SelectedDate < DateTime.Now.AddYears(-100))
+            if ((DateTime)DateFechaNac.SelectedDate < DateTime.Now.AddYears(-100))
             {
-                lblStatus.Content = "No puede tener más de 100 años";
-                dateFechaNac.Focus();
+                LblStatus.Content = "No puede tener más de 100 años";
+                DateFechaNac.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtDireccion.Text))
+            if (string.IsNullOrWhiteSpace(TxtDireccion.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtDireccion.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtDireccion.Focus();
                 return false;
             }
-            if (txtDireccion.Text.Length < 5)
+            if (TxtDireccion.Text.Length < 5)
             {
-                lblStatus.Content = "Debe tener mínimo 5 caracteres";
-                txtDireccion.Focus();
+                LblStatus.Content = "Debe tener mínimo 5 caracteres";
+                TxtDireccion.Focus();
                 return false;
             }
-            if (!txtDireccion.Text.Any(char.IsDigit))
+            if (!TxtDireccion.Text.Any(char.IsDigit))
             {
-                lblStatus.Content = "El campo debe tener letras y números";
-                txtDireccion.Focus();
+                LblStatus.Content = "El campo debe tener letras y números";
+                TxtDireccion.Focus();
                 return false;
             }
-            if (!txtDireccion.Text.Any(char.IsLetter))
+            if (!TxtDireccion.Text.Any(char.IsLetter))
             {
-                lblStatus.Content = "El campo debe tener letras y números";
-                txtDireccion.Focus();
+                LblStatus.Content = "El campo debe tener letras y números";
+                TxtDireccion.Focus();
                 return false;
             }
-            if (cmbComuna.SelectedItem == null)
+            if (CmbComuna.SelectedItem == null)
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                cmbComuna.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                CmbComuna.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtFonoFijo.Text))
+            if (string.IsNullOrWhiteSpace(TxtFonoFijo.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtFonoFijo.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtFonoFijo.Focus();
                 return false;
             }
             int i;
-            if (!int.TryParse(txtFonoFijo.Text, out i))
+            if (!int.TryParse(TxtFonoFijo.Text, out i))
             {
-                lblStatus.Content = "El teléfono sólo debe tener números";
-                txtFonoFijo.Focus();
+                LblStatus.Content = "El teléfono sólo debe tener números";
+                TxtFonoFijo.Focus();
                 return false;
             }
-            if (txtFonoFijo.Text.Length < 7)
+            if (TxtFonoFijo.Text.Length < 7)
             {
-                lblStatus.Content = "Debe tener mínimo 7 caracteres";
-                txtFonoFijo.Focus();
+                LblStatus.Content = "Debe tener mínimo 7 caracteres";
+                TxtFonoFijo.Focus();
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtFonoCel.Text))
+            if (string.IsNullOrWhiteSpace(TxtFonoCel.Text))
             {
-                lblStatus.Content = "Debe llenar todos los campos";
-                txtFonoCel.Focus();
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtFonoCel.Focus();
                 return false;
             }
-            if (!int.TryParse(txtFonoCel.Text, out i))
+            if (!int.TryParse(TxtFonoCel.Text, out i))
             {
-                lblStatus.Content = "El teléfono sólo debe tener números";
-                txtFonoCel.Focus();
+                LblStatus.Content = "El teléfono sólo debe tener números";
+                TxtFonoCel.Focus();
                 return false;
             }
-            if (txtFonoCel.Text.Length < 8)
+            if (TxtFonoCel.Text.Length < 8)
             {
-                lblStatus.Content = "Debe tener mínimo 8 caracteres";
-                txtFonoCel.Focus();
+                LblStatus.Content = "Debe tener mínimo 8 caracteres";
+                TxtFonoCel.Focus();
                 return false;
             }
             if (_isEstudiante)
             {
-                if (string.IsNullOrWhiteSpace(txtRunApoderado.Text))
+                if (string.IsNullOrWhiteSpace(TxtRunApoderado.Text))
                 {
-                    lblStatus.Content = "Debe llenar todos los campos";
-                    txtRunApoderado.Focus();
+                    LblStatus.Content = "Debe llenar todos los campos";
+                    TxtRunApoderado.Focus();
                     return false;
                 }
-                if (!RUNValidate(txtRunApoderado.Text))
+                if (!RUNValidate(TxtRunApoderado.Text))
                 {
-                    lblStatus.Content = "Debe ingresar un RUN válido";
-                    txtRunApoderado.Focus();
+                    LblStatus.Content = "Debe ingresar un RUN válido";
+                    TxtRunApoderado.Focus();
                     return false;
                 }
-                if (txtRunApoderado.Text == txtRun.Text)
+                if (TxtRunApoderado.Text == TxtRun.Text)
                 {
-                    lblStatus.Content = "Estudiante y Apoderado no pueden tener mismo RUN";
-                    txtRunApoderado.Focus();
+                    LblStatus.Content = "Estudiante y Apoderado no pueden tener mismo RUN";
+                    TxtRunApoderado.Focus();
                     return false;
                 }
-                if (App.Users.IsStudent(txtRunApoderado.Text))
+                if (App.Users.IsStudent(TxtRunApoderado.Text))
                 {
-                    lblStatus.Content = "El apoderado no puede ser un estudiante";
-                    txtRunApoderado.Focus();
+                    LblStatus.Content = "El apoderado no puede ser un estudiante";
+                    TxtRunApoderado.Focus();
                     return false;
                 }
-                if (cmbParentesco.SelectedIndex == -1)
+                if (CmbParentesco.SelectedIndex == -1)
                 {
-                    lblStatus.Content = "Debe seleccionar un parentesco";
-                    cmbParentesco.Focus();
+                    LblStatus.Content = "Debe seleccionar un parentesco";
+                    CmbParentesco.Focus();
                     return false;
                 }
-                if (string.IsNullOrWhiteSpace(txtCurso.Text))
+                if (string.IsNullOrWhiteSpace(TxtCurso.Text))
                 {
-                    lblStatus.Content = "Debe llenar todos los campos";
-                    txtCurso.Focus();
+                    LblStatus.Content = "Debe llenar todos los campos";
+                    TxtCurso.Focus();
                     return false;
                 }
             }
             else
             {
-                if (string.IsNullOrWhiteSpace(txtCargo.Text))
+                if (string.IsNullOrWhiteSpace(TxtCargo.Text))
                 {
-                    lblStatus.Content = "Debe llenar todos los campos";
-                    txtCargo.Focus();
+                    LblStatus.Content = "Debe llenar todos los campos";
+                    TxtCargo.Focus();
                     return false;
                 }
             }
-            lblStatus.Content = string.Empty;
+            LblStatus.Content = string.Empty;
             return true;
         }
         /// <summary>
@@ -373,25 +384,25 @@ namespace Biblioteca.GUI
         {
             if (_isEstudiante)
             {
-                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, true, txtCurso.Text, txtRunApoderado.Text, cmbParentesco.SelectedValue.ToString());
-                if (!App.Users.ExistsRun(txtRunApoderado.Text).Status)
+                App.Users.PreloadPersona(TxtRun.Text, TxtNombre.Text, TxtApellido.Text, TxtDireccion.Text, (int)CmbComuna.SelectedValue, TxtFonoFijo.Text, TxtFonoCel.Text, (DateTime)DateFechaNac.SelectedDate, true, TxtCurso.Text, TxtRunApoderado.Text, CmbParentesco.SelectedValue.ToString());
+                if (!App.Users.ExistsRun(TxtRunApoderado.Text).Status)
                 {
                     GoCreateApoderado();
                     return;
                 }
             }
             else
-                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, true, txtCargo.Text);
+                App.Users.PreloadPersona(TxtRun.Text, TxtNombre.Text, TxtApellido.Text, TxtDireccion.Text, (int)CmbComuna.SelectedValue, TxtFonoFijo.Text, TxtFonoCel.Text, (DateTime)DateFechaNac.SelectedDate, true, TxtCargo.Text);
 
             var execute = App.Users.Insert();
             if (execute.Status)
             {
                 if (_isEstudiante)
                 {
-                    var insertApoderado = App.Users.InsertApoderadoOnly(txtRunApoderado.Text, App.Users.FetchNroFicha(txtRun.Text), cmbParentesco.SelectedValue.ToString());
+                    var insertApoderado = App.Users.InsertApoderadoOnly(TxtRunApoderado.Text, App.Users.FetchNroFicha(TxtRun.Text), CmbParentesco.SelectedValue.ToString());
                     if (!insertApoderado.Status)
                     {
-                        lblStatus.Content = insertApoderado.Mensaje + " (Apoderado)";
+                        LblStatus.Content = insertApoderado.Mensaje + " (Apoderado)";
                         return;
                     }
                 }
@@ -400,7 +411,7 @@ namespace Biblioteca.GUI
                 Close();
             }
             else
-                lblStatus.Content = execute.Mensaje + " (Usuario)";
+                LblStatus.Content = execute.Mensaje + " (Usuario)";
         }
         /// <summary>
         /// Calls to the Users Controller, and executes the Update query.
@@ -409,9 +420,9 @@ namespace Biblioteca.GUI
         private void ExecuteUpdate()
         {
             if (_isEstudiante)
-                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, switchEnabledAccount.IsChecked.Value, txtCurso.Text, txtRunApoderado.Text, cmbParentesco.SelectedValue.ToString(), int.Parse(_nroFicha));
+                App.Users.PreloadPersona(TxtRun.Text, TxtNombre.Text, TxtApellido.Text, TxtDireccion.Text, (int)CmbComuna.SelectedValue, TxtFonoFijo.Text, TxtFonoCel.Text, (DateTime)DateFechaNac.SelectedDate, SwitchEnabledAccount.IsChecked.Value, TxtCurso.Text, TxtRunApoderado.Text, CmbParentesco.SelectedValue.ToString(), int.Parse(_nroFicha));
             else
-                App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text, (int)cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, (DateTime)dateFechaNac.SelectedDate, switchEnabledAccount.IsChecked.Value, txtCargo.Text, int.Parse(_nroFicha));
+                App.Users.PreloadPersona(TxtRun.Text, TxtNombre.Text, TxtApellido.Text, TxtDireccion.Text, (int)CmbComuna.SelectedValue, TxtFonoFijo.Text, TxtFonoCel.Text, (DateTime)DateFechaNac.SelectedDate, SwitchEnabledAccount.IsChecked.Value, TxtCargo.Text, int.Parse(_nroFicha));
 
             var execute = App.Users.Update();
 
@@ -421,7 +432,7 @@ namespace Biblioteca.GUI
                 Close();
             }
             else
-                lblStatus.Content = execute.Mensaje + " (Usuario)";
+                LblStatus.Content = execute.Mensaje + " (Usuario)";
         }
         /// <summary>
         /// Shows an alert dialog and redirects to an UserAddApoderado Window
@@ -453,9 +464,9 @@ namespace Biblioteca.GUI
             var test = App.Users.TestConnection();
             if (test.Status)
             {
-                cmbComuna.ItemsSource = App.Users.FetchComunas();
-                cmbComuna.DisplayMemberPath = "NomComuna";
-                cmbComuna.SelectedValuePath = "CodComuna";
+                CmbComuna.ItemsSource = App.Users.FetchComunas();
+                CmbComuna.DisplayMemberPath = "NomComuna";
+                CmbComuna.SelectedValuePath = "CodComuna";
 
                 if (_isAdd)
                     SelectTypeDialog();
@@ -516,10 +527,10 @@ namespace Biblioteca.GUI
         /// <param name="e">Parameters (optional)</param>
         private void txtRun_TextChanged(object sender, TextChangedEventArgs e)
         {
-            txtRun.Text = txtRun.Text.Replace(".", "");
-            if (txtRun.IsFocused) txtRun.CaretIndex = txtRun.Text.Length;
-            txtRunApoderado.Text = txtRunApoderado.Text.Replace(".", "");
-            if (txtRunApoderado.IsFocused) txtRunApoderado.CaretIndex = txtRunApoderado.Text.Length;
+            TxtRun.Text = TxtRun.Text.Replace(".", "");
+            if (TxtRun.IsFocused) TxtRun.CaretIndex = TxtRun.Text.Length;
+            TxtRunApoderado.Text = TxtRunApoderado.Text.Replace(".", "");
+            if (TxtRunApoderado.IsFocused) TxtRunApoderado.CaretIndex = TxtRunApoderado.Text.Length;
         }
         #endregion
     }
