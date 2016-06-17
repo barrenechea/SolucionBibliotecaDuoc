@@ -16,7 +16,7 @@ namespace Biblioteca.GUI
     {
         #region Attributes
         private readonly BackgroundWorker _fetch = new BackgroundWorker();
-        private readonly List<Libro> _libros;
+        private List<Libro> _libros;
         private ProgressDialogController _controller;
         private List<TipoLibro> _tipoLibros;
         private Message _connectionMessage;
@@ -155,6 +155,7 @@ namespace Biblioteca.GUI
         /// <param name="e">Parameters (optional)</param>
         private void BtnVolver_Click(object sender, RoutedEventArgs e)
         {
+            _libros = null;
             new Inicio().Show();
             Close();
         }
