@@ -146,41 +146,35 @@ namespace Biblioteca.GUI
                 TxtUsuario.Focus();
                 return false;
             }
-            if (_isAdd)
+            if (_isAdd && App.Admins.ExistsUsuario(TxtUsuario.Text))
             {
-                if (App.Admins.ExistsUsuario(TxtUsuario.Text))
-                {
-                    LblStatus.Content = "Nombre de usuario ya existe";
-                    TxtUsuario.Focus();
-                    return false;
-                }
-                if (string.IsNullOrWhiteSpace(TxtPassword.Password))
-                {
-                    LblStatus.Content = "Debe llenar todos los campos";
-                    TxtPassword.Focus();
-                    return false;
-                }
-                if (string.IsNullOrWhiteSpace(TxtPasswordCheck.Password))
-                {
-                    LblStatus.Content = "Debe llenar todos los campos";
-                    TxtPasswordCheck.Focus();
-                    return false;
-                }
+                LblStatus.Content = "Nombre de usuario ya existe";
+                TxtUsuario.Focus();
+                return false;
             }
-            if (!string.IsNullOrWhiteSpace(TxtPassword.Password))
+            if (string.IsNullOrWhiteSpace(TxtPassword.Password))
             {
-                if (TxtPassword.Password.Length < 6)
-                {
-                    LblStatus.Content = "Debe tener mínimo 6 caracteres";
-                    TxtPassword.Focus();
-                    return false;
-                }
-                if (!string.Equals(TxtPassword.Password, TxtPasswordCheck.Password))
-                {
-                    LblStatus.Content = "Las contraseñas no coinciden";
-                    TxtPassword.Focus();
-                    return false;
-                }
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtPassword.Focus();
+                return false;
+            }
+            if (TxtPassword.Password.Length < 6)
+            {
+                LblStatus.Content = "Debe tener mínimo 6 caracteres";
+                TxtPassword.Focus();
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(TxtPasswordCheck.Password))
+            {
+                LblStatus.Content = "Debe llenar todos los campos";
+                TxtPasswordCheck.Focus();
+                return false;
+            }
+            if (!string.Equals(TxtPassword.Password, TxtPasswordCheck.Password))
+            {
+                LblStatus.Content = "Las contraseñas no coinciden";
+                TxtPassword.Focus();
+                return false;
             }
             
             LblStatus.Content = string.Empty;
