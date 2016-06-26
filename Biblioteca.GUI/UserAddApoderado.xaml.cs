@@ -142,11 +142,12 @@ namespace Biblioteca.GUI
         /// </summary>
         private void AddApoderado()
         {
+            var runEstudiante = App.Users.PersonaPersistence.Run;
             var insertEstudiante = App.Users.Insert();
             if (insertEstudiante.Status)
             {
                 var preload = App.Users.PreloadPersona(txtRun.Text, txtNombre.Text, txtApellido.Text, txtDireccion.Text,
-                    (int) cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, App.Users.FetchNroFicha(txtRun.Text),
+                    (int) cmbComuna.SelectedValue, txtFonoFijo.Text, txtFonoCel.Text, App.Users.FetchNroFicha(runEstudiante),
                     txtParentesco.Text);
                 if (preload.Status)
                 {
