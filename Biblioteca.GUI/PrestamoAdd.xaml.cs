@@ -65,7 +65,7 @@ namespace Biblioteca.GUI
                     }
                     if (prestados >= 1)
                     {
-                        lblStatus.Content = "El estudiante tiene un prestamo pendiente";
+                        lblStatus.Content = "El usuario no puede tener más de un libro";
                         return false;
                     }
                 }
@@ -73,7 +73,7 @@ namespace Biblioteca.GUI
                 {
                     if (prestados + codigos.Length > 5)
                     {
-                        lblStatus.Content = "Los funcionarios no pueden tener más de cinco libros";
+                        lblStatus.Content = "El usuario no puede tener más de cinco libros";
                         txtCodLibro.Focus();
                         return false;
                     }
