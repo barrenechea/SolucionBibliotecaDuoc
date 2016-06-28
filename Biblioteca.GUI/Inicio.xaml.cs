@@ -158,9 +158,9 @@ namespace Biblioteca.GUI
             if (loginData == null) return;
 
             if (string.IsNullOrWhiteSpace(loginData.Username)) 
-                ShowNormalDialog("Error", "Debe ingresar un usuario");
+                ShowNormalDialog("Error", "Debe llenar todos los campos");
             else if (string.IsNullOrWhiteSpace(loginData.Password))
-                ShowNormalDialog("Error", "Debe ingresar una contraseña");
+                ShowNormalDialog("Error", "Debe llenar todos los campos");
             else
             {
                 _loginData = loginData;

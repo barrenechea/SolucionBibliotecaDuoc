@@ -179,27 +179,7 @@ namespace Biblioteca.GUI
             
             LblStatus.Content = string.Empty;
             return true;
-        }
-        /// <summary>
-        /// Opens a Confirmation Dialog inside the Window.
-        /// It's being used when an Administrador is being modified, but the password fields were left in blank.
-        /// </summary>
-        private async void ConfirmationDialog()
-        {
-            var settings = new MetroDialogSettings
-            {
-                AffirmativeButtonText = "Si",
-                NegativeButtonText = "No",
-                ColorScheme = MetroDialogOptions.ColorScheme
-            };
-
-            var confirmation = await this.ShowMessageAsync("Contraseña", "¿Está seguro que desea mantener la contraseña antigua?", MessageDialogStyle.AffirmativeAndNegative, settings);
-
-            if (confirmation == MessageDialogResult.Affirmative)
-            {
-                Execute();
-            }
-        }
+        }   
         /// <summary>
         /// Calls to the Admin Controller, and executes the Insert or Update querys.
         /// In case of success, it's returned to the PanelAdmin Window.
@@ -291,14 +271,7 @@ namespace Biblioteca.GUI
             if (App.Admins.TestConnection().Status)
             {
                 if (!Validation()) return;
-
-                if (_isAdd) Execute();
-
-                else
-                {
-                    if(string.IsNullOrWhiteSpace(TxtPassword.Password)) ConfirmationDialog();
-                    else Execute();
-                }
+                Execute();
             }
             else
                 ShowNormalDialog("Error", "Se ha perdido la conexión con el servidor. Intente nuevamente más tarde");
