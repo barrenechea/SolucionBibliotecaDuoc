@@ -126,6 +126,15 @@ namespace Biblioteca.Controlador
             sqlSentence = "INSERT INTO Persona (rut, nombre, apellido, direccion, cod_comuna, fec_creacion) " +
                           "VALUES (@Run, @Nombre, @Apellido, @Direccion, @CodComuna, @FechaCreacion);";
             arrayParameters = new[] { "@Run", "@Nombre", "@Apellido", "@Direccion", "@CodComuna", "@FechaCreacion" };
+
+            PersonaPersistence.Run = PersonaPersistence.Run.ToUpper();
+            PersonaPersistence.Run = PersonaPersistence.Run.Replace(" ", "");
+            PersonaPersistence.Run = PersonaPersistence.Run.Replace(".", "");
+            PersonaPersistence.Run = PersonaPersistence.Run.Replace("-", "");
+            var rutAux = int.Parse(PersonaPersistence.Run.Substring(0, PersonaPersistence.Run.Length - 1));
+            var dv = char.Parse(PersonaPersistence.Run.Substring(PersonaPersistence.Run.Length - 1, 1));
+            PersonaPersistence.Run = rutAux + "-" + dv;
+
             arrayObjects = new object[] { PersonaPersistence.Run, PersonaPersistence.Nombre, PersonaPersistence.Apellido, PersonaPersistence.Direccion, PersonaPersistence.CodComuna, DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") };
 
             var executePer = Execute(sqlSentence, arrayParameters, arrayObjects);
